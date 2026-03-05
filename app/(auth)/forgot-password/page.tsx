@@ -1,0 +1,24 @@
+import Link from "next/link";
+import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
+
+export default function ForgotPasswordPage() {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-gray-950 px-4">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-white">Reset your password</h1>
+          <p className="mt-2 text-gray-400">
+            Enter your email and we&apos;ll send you a reset link
+          </p>
+        </div>
+        <ForgotPasswordForm />
+        <p className="text-center text-sm text-gray-400">
+          Remember your password?{" "}
+          <Link href="/login" className="text-blue-400 hover:text-blue-300">
+            Sign in
+          </Link>
+        </p>
+      </div>
+    </main>
+  );
+}
