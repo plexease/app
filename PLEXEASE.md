@@ -210,7 +210,6 @@ Each phase uses **3 focused sessions** to optimise token usage and quality:
 
 > **Update this section each session.**
 
-- Phase: 3 code review (Phases 1, 2, 2.5 & 3 built, awaiting Opus code review before Phase 4)
-- Last action: Phase 3 webhook testing — checkout.session.completed verified end-to-end (200, Supabase updated to plan: pro, status: active). Fixed webhook error handling, upsert constraint, schema.sql sync, and worktree .env.local now symlinked to main project
-- Next step: Code review session (Opus) — say "Code review Phase 3"
-- After review: Phase 4 — Testing (Playwright for auth, tools, billing flows)
+- Phase: 3 complete, merged to main, pushed to GitHub
+- Last action: Phase 3 code review (Opus) — fixed all issues (C1: past_due Pro access, I1: reconciliation frequency, I2: webhook rate limiting, I4: server-side Pro redirect on upgrade page, I5: useEffect for toast, M1-M5: service client extraction, body size check, shared isProUser, feature parity, price animation)
+- Next step: Phase 4 — Testing (Playwright for auth, tools, billing flows)
