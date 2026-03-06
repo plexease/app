@@ -131,7 +131,7 @@ export async function reconcileSubscription(
         plan: "pro",
         status: "active",
         stripe_subscription_id: sub.id,
-        current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
+        current_period_end: new Date(sub.items.data[0].current_period_end * 1000).toISOString(),
         cancel_at_period_end: sub.cancel_at_period_end,
       })
       .eq("user_id", userId);

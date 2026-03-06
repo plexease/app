@@ -121,7 +121,7 @@ async function handleCheckoutCompleted(
       plan: "pro",
       status: "active",
       stripe_subscription_id: subscriptionId,
-      current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+      current_period_end: new Date(subscription.items.data[0].current_period_end * 1000).toISOString(),
       cancel_at_period_end: false,
       grace_period_end: null,
     })
@@ -149,7 +149,7 @@ async function handleSubscriptionUpdated(
     .from("subscriptions")
     .update({
       status,
-      current_period_end: new Date(verified.current_period_end * 1000).toISOString(),
+      current_period_end: new Date(verified.items.data[0].current_period_end * 1000).toISOString(),
       cancel_at_period_end: verified.cancel_at_period_end,
     })
     .eq("user_id", userId);
@@ -166,7 +166,7 @@ async function handleSubscriptionDeleted(
     throw new Error("Missing supabase_user_id in subscription metadata");
   }
 
-  const periodEnd = new Date(subscription.current_period_end * 1000);
+  const periodEnd = new Date(subscription.items.data[0].current_period_end * 1000);
   const gracePeriodEnd = calculateGracePeriodEnd(periodEnd);
 
   await supabase
@@ -184,7 +184,7 @@ async function handlePaymentFailed(
   supabase: ReturnType<typeof getServiceClient>
 ) {
   const invoice = event.data.object as Stripe.Invoice;
-  const subscriptionId = invoice.subscription as string;
+  const subscriptionId = invoice.parent?.subscription_details?.subscription as string | undefined;
 
   if (!subscriptionId) return;
 
