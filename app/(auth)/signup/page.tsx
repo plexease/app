@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { SignupForm } from "@/components/auth/signup-form";
 import { OAuthButton } from "@/components/auth/oauth-button";
+import { AuthHeader } from "@/components/auth/auth-header";
 
 export default function SignupPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-950 px-4">
       <div className="w-full max-w-md space-y-8">
+        <AuthHeader />
         <div className="text-center">
           <h1 className="text-3xl font-bold text-white">Create your account</h1>
           <p className="mt-2 text-gray-400">Start using Plexease for free</p>

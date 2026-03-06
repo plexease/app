@@ -12,8 +12,10 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-gray-950 text-white">
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-4 lg:px-12">
-        <span className="text-xl font-bold">Plexease</span>
+      <nav className="flex flex-wrap items-center justify-between gap-2 px-6 py-4 lg:px-12">
+        <Link href="/" className="text-xl font-bold hover:text-blue-400 transition-colors">
+          Plexease
+        </Link>
         <div className="flex items-center gap-4">
           <Link
             href="/login"

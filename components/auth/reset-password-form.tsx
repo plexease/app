@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import { friendlyAuthError } from "@/lib/auth-errors";
 
 export function ResetPasswordForm() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export function ResetPasswordForm() {
     const { error } = await supabase.auth.updateUser({ password });
 
     if (error) {
-      toast.error(error.message);
+      toast.error(friendlyAuthError(error.message));
       setLoading(false);
     } else {
       toast.success("Password updated successfully");
@@ -46,6 +47,7 @@ export function ResetPasswordForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength={6}
+          autoComplete="new-password"
           className="mt-1 block w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           placeholder="At least 6 characters"
         />
@@ -61,6 +63,7 @@ export function ResetPasswordForm() {
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
           minLength={6}
+          autoComplete="new-password"
           className="mt-1 block w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           placeholder="Repeat your new password"
         />

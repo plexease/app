@@ -1,22 +1,37 @@
 "use client";
 
+import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 export function OAuthButton() {
+  const [loading, setLoading] = useState(false);
+
   const handleGoogleLogin = async () => {
-    const supabase = createClient();
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    setLoading(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) {
+        toast.error("Failed to connect to Google. Please try again.");
+        setLoading(false);
+      }
+    } catch {
+      toast.error("Failed to connect to Google. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
     <button
       onClick={handleGoogleLogin}
-      className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-sm font-medium text-white hover:bg-gray-700 transition-colors"
+      disabled={loading}
+      className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50 transition-colors"
     >
       <svg className="h-5 w-5" viewBox="0 0 24 24">
         <path
@@ -36,7 +51,7 @@ export function OAuthButton() {
           fill="#EA4335"
         />
       </svg>
-      Continue with Google
+      {loading ? "Connecting..." : "Continue with Google"}
     </button>
   );
 }

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import { friendlyAuthError } from "@/lib/auth-errors";
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ export function ForgotPasswordForm() {
     });
 
     if (error) {
-      toast.error(error.message);
+      toast.error(friendlyAuthError(error.message));
     } else {
       setSent(true);
     }
@@ -52,6 +53,7 @@ export function ForgotPasswordForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          autoComplete="email"
           className="mt-1 block w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           placeholder="you@example.com"
         />

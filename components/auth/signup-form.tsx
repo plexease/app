@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
+import { friendlyAuthError } from "@/lib/auth-errors";
 
 export function SignupForm() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export function SignupForm() {
     });
 
     if (error) {
-      toast.error(error.message);
+      toast.error(friendlyAuthError(error.message));
       setLoading(false);
     } else {
       router.push("/check-email");
@@ -44,6 +45,7 @@ export function SignupForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          autoComplete="email"
           className="mt-1 block w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           placeholder="you@example.com"
         />
@@ -59,6 +61,7 @@ export function SignupForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength={6}
+          autoComplete="new-password"
           className="mt-1 block w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           placeholder="At least 6 characters"
         />
