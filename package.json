@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "npx playwright test --config playwright/playwright.config.ts",
+    "test:ui": "npx playwright test --config playwright/playwright.config.ts --ui"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
@@ -26,6 +28,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.3.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
