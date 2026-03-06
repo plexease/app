@@ -16,7 +16,9 @@ test.describe("Stripe Checkout", () => {
     expect(freeUserPage.url()).toContain("checkout.stripe.com");
   });
 
-  test("full checkout with test card @skip-ci", async ({ freeUserPage }) => {
+  test("full checkout with test card", async ({ freeUserPage }) => {
+    test.skip(!!process.env.CI, "Skipped in CI — Stripe hosted checkout DOM is fragile");
+    test.setTimeout(60000);
     const upgrade = new UpgradePage(freeUserPage);
     await upgrade.goto();
     await upgrade.clickSubscribe();

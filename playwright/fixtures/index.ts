@@ -1,4 +1,4 @@
-import { test as base, type Page } from "@playwright/test";
+import { test as base, type Page, type BrowserContext } from "@playwright/test";
 import path from "path";
 import {
   setUsageCount,
@@ -19,11 +19,28 @@ type TestFixtures = {
   };
 };
 
+async function hideDevOverlay(context: BrowserContext) {
+  await context.addInitScript(() => {
+    // Hide the Next.js dev tools overlay that intercepts pointer events
+    const style = document.createElement("style");
+    style.textContent = "nextjs-portal { display: none !important; pointer-events: none !important; }";
+    document.head.appendChild(style);
+  });
+}
+
+async function dismissCookieConsent(context: BrowserContext) {
+  await context.addInitScript(() => {
+    localStorage.setItem("cookie-consent", "accepted");
+    localStorage.setItem("cookie-consent-at", Date.now().toString());
+  });
+}
+
 export const test = base.extend<TestFixtures>({
   freeUserPage: async ({ browser }, use) => {
     const context = await browser.newContext({
       storageState: path.resolve(__dirname, "../auth/free-user.json"),
     });
+    await hideDevOverlay(context);
     const page = await context.newPage();
     await use(page);
     await context.close();
@@ -33,6 +50,7 @@ export const test = base.extend<TestFixtures>({
     const context = await browser.newContext({
       storageState: path.resolve(__dirname, "../auth/pro-user.json"),
     });
+    await hideDevOverlay(context);
     const page = await context.newPage();
     await use(page);
     await context.close();
@@ -40,11 +58,8 @@ export const test = base.extend<TestFixtures>({
 
   anonPage: async ({ browser }, use) => {
     const context = await browser.newContext();
-    // Dismiss cookie consent dialog before any page loads
-    await context.addInitScript(() => {
-      localStorage.setItem("cookie-consent", "accepted");
-      localStorage.setItem("cookie-consent-at", Date.now().toString());
-    });
+    await hideDevOverlay(context);
+    await dismissCookieConsent(context);
     const page = await context.newPage();
     await use(page);
     await context.close();

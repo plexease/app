@@ -3,11 +3,12 @@ import type { Page } from "@playwright/test";
 export class DashboardPage {
   constructor(private page: Page) {}
 
-  readonly heading = this.page.locator("h1", { hasText: "Dashboard" });
-  readonly upgradeLink = this.page.locator('a[href="/upgrade"]');
-  readonly usageCard = this.page.getByText("Usage").locator("..");
-  readonly nugetAdvisorLink = this.page.locator('a[href="/tools/nuget-advisor"]');
-  readonly manageBillingButton = this.page.getByText("Manage Subscription");
+  private readonly main = this.page.locator("main");
+  readonly heading = this.main.locator("h1", { hasText: "Dashboard" });
+  readonly upgradeLink = this.main.locator('a[href="/upgrade"]');
+  readonly usageCard = this.main.getByText("Usage").locator("..");
+  readonly nugetAdvisorLink = this.main.locator('a[href="/tools/nuget-advisor"]');
+  readonly manageBillingButton = this.main.getByText("Manage Subscription");
 
   async goto() {
     await this.page.goto("/dashboard");
