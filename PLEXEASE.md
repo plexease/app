@@ -122,15 +122,15 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - [x] Implement Supabase Auth (sign up, login, logout)
 - [x] Build dashboard shell with route protection (middleware.ts)
 
-### ⬜ Phase 2 — First Tool (NuGet Advisor)
-- [ ] Add unique constraint migration on usage table (user_id, tool_name, month)
-- [ ] Build lib/claude.ts (Anthropic client + structured prompt)
-- [ ] Build POST /api/tools/nuget-advisor (usage check, Claude call, upsert)
-- [ ] Build NuGet Advisor page + form + result cards UI
-- [ ] Add NuGet Advisor to sidebar and dashboard
-- [ ] Implement usage tracking (20/month free limit, unlimited Pro)
-- [ ] Add upgrade prompt when limit reached
-- [ ] Test tool end-to-end
+### ✅ Phase 2 — First Tool (NuGet Advisor) (complete)
+- [x] Add unique constraint migration on usage table (user_id, tool_name, month)
+- [x] Build lib/claude.ts (Anthropic client + structured prompt)
+- [x] Build POST /api/tools/nuget-advisor (usage check, Claude call, upsert)
+- [x] Build NuGet Advisor page + form + result cards UI
+- [x] Add NuGet Advisor to sidebar and dashboard
+- [x] Implement usage tracking (20/month free limit, unlimited Pro)
+- [x] Add upgrade prompt when limit reached
+- [x] Test tool end-to-end
 
 ### ⬜ Phase 3 — Monetisation
 - [ ] Create Stripe products (Free, Pro £19/mo)
@@ -179,6 +179,6 @@ Update this file at the end of each Claude Code session:
 
 > **Update this section each session.**
 
-- Phase: 2 (Phase 1 complete, Phase 2 in progress)
-- Last action: Designed NuGet Advisor tool — structured cards output, API route architecture, 20/month free usage limit
-- Next step: Implement Phase 2 per design doc at docs/plans/2026-03-06-nuget-advisor-design.md
+- Phase: 3 (Phases 1 & 2 complete, Phase 3 not yet started)
+- Last action: NuGet Advisor live and tested — 4 result cards, 20/month usage tracking, upgrade prompt
+- Next step: Phase 3 — Monetisation (Stripe integration)
