@@ -35,6 +35,6 @@ Return ONLY valid JSON in this exact shape — no markdown, no explanation, no c
   try {
     return JSON.parse(text) as NuGetAdvisorResult;
   } catch {
-    throw new Error("Failed to parse Claude response");
+    throw new Error(`Failed to parse Claude response: ${text}`);
   }
 }
