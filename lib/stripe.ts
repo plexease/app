@@ -13,12 +13,14 @@ for (const envVar of requiredEnvVars) {
 }
 
 const key = process.env.STRIPE_SECRET_KEY!;
-const isDev = process.env.NODE_ENV !== "production";
+// Use VERCEL_ENV rather than NODE_ENV — next build always sets NODE_ENV=production
+// even during local builds, whereas VERCEL_ENV=production only on actual prod deployments.
+const isProductionDeployment = process.env.VERCEL_ENV === "production";
 
-if (isDev && !key.startsWith("sk_test_")) {
-  throw new Error("STRIPE_SECRET_KEY must be a test key in development");
+if (!isProductionDeployment && !key.startsWith("sk_test_")) {
+  throw new Error("STRIPE_SECRET_KEY must be a test key outside of production");
 }
-if (!isDev && !key.startsWith("sk_live_")) {
+if (isProductionDeployment && !key.startsWith("sk_live_")) {
   throw new Error("STRIPE_SECRET_KEY must be a live key in production");
 }
 
