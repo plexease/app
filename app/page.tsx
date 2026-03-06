@@ -1,6 +1,21 @@
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { PricingSection } from "@/components/landing/pricing-section";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let isPro = false;
+  if (user) {
+    const { data: subscription } = await supabase
+      .from("subscriptions")
+      .select("plan")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    isPro = subscription?.plan === "pro";
+  }
+
   return (
     <main className="min-h-screen bg-gray-950 text-white">
       {/* Nav */}
@@ -78,42 +93,7 @@ export default function Home() {
       </section>
 
       {/* Pricing */}
-      <section className="mx-auto max-w-4xl px-6 py-16">
-        <h2 className="text-center text-3xl font-bold">Pricing</h2>
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
-          <div className="rounded-lg border border-gray-800 bg-gray-900 p-6">
-            <h3 className="text-lg font-semibold">Free</h3>
-            <p className="mt-2 text-3xl font-bold">&pound;0</p>
-            <ul className="mt-6 space-y-3 text-sm text-gray-400">
-              <li>20 tool uses per month</li>
-              <li>All available tools</li>
-            </ul>
-            <Link
-              href="/signup"
-              className="mt-8 block rounded-lg border border-gray-700 px-4 py-2 text-center text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors"
-            >
-              Get started
-            </Link>
-          </div>
-          <div className="rounded-lg border border-blue-600 bg-gray-900 p-6">
-            <h3 className="text-lg font-semibold">Pro</h3>
-            <p className="mt-2 text-3xl font-bold">
-              &pound;19<span className="text-sm font-normal text-gray-400">/month</span>
-            </p>
-            <ul className="mt-6 space-y-3 text-sm text-gray-400">
-              <li>Unlimited tool uses</li>
-              <li>Saved history</li>
-              <li>Priority AI responses</li>
-            </ul>
-            <Link
-              href="/signup"
-              className="mt-8 block rounded-lg bg-blue-600 px-4 py-2 text-center text-sm font-medium hover:bg-blue-500 transition-colors"
-            >
-              Start free trial
-            </Link>
-          </div>
-        </div>
-      </section>
+      <PricingSection isLoggedIn={!!user} isPro={isPro} />
 
       {/* Footer */}
       <footer className="border-t border-gray-800 px-6 py-8 text-center text-sm text-gray-500">
