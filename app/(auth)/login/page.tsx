@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { LoginForm } from "@/components/auth/login-form";
 import { OAuthButton } from "@/components/auth/oauth-button";
@@ -21,7 +22,9 @@ export default function LoginPage() {
             <span className="bg-gray-950 px-2 text-gray-500">or</span>
           </div>
         </div>
-        <LoginForm />
+        <Suspense>
+          <LoginForm />
+        </Suspense>
         <p className="text-center text-sm text-gray-400">
           Don&apos;t have an account?{" "}
           <Link href="/signup" className="text-blue-400 hover:text-blue-300">

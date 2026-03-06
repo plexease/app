@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { friendlyAuthError } from "@/lib/auth-errors";
@@ -70,9 +71,9 @@ export function LoginForm() {
         />
       </div>
       <div className="text-right">
-        <a href="/forgot-password" className="text-sm text-blue-400 hover:text-blue-300">
+        <Link href="/forgot-password" className="text-sm text-blue-400 hover:text-blue-300">
           Forgot password?
-        </a>
+        </Link>
       </div>
       <button
         type="submit"
