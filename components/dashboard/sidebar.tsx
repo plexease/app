@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { SignOutButton } from "./sign-out-button";
 import { TierBadge } from "@/components/billing/tier-badge";
 import { UsageCounter } from "@/components/billing/usage-counter";
+import { resetCookieConsent } from "@/components/ui/cookie-consent";
 import type { UserPlan } from "@/lib/subscription";
 
 const navItems = [
@@ -62,7 +63,13 @@ export function Sidebar({ plan, usageCount }: Props) {
         })}
       </nav>
 
-      <div className="border-t border-gray-800 pt-4">
+      <div className="border-t border-gray-800 pt-4 space-y-1">
+        <button
+          onClick={() => resetCookieConsent()}
+          className="flex w-full items-center rounded-lg px-3 py-2 text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-colors"
+        >
+          Manage cookies
+        </button>
         <SignOutButton />
       </div>
     </aside>

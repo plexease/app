@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { isProUser } from "@/lib/subscription";
 import { PricingSection } from "@/components/landing/pricing-section";
+import { ManageCookiesButton } from "@/components/ui/manage-cookies-button";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -92,7 +93,13 @@ export default async function Home() {
 
       {/* Footer */}
       <footer className="border-t border-gray-800 px-6 py-8 text-center text-sm text-gray-500">
-        &copy; {new Date().getFullYear()} Plexease. All rights reserved.
+        <p>&copy; {new Date().getFullYear()} Plexease. All rights reserved.</p>
+        <div className="mt-2 flex items-center justify-center gap-4">
+          <a href="/privacy" className="hover:text-gray-400 transition-colors">
+            Privacy policy
+          </a>
+          <ManageCookiesButton />
+        </div>
       </footer>
     </main>
   );
