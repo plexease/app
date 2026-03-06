@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getNuGetAdvice } from "@/lib/claude";
 import { FREE_MONTHLY_LIMIT, TOOL_NAME_NUGET_ADVISOR } from "@/lib/constants";
 import { currentMonthDate } from "@/lib/utils";
+import { isProUser } from "@/lib/subscription";
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
@@ -32,18 +33,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Package name is too long" }, { status: 400 });
   }
 
-  // Check plan
-  const { data: subscription } = await supabase
-    .from("subscriptions")
-    .select("plan")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  const isPro = subscription?.plan === "pro";
+  // Check plan using shared module
+  const isPro = await isProUser(user.id);
 
   // Enforce monthly limit for free users
-  // NOTE: check-then-increment is not atomic — concurrent requests could exceed the limit.
-  // Acceptable for v1 free tier. For Phase 3 billing, move limit enforcement into the RPC.
   if (!isPro) {
     const month = currentMonthDate();
 
