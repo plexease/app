@@ -15,6 +15,12 @@ export function Sidebar() {
         >
           Dashboard
         </Link>
+        <Link
+          href="/tools/nuget-advisor"
+          className="flex items-center rounded-lg px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+        >
+          NuGet Advisor
+        </Link>
       </nav>
 
       <div className="border-t border-gray-800 pt-4">
