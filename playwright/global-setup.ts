@@ -5,6 +5,13 @@ import { ensureTestUser, ensureProSubscription, resetUsageForUser } from "./help
 
 dotenv.config({ path: path.resolve(__dirname, ".env.test") });
 
+async function dismissCookieConsent(page: import("@playwright/test").Page) {
+  await page.evaluate(() => {
+    localStorage.setItem("cookie-consent", "accepted");
+    localStorage.setItem("cookie-consent-at", Date.now().toString());
+  });
+}
+
 async function globalSetup() {
   const freeEmail = process.env.TEST_FREE_USER_EMAIL!;
   const freePassword = process.env.TEST_FREE_USER_PASSWORD!;
@@ -33,6 +40,7 @@ async function globalSetup() {
   const freeContext = await browser.newContext();
   const freePage = await freeContext.newPage();
   await freePage.goto("http://localhost:3000/login");
+  await dismissCookieConsent(freePage);
   await freePage.locator('input[id="email"]').fill(freeEmail);
   await freePage.locator('input[id="password"]').fill(freePassword);
   await freePage.locator('button[type="submit"]').click();
@@ -45,6 +53,7 @@ async function globalSetup() {
   const proContext = await browser.newContext();
   const proPage = await proContext.newPage();
   await proPage.goto("http://localhost:3000/login");
+  await dismissCookieConsent(proPage);
   await proPage.locator('input[id="email"]').fill(proEmail);
   await proPage.locator('input[id="password"]').fill(proPassword);
   await proPage.locator('button[type="submit"]').click();

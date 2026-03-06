@@ -40,6 +40,11 @@ export const test = base.extend<TestFixtures>({
 
   anonPage: async ({ browser }, use) => {
     const context = await browser.newContext();
+    // Dismiss cookie consent dialog before any page loads
+    await context.addInitScript(() => {
+      localStorage.setItem("cookie-consent", "accepted");
+      localStorage.setItem("cookie-consent-at", Date.now().toString());
+    });
     const page = await context.newPage();
     await use(page);
     await context.close();

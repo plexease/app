@@ -47,12 +47,20 @@ export default async function DashboardLayout({
     }
 
     // Set session cookie so we don't reconcile again until next login
-    cookieStore.set("reconciled", "1", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      // No maxAge = session cookie, cleared when browser closes
-    });
+    // Note: cookieStore.set() can throw in Server Components (Next.js 16+).
+    // It works in practice because layouts are rendered in a request context,
+    // but we guard against edge cases where the response is already streaming.
+    try {
+      cookieStore.set("reconciled", "1", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        // No maxAge = session cookie, cleared when browser closes
+      });
+    } catch {
+      // Reconciliation still ran — the cookie just won't be set this time.
+      // Next page load will reconcile again (harmless, just an extra Stripe call).
+    }
   }
 
   return (
