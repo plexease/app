@@ -160,6 +160,22 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - [x] Auth routes updated in middleware (check-email, reset-password)
 - [x] .env.local.example updated with Stripe price ID vars
 
+### ⬜ Phase 4.5 — Smoke Tests
+- [ ] Create `plexease-test` Supabase project (same org), apply schema + RPC
+- [ ] Install Playwright, configure `.env.test`
+- [ ] Global setup: auto-create test users via Supabase admin API, seed pro subscription, save storageState
+- [ ] Global teardown: reset usage counts, clean mutable state
+- [ ] Page Object Model: login, signup, dashboard, nuget-advisor, upgrade, error pages
+- [ ] Custom fixtures: freeUserPage, proUserPage, anonPage, supabaseAdmin
+- [ ] Test: auth flows (signup, login, logout, forgot password)
+- [ ] Test: dashboard rendering (free vs pro)
+- [ ] Test: NuGet Advisor (free + pro)
+- [ ] Test: usage limits (DB seed to 19, boundary test)
+- [ ] Test: Stripe checkout (redirect + soft-assert full flow) + manage billing portal
+- [ ] Test: protected routes (anon redirect, pro access)
+- [ ] Test: error pages (404)
+- Design doc: `docs/plans/2026-03-06-phase4.5-smoke-tests-design.md`
+
 ### ⬜ Phase 5 — Branding
 - [ ] Visual identity, logo, colour palette, typography
 - [ ] Apply brand to all pages and components
@@ -170,12 +186,12 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - [ ] Trust signals (testimonials, social proof)
 - [ ] Visibility and digital marketing (SEO, social, content strategy)
 
-### ⬜ Phase 7 — Testing
-- [ ] Set up Playwright
-- [ ] Auth flow tests
-- [ ] Tool usage tests
-- [ ] Stripe checkout tests
-- [ ] Usage limit enforcement tests
+### ⬜ Phase 7 — Testing & Environments
+- [ ] Dev/Test/Prod environment separation (Supabase projects, Stripe accounts, env configs)
+- [ ] Playwright test projects: separate suites per user type (free, pro, unauthenticated) for parallel execution
+- [ ] GitHub Actions CI: workflow running tests on push/PR with secrets configured
+- [ ] Wider test scope: resubscribe flow, cancellation/payment-failed banners, cookie consent, new tool tests
+- [ ] Staging environment strategy
 
 ### ⬜ Phase 8+ — Additional Tools
 Build out remaining tools per the roadmap above.
@@ -194,20 +210,20 @@ Update this file at the end of each Claude Code session:
 
 ### Session & Model Strategy
 
-Each phase uses **3 focused sessions** to optimise token usage and quality:
+All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for fresh context:
 
-| Session | Model | Purpose | Output |
-|---------|-------|---------|--------|
-| 1. Design | **Opus** | Brainstorm, architecture, edge cases, write plan | `docs/plans/YYYY-MM-DD-<feature>-design.md` |
-| 2. Build | **Sonnet** | Implement the plan, commit code | Working feature, pushed to GitHub |
-| 3. Review | **Opus** | Code review, fix issues, final push | Clean, reviewed code |
+| Session | Purpose | Output |
+|---------|---------|--------|
+| 1. Design | Brainstorm, architecture, edge cases, write plan | `docs/plans/YYYY-MM-DD-<feature>-design.md` |
+| 2. Build | Implement the plan, commit code | Working feature, pushed to GitHub |
+| 3. Review | Code review, fix issues, final push | Clean, reviewed code |
 
 **How to run this:**
-1. Start session → `/model claude-opus-4-6` → brainstorm & write plan → end session
-2. Start session → `/model claude-sonnet-4-6` → say "implement `docs/plans/<plan>.md`" → end session
-3. Start session → `/model claude-opus-4-6` → say "code review phase N" → end session
+1. Start session → brainstorm & write plan → end session
+2. Start session → say "implement `docs/plans/<plan>.md`" → end session
+3. Start session → say "code review phase N" → end session
 
-**Why separate sessions:** each starts with a fresh context window. Carrying implementation history into a review wastes tokens at Opus rates. The plan files and `PLEXEASE.md` carry all context between sessions via the memory file at `~/.claude/projects/-home-deck/memory/plexease.md`.
+**Why separate sessions:** each starts with a fresh context window. The plan files and `PLEXEASE.md` carry all context between sessions via the memory file at `~/.claude/projects/-home-deck/memory/plexease.md`.
 
 **When to stay in one session:** small fixes, hotfixes, or tasks that take < 10 minutes total.
 
@@ -229,6 +245,6 @@ Each phase uses **3 focused sessions** to optimise token usage and quality:
 
 > **Update this section each session.**
 
-- Phase: 4 complete, code reviewed, fixes committed, pushed to GitHub
-- Last action: Phase 4 code review (Opus) — no critical issues; fixed 2 important: portable cookie secure flag (NODE_ENV not VERCEL_ENV), server-only guard on service client
-- Next step: Phase 5 — Branding (visual identity, logo, colour palette, typography, apply to all pages)
+- Phase: 4 complete, Phase 4.5 design complete
+- Last action: Phase 4.5 smoke tests design — 7 spec files, ~15 tests, POM architecture, real services with test accounts
+- Next step: Phase 4.5 — implementation (create Supabase test project, install Playwright, write tests)
