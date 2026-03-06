@@ -1,6 +1,6 @@
 import { stripe } from "@/lib/stripe";
 import { GRACE_PERIOD_DAYS } from "@/lib/constants";
-import { createClient as createServiceClient } from "@supabase/supabase-js";
+import { createClient as createServiceClient, type SupabaseClient } from "@supabase/supabase-js";
 
 // Service role client for server-side operations that bypass RLS
 function getServiceClient() {
@@ -64,9 +64,12 @@ export async function isProUser(userId: string): Promise<boolean> {
 
 export async function getOrCreateStripeCustomer(
   userId: string,
-  email: string
+  email: string,
+  // Pass an authenticated session client to avoid needing the service role key
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  client?: SupabaseClient<any>
 ): Promise<string> {
-  const supabase = getServiceClient();
+  const supabase = client ?? getServiceClient();
 
   // Step 1: Check if user already has a Stripe customer ID
   const { data: user } = await supabase

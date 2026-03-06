@@ -44,10 +44,10 @@ export async function POST(request: NextRequest) {
 
   const priceId = interval === "monthly" ? STRIPE_PRICE_ID_MONTHLY : STRIPE_PRICE_ID_ANNUAL;
 
-  // Get or create Stripe customer (saved to DB before proceeding)
+  // Get or create Stripe customer — pass session client to avoid needing service role key
   let customerId: string;
   try {
-    customerId = await getOrCreateStripeCustomer(user.id, user.email!);
+    customerId = await getOrCreateStripeCustomer(user.id, user.email!, supabase);
   } catch (err) {
     console.error("Failed to create Stripe customer:", err);
     return NextResponse.json(
