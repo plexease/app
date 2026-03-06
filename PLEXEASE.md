@@ -114,18 +114,21 @@ plexease/
 ### ✅ Phase 0 — Planning (complete)
 Business model, brand name, tech stack, roadmap, legal requirements.
 
-### ⬜ Phase 1 — Foundation
-- [ ] Scaffold Next.js project with TypeScript + Tailwind
-- [ ] Connect Supabase (create project, add env vars)
-- [ ] Create database tables (users, subscriptions, usage)
-- [ ] Build landing page
-- [ ] Implement Supabase Auth (sign up, login, logout)
-- [ ] Build dashboard shell with route protection (middleware.ts)
+### ✅ Phase 1 — Foundation (complete)
+- [x] Scaffold Next.js project with TypeScript + Tailwind
+- [x] Connect Supabase (create project, add env vars)
+- [x] Create database tables (users, subscriptions, usage)
+- [x] Build landing page
+- [x] Implement Supabase Auth (sign up, login, logout)
+- [x] Build dashboard shell with route protection (middleware.ts)
 
 ### ⬜ Phase 2 — First Tool (NuGet Advisor)
-- [ ] Build NuGet Advisor UI
-- [ ] Connect Claude API (lib/claude.ts)
-- [ ] Implement usage tracking (5/day free limit)
+- [ ] Add unique constraint migration on usage table (user_id, tool_name, month)
+- [ ] Build lib/claude.ts (Anthropic client + structured prompt)
+- [ ] Build POST /api/tools/nuget-advisor (usage check, Claude call, upsert)
+- [ ] Build NuGet Advisor page + form + result cards UI
+- [ ] Add NuGet Advisor to sidebar and dashboard
+- [ ] Implement usage tracking (20/month free limit, unlimited Pro)
 - [ ] Add upgrade prompt when limit reached
 - [ ] Test tool end-to-end
 
@@ -176,6 +179,6 @@ Update this file at the end of each Claude Code session:
 
 > **Update this section each session.**
 
-- Phase: 0 (Planning complete, Phase 1 not yet started)
-- Last action: Conversation migrated to Claude Code
-- Next step: Scaffold Next.js project (Phase 1, Task 1)
+- Phase: 2 (Phase 1 complete, Phase 2 in progress)
+- Last action: Designed NuGet Advisor tool — structured cards output, API route architecture, 20/month free usage limit
+- Next step: Implement Phase 2 per design doc at docs/plans/2026-03-06-nuget-advisor-design.md
