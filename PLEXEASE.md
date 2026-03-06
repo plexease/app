@@ -151,14 +151,33 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - [x] Landing page pricing section updated with toggle and smart CTAs
 - [x] /upgrade added to protected routes
 
-### ⬜ Phase 4 — Testing
+### ✅ Phase 4 — Foundation Revisit (complete)
+- [x] Auth page UX — branded AuthHeader, friendly error messages, autoComplete, Suspense boundary, OAuth error handling
+- [x] Responsive landing page nav with clickable Plexease link
+- [x] Error pages — 404/500 with dashboard + home links, dev error details, inline styles for global-error
+- [x] Cookie consent — 12-month expiry, GDPR copy, manage cookies in sidebar + footer, accessibility
+- [x] Security hardening — response headers, stricter CSRF, error log sanitization, email validation, cookie secure flag fix
+- [x] Auth routes updated in middleware (check-email, reset-password)
+- [x] .env.local.example updated with Stripe price ID vars
+
+### ⬜ Phase 5 — Branding
+- [ ] Visual identity, logo, colour palette, typography
+- [ ] Apply brand to all pages and components
+
+### ⬜ Phase 6 — Marketing & Trust
+- [ ] Landing page refresh
+- [ ] Legal pages (Terms of Service, Privacy Policy)
+- [ ] Trust signals (testimonials, social proof)
+- [ ] Visibility and digital marketing (SEO, social, content strategy)
+
+### ⬜ Phase 7 — Testing
 - [ ] Set up Playwright
 - [ ] Auth flow tests
 - [ ] Tool usage tests
 - [ ] Stripe checkout tests
 - [ ] Usage limit enforcement tests
 
-### ⬜ Phase 5+ — Additional Tools
+### ⬜ Phase 8+ — Additional Tools
 Build out remaining tools per the roadmap above.
 
 ---
@@ -210,6 +229,6 @@ Each phase uses **3 focused sessions** to optimise token usage and quality:
 
 > **Update this section each session.**
 
-- Phase: 3 complete, merged to main, pushed to GitHub
-- Last action: Phase 3 code review (Opus) — fixed all issues (C1: past_due Pro access, I1: reconciliation frequency, I2: webhook rate limiting, I4: server-side Pro redirect on upgrade page, I5: useEffect for toast, M1-M5: service client extraction, body size check, shared isProUser, feature parity, price animation)
-- Next step: Phase 4 — Testing (Playwright for auth, tools, billing flows)
+- Phase: 4 complete, merged to main, pushed to GitHub
+- Last action: Phase 4 build session (Sonnet) — implemented all groups, caught plan error ('use server' on service client)
+- Next step: Phase 4 code review (Opus), then Phase 5 — Branding
