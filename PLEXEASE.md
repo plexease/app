@@ -229,6 +229,6 @@ Each phase uses **3 focused sessions** to optimise token usage and quality:
 
 > **Update this section each session.**
 
-- Phase: 4 complete, merged to main, pushed to GitHub
-- Last action: Phase 4 build session (Sonnet) — implemented all groups, caught plan error ('use server' on service client)
-- Next step: Phase 4 code review (Opus), then Phase 5 — Branding
+- Phase: 4 complete, code reviewed, fixes committed, pushed to GitHub
+- Last action: Phase 4 code review (Opus) — no critical issues; fixed 2 important: portable cookie secure flag (NODE_ENV not VERCEL_ENV), server-only guard on service client
+- Next step: Phase 5 — Branding (visual identity, logo, colour palette, typography, apply to all pages)
