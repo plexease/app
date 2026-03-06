@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   // CSRF check
   const origin = request.headers.get("origin");
   const expectedOrigin = request.nextUrl.origin;
-  if (origin && origin !== expectedOrigin) {
+  if (!origin || origin !== expectedOrigin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -47,9 +47,12 @@ export async function POST(request: NextRequest) {
   // Get or create Stripe customer — pass session client to avoid needing service role key
   let customerId: string;
   try {
-    customerId = await getOrCreateStripeCustomer(user.id, user.email!, supabase);
+    if (!user.email) {
+      return NextResponse.json({ error: "Email is required for billing" }, { status: 400 });
+    }
+    customerId = await getOrCreateStripeCustomer(user.id, user.email, supabase);
   } catch (err) {
-    console.error("Failed to create Stripe customer:", err);
+    console.error("Failed to create Stripe customer:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json(
       { error: "Payment service temporarily unavailable. Please try again." },
       { status: 503 }
@@ -72,7 +75,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: session.url });
   } catch (err) {
-    console.error("Failed to create checkout session:", err);
+    console.error("Failed to create checkout session:", err instanceof Error ? err.message : "Unknown error");
     return NextResponse.json(
       { error: "Payment service temporarily unavailable. Please try again." },
       { status: 503 }

@@ -49,7 +49,7 @@ export default async function DashboardLayout({
     // Set session cookie so we don't reconcile again until next login
     cookieStore.set("reconciled", "1", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.VERCEL_ENV === "production",
       sameSite: "lax",
       // No maxAge = session cookie, cleared when browser closes
     });

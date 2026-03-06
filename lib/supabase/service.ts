@@ -1,3 +1,5 @@
+"use server";
+
 import { createClient } from "@supabase/supabase-js";
 
 // Service role client for server-side operations that bypass RLS
