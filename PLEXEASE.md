@@ -134,12 +134,22 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - [x] Add upgrade prompt when limit reached
 - [x] Test tool end-to-end
 
-### ⬜ Phase 3 — Monetisation
-- [ ] Create Stripe products (Free, Pro £19/mo)
-- [ ] Build checkout flow
-- [ ] Handle Stripe webhooks
-- [ ] Sync subscription status to Supabase
-- [ ] Enforce access control based on plan
+### ✅ Phase 3 — Monetisation (complete)
+- [x] Install Stripe SDK with env validation and mode safeguard
+- [x] Add billing/usage threshold constants and Stripe price IDs
+- [x] Database migrations: billing columns, unique index, processed_events table
+- [x] Shared subscription module (getUserPlan, isProUser, reconcileSubscription)
+- [x] Stripe checkout API route with CSRF protection
+- [x] Stripe webhook handler with signature verification and deduplication
+- [x] Customer Portal API route
+- [x] Resubscribe API route (un-cancel active subscriptions)
+- [x] Billing UI components: TierBadge, UsageCounter, UsageCard, CancellationBanner, PaymentFailedBanner, PricingToggle, PricingCard, FeatureComparison, FaqSection
+- [x] Upgrade page with monthly/annual toggle
+- [x] Checkout success page with polling
+- [x] Dashboard with subscription card, usage card, and billing banners
+- [x] Sidebar updated with tier badge, usage counter, upgrade link
+- [x] Landing page pricing section updated with toggle and smart CTAs
+- [x] /upgrade added to protected routes
 
 ### ⬜ Phase 4 — Testing
 - [ ] Set up Playwright
@@ -200,6 +210,6 @@ Each phase uses **3 focused sessions** to optimise token usage and quality:
 
 > **Update this section each session.**
 
-- Phase: 3 (Phases 1, 2 & 2.5 complete, Phase 3 not yet started)
-- Last action: Code review fixes — extracted shared utils/constants, Zod validation, accessibility, sidebar active state
-- Next step: Phase 3 — Monetisation (Stripe integration)
+- Phase: 4 (Phases 1, 2, 2.5 & 3 complete)
+- Last action: Phase 3 — Stripe monetisation (checkout, webhooks, Customer Portal, billing banners, usage cards, upgrade page)
+- Next step: Phase 4 — Testing (Playwright + Vitest for auth, tools, billing flows)
