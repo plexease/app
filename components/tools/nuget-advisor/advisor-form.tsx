@@ -26,27 +26,31 @@ export function AdvisorForm({ usageCount, isPro }: Props) {
     setError(null);
     setResult(null);
 
-    const res = await fetch("/api/tools/nuget-advisor", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ packageName }),
-    });
+    try {
+      const res = await fetch("/api/tools/nuget-advisor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ packageName }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      if (data.limitReached) {
-        setCurrentUsage(FREE_MONTHLY_LIMIT);
-      } else {
-        setError(data.error ?? "Something went wrong. Please try again.");
+      if (!res.ok) {
+        if (data.limitReached) {
+          setCurrentUsage(FREE_MONTHLY_LIMIT);
+        } else {
+          setError(data.error ?? "Something went wrong. Please try again.");
+        }
+        return;
       }
-      setLoading(false);
-      return;
-    }
 
-    setResult(data);
-    setCurrentUsage((prev) => prev + 1);
-    setLoading(false);
+      setResult(data);
+      setCurrentUsage((prev) => prev + 1);
+    } catch {
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (limitReached) {
@@ -70,8 +74,12 @@ export function AdvisorForm({ usageCount, isPro }: Props) {
 
   return (
     <div>
+      <label htmlFor="package-name" className="block text-sm font-medium text-gray-300">
+        Package name
+      </label>
       <form onSubmit={handleSubmit} className="flex gap-3">
         <input
+          id="package-name"
           type="text"
           value={packageName}
           onChange={(e) => setPackageName(e.target.value)}
