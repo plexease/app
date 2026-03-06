@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardPage() {
@@ -14,7 +15,7 @@ export default async function DashboardPage() {
       <div className="mt-8">
         <h2 className="text-lg font-semibold text-white">Your tools</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <a
+          <Link
             href="/tools/nuget-advisor"
             className="rounded-lg border border-gray-700 bg-gray-800 p-6 hover:border-gray-600 transition-colors"
           >
@@ -22,7 +23,7 @@ export default async function DashboardPage() {
             <p className="mt-1 text-sm text-gray-400">
               Get AI-powered advice on any NuGet package — what it does, alternatives, compatibility, and version guidance.
             </p>
-          </a>
+          </Link>
         </div>
       </div>
     </div>
