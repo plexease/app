@@ -14,10 +14,10 @@ export function ResultCards({ result }: { result: NuGetAdvisorResult }) {
         <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-400">
           Alternatives
         </h3>
-        <ul className="mt-2 space-y-1">
+        <ul className="mt-2 list-disc list-inside space-y-1">
           {result.alternatives.map((alt) => (
             <li key={alt} className="text-sm text-gray-300">
-              • {alt}
+              {alt}
             </li>
           ))}
         </ul>
