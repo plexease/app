@@ -37,8 +37,9 @@ create table public.usage (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references public.users(id) on delete cascade not null,
   tool_name text not null,
-  date date default current_date not null,
-  count integer default 0 not null
+  month date not null,
+  count integer default 0 not null,
+  constraint usage_user_tool_month_unique unique (user_id, tool_name, month)
 );
 
 alter table public.usage enable row level security;
@@ -54,6 +55,20 @@ create policy "Users can insert own usage"
 create policy "Users can update own usage"
   on public.usage for update
   using (auth.uid() = user_id);
+
+-- Atomic usage increment (security definer bypasses RLS safely — auth checked in API route)
+create or replace function increment_usage(
+  p_user_id uuid,
+  p_tool_name text,
+  p_month date
+) returns void as $$
+begin
+  insert into public.usage (user_id, tool_name, month, count)
+  values (p_user_id, p_tool_name, p_month, 1)
+  on conflict (user_id, tool_name, month)
+  do update set count = usage.count + 1;
+end;
+$$ language plpgsql security definer;
 
 -- Trigger: auto-create user row + free subscription on signup
 create or replace function public.handle_new_user()
