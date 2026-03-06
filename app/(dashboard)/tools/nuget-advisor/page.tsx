@@ -1,10 +1,8 @@
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AdvisorForm } from "@/components/tools/nuget-advisor/advisor-form";
-
-function currentMonthDate(): string {
-  const now = new Date();
-  return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
-}
+import { TOOL_NAME_NUGET_ADVISOR } from "@/lib/constants";
+import { currentMonthDate } from "@/lib/utils";
 
 export default async function NuGetAdvisorPage() {
   const supabase = await createClient();
@@ -12,17 +10,21 @@ export default async function NuGetAdvisorPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) {
+    redirect("/login");
+  }
+
   const [{ data: subscription }, { data: usage }] = await Promise.all([
     supabase
       .from("subscriptions")
       .select("plan")
-      .eq("user_id", user!.id)
-      .single(),
+      .eq("user_id", user.id)
+      .maybeSingle(),
     supabase
       .from("usage")
       .select("count")
-      .eq("user_id", user!.id)
-      .eq("tool_name", "nuget-advisor")
+      .eq("user_id", user.id)
+      .eq("tool_name", TOOL_NAME_NUGET_ADVISOR)
       .eq("month", currentMonthDate())
       .maybeSingle(),
   ]);

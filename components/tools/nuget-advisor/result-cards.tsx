@@ -14,13 +14,17 @@ export function ResultCards({ result }: { result: NuGetAdvisorResult }) {
         <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-400">
           Alternatives
         </h3>
-        <ul className="mt-2 list-disc list-inside space-y-1">
-          {result.alternatives.map((alt) => (
-            <li key={alt} className="text-sm text-gray-300">
-              {alt}
-            </li>
-          ))}
-        </ul>
+        {result.alternatives.length > 0 ? (
+          <ul className="mt-2 list-disc list-inside space-y-1">
+            {result.alternatives.map((alt) => (
+              <li key={alt} className="text-sm text-gray-300">
+                {alt}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-2 text-sm text-gray-300">No well-known alternatives.</p>
+        )}
       </div>
 
       <div className="rounded-lg border border-gray-700 bg-gray-800 p-5">

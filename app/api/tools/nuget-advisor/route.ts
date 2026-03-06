@@ -1,14 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getNuGetAdvice } from "@/lib/claude";
-
-const FREE_MONTHLY_LIMIT = 20;
-const TOOL_NAME = "nuget-advisor";
-
-function currentMonthDate(): string {
-  const now = new Date();
-  return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
-}
+import { FREE_MONTHLY_LIMIT, TOOL_NAME_NUGET_ADVISOR } from "@/lib/constants";
+import { currentMonthDate } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
@@ -48,6 +42,8 @@ export async function POST(request: NextRequest) {
   const isPro = subscription?.plan === "pro";
 
   // Enforce monthly limit for free users
+  // NOTE: check-then-increment is not atomic — concurrent requests could exceed the limit.
+  // Acceptable for v1 free tier. For Phase 3 billing, move limit enforcement into the RPC.
   if (!isPro) {
     const month = currentMonthDate();
 
@@ -55,7 +51,7 @@ export async function POST(request: NextRequest) {
       .from("usage")
       .select("count")
       .eq("user_id", user.id)
-      .eq("tool_name", TOOL_NAME)
+      .eq("tool_name", TOOL_NAME_NUGET_ADVISOR)
       .eq("month", month)
       .maybeSingle();
 
@@ -82,7 +78,7 @@ export async function POST(request: NextRequest) {
   // Increment usage
   const { error: rpcError } = await supabase.rpc("increment_usage", {
     p_user_id: user.id,
-    p_tool_name: TOOL_NAME,
+    p_tool_name: TOOL_NAME_NUGET_ADVISOR,
     p_month: currentMonthDate(),
   });
   if (rpcError) {

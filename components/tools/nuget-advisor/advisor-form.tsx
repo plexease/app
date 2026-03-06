@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { ResultCards } from "./result-cards";
 import type { NuGetAdvisorResult } from "@/lib/claude";
-
-const FREE_MONTHLY_LIMIT = 20;
+import { FREE_MONTHLY_LIMIT } from "@/lib/constants";
 
 type Props = {
   usageCount: number;
@@ -103,11 +102,13 @@ export function AdvisorForm({ usageCount, isPro }: Props) {
         </p>
       )}
 
-      {error && (
-        <p className="mt-3 text-sm text-red-400">{error}</p>
-      )}
+      <div aria-live="polite">
+        {error && (
+          <p className="mt-3 text-sm text-red-400" role="alert">{error}</p>
+        )}
 
-      {result && <ResultCards result={result} />}
+        {result && <ResultCards result={result} />}
+      </div>
     </div>
   );
 }

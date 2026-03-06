@@ -1,15 +1,18 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { z } from "zod";
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-export type NuGetAdvisorResult = {
-  whatItDoes: string;
-  alternatives: string[];
-  compatibility: string;
-  versionAdvice: string;
-};
+const NuGetAdvisorSchema = z.object({
+  whatItDoes: z.string(),
+  alternatives: z.array(z.string()),
+  compatibility: z.string(),
+  versionAdvice: z.string(),
+});
+
+export type NuGetAdvisorResult = z.infer<typeof NuGetAdvisorSchema>;
 
 export async function getNuGetAdvice(packageName: string): Promise<NuGetAdvisorResult> {
   const message = await client.messages.create({
@@ -31,10 +34,10 @@ Return ONLY valid JSON in this exact shape — no markdown, no explanation, no c
   });
 
   const raw = message.content[0].type === "text" ? message.content[0].text : "";
-  const text = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
 
   try {
-    return JSON.parse(text) as NuGetAdvisorResult;
+    return NuGetAdvisorSchema.parse(JSON.parse(text));
   } catch {
     throw new Error(`Failed to parse Claude response: ${text}`);
   }

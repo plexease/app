@@ -1,7 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { SignOutButton } from "./sign-out-button";
 
+const navItems = [
+  { href: "/dashboard", label: "Dashboard", exact: true },
+  { href: "/tools/nuget-advisor", label: "NuGet Advisor" },
+];
+
 export function Sidebar() {
+  const pathname = usePathname();
+
   return (
     <aside className="flex h-screen w-64 flex-col border-r border-gray-800 bg-gray-950 px-4 py-6">
       <Link href="/dashboard" className="text-xl font-bold text-white">
@@ -9,18 +19,22 @@ export function Sidebar() {
       </Link>
 
       <nav className="mt-8 flex-1 space-y-1">
-        <Link
-          href="/dashboard"
-          className="flex items-center rounded-lg px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-        >
-          Dashboard
-        </Link>
-        <Link
-          href="/tools/nuget-advisor"
-          className="flex items-center rounded-lg px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-        >
-          NuGet Advisor
-        </Link>
+        {navItems.map(({ href, label, exact }) => {
+          const isActive = exact ? pathname === href : pathname.startsWith(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                isActive
+                  ? "bg-gray-800 text-white"
+                  : "text-gray-300 hover:bg-gray-800 hover:text-white"
+              }`}
+            >
+              {label}
+            </Link>
+          );
+        })}
       </nav>
 
       <div className="border-t border-gray-800 pt-4">
