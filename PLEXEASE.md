@@ -41,7 +41,7 @@ Plexease is a SaaS integration toolkit for small businesses, tech support staff,
 
 | Tier | Price | Limits |
 |---|---|---|
-| Free | £0 | 5 tool uses/day |
+| Free | £0 | 20 tool uses/month |
 | Pro | £19/month | Unlimited, saved history, priority AI |
 
 ---
@@ -51,7 +51,9 @@ Plexease is a SaaS integration toolkit for small businesses, tech support staff,
 ```sql
 users           (id, email, created_at, stripe_customer_id)
 subscriptions   (id, user_id, plan, status, stripe_subscription_id)
-usage           (id, user_id, tool_name, date, count)
+usage           (id, user_id, tool_name, month, count)
+              -- unique constraint on (user_id, tool_name, month)
+              -- increment_usage() RPC for atomic upserts
 ```
 
 ---
@@ -72,7 +74,7 @@ plexease/
 ├── components/                         # UI, auth, dashboard, tools
 ├── lib/                                # supabase, stripe, claude clients
 ├── types/                              # TypeScript interfaces
-├── middleware.ts                       # route protection
+├── proxy.ts                           # route protection (Next.js 16)
 ├── .env.local                          # API keys (never committed)
 ├── playwright/                         # tests
 └── PLEXEASE.md                         # this file
@@ -160,6 +162,25 @@ Build out remaining tools per the roadmap above.
 
 Update this file at the end of each Claude Code session:
 > "Update PLEXEASE.md to reflect what we just built"
+
+### Session & Model Strategy
+
+Each phase uses **3 focused sessions** to optimise token usage and quality:
+
+| Session | Model | Purpose | Output |
+|---------|-------|---------|--------|
+| 1. Design | **Opus** | Brainstorm, architecture, edge cases, write plan | `docs/plans/YYYY-MM-DD-<feature>-design.md` |
+| 2. Build | **Sonnet** | Implement the plan, commit code | Working feature, pushed to GitHub |
+| 3. Review | **Opus** | Code review, fix issues, final push | Clean, reviewed code |
+
+**How to run this:**
+1. Start session → `/model claude-opus-4-6` → brainstorm & write plan → end session
+2. Start session → `/model claude-sonnet-4-6` → say "implement `docs/plans/<plan>.md`" → end session
+3. Start session → `/model claude-opus-4-6` → say "code review phase N" → end session
+
+**Why separate sessions:** each starts with a fresh context window. Carrying implementation history into a review wastes tokens at Opus rates. The plan files and `PLEXEASE.md` carry all context between sessions via the memory file at `~/.claude/projects/-home-deck/memory/plexease.md`.
+
+**When to stay in one session:** small fixes, hotfixes, or tasks that take < 10 minutes total.
 
 ---
 
