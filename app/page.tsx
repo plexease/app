@@ -60,8 +60,8 @@ export default function Home() {
               Enter a .NET package name and get instant analysis: what it does,
               alternatives, compatibility notes, and version advice.
             </p>
-            <span className="mt-4 inline-block rounded-full bg-blue-600/20 px-3 py-1 text-xs text-blue-400">
-              Coming soon
+            <span className="mt-4 inline-block rounded-full bg-green-600/20 px-3 py-1 text-xs text-green-400">
+              Available now
             </span>
           </div>
           <div className="rounded-lg border border-gray-800 bg-gray-900 p-6">
@@ -83,9 +83,9 @@ export default function Home() {
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           <div className="rounded-lg border border-gray-800 bg-gray-900 p-6">
             <h3 className="text-lg font-semibold">Free</h3>
-            <p className="mt-2 text-3xl font-bold">$0</p>
+            <p className="mt-2 text-3xl font-bold">&pound;0</p>
             <ul className="mt-6 space-y-3 text-sm text-gray-400">
-              <li>5 tool uses per day</li>
+              <li>20 tool uses per month</li>
               <li>All available tools</li>
             </ul>
             <Link
