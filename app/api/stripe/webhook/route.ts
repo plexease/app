@@ -115,17 +115,21 @@ async function handleCheckoutCompleted(
   }
 
   // Upsert subscription in Supabase
-  await supabase
+  const { error } = await supabase
     .from("subscriptions")
-    .update({
+    .upsert({
+      user_id: userId,
       plan: "pro",
       status: "active",
       stripe_subscription_id: subscriptionId,
       current_period_end: new Date(subscription.items.data[0].current_period_end * 1000).toISOString(),
       cancel_at_period_end: false,
       grace_period_end: null,
-    })
-    .eq("user_id", userId);
+    }, { onConflict: "user_id" });
+
+  if (error) {
+    throw new Error(`Failed to upsert subscription for user ${userId}: ${error.message}`);
+  }
 }
 
 async function handleSubscriptionUpdated(
@@ -145,7 +149,7 @@ async function handleSubscriptionUpdated(
   const status = verified.status === "active" ? "active" :
     verified.status === "past_due" ? "past_due" : "cancelled";
 
-  await supabase
+  const { error } = await supabase
     .from("subscriptions")
     .update({
       status,
@@ -153,6 +157,10 @@ async function handleSubscriptionUpdated(
       cancel_at_period_end: verified.cancel_at_period_end,
     })
     .eq("user_id", userId);
+
+  if (error) {
+    throw new Error(`Failed to update subscription for user ${userId}: ${error.message}`);
+  }
 }
 
 async function handleSubscriptionDeleted(
@@ -169,7 +177,7 @@ async function handleSubscriptionDeleted(
   const periodEnd = new Date(subscription.items.data[0].current_period_end * 1000);
   const gracePeriodEnd = calculateGracePeriodEnd(periodEnd);
 
-  await supabase
+  const { error } = await supabase
     .from("subscriptions")
     .update({
       status: "cancelled",
@@ -177,6 +185,10 @@ async function handleSubscriptionDeleted(
       grace_period_end: gracePeriodEnd.toISOString(),
     })
     .eq("user_id", userId);
+
+  if (error) {
+    throw new Error(`Failed to update cancelled subscription for user ${userId}: ${error.message}`);
+  }
 }
 
 async function handlePaymentFailed(
@@ -196,8 +208,12 @@ async function handlePaymentFailed(
     throw new Error("Missing supabase_user_id in subscription metadata");
   }
 
-  await supabase
+  const { error } = await supabase
     .from("subscriptions")
     .update({ status: "past_due" })
     .eq("user_id", userId);
+
+  if (error) {
+    throw new Error(`Failed to update past_due status for user ${userId}: ${error.message}`);
+  }
 }
