@@ -179,6 +179,6 @@ Update this file at the end of each Claude Code session:
 
 > **Update this section each session.**
 
-- Phase: 3 (Phases 1 & 2 complete, Phase 3 not yet started)
-- Last action: NuGet Advisor live and tested — 4 result cards, 20/month usage tracking, upgrade prompt
+- Phase: 3 (Phases 1, 2 & 2.5 complete, Phase 3 not yet started)
+- Last action: Code review fixes — extracted shared utils/constants, Zod validation, accessibility, sidebar active state
 - Next step: Phase 3 — Monetisation (Stripe integration)
