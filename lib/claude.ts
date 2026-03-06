@@ -30,7 +30,8 @@ Return ONLY valid JSON in this exact shape — no markdown, no explanation, no c
     ],
   });
 
-  const text = message.content[0].type === "text" ? message.content[0].text : "";
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
 
   try {
     return JSON.parse(text) as NuGetAdvisorResult;

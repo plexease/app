@@ -71,7 +71,8 @@ export async function POST(request: NextRequest) {
   let result;
   try {
     result = await getNuGetAdvice(packageName);
-  } catch {
+  } catch (err) {
+    console.error("Claude API error:", err);
     return NextResponse.json(
       { error: "Failed to get advice. Please try again." },
       { status: 500 }
