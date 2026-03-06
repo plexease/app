@@ -23,6 +23,9 @@ create table public.subscriptions (
   plan text default 'free' not null check (plan in ('free', 'pro')),
   status text default 'active' not null check (status in ('active', 'cancelled', 'past_due')),
   stripe_subscription_id text,
+  current_period_end timestamptz,
+  cancel_at_period_end boolean default false not null,
+  grace_period_end timestamptz,
   created_at timestamptz default now() not null
 );
 
@@ -31,6 +34,11 @@ alter table public.subscriptions enable row level security;
 create policy "Users can read own subscriptions"
   on public.subscriptions for select
   using (auth.uid() = user_id);
+
+-- Prevent double active subscriptions
+create unique index one_active_sub_per_user
+  on public.subscriptions (user_id)
+  where status = 'active';
 
 -- Usage table
 create table public.usage (
@@ -69,6 +77,15 @@ begin
   do update set count = usage.count + 1;
 end;
 $$ language plpgsql security definer;
+
+-- Webhook event deduplication
+create table public.processed_events (
+  stripe_event_id text primary key,
+  event_type text not null,
+  processed_at timestamptz default now() not null
+);
+
+alter table public.processed_events enable row level security;
 
 -- Trigger: auto-create user row + free subscription on signup
 create or replace function public.handle_new_user()
