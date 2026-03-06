@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getUserPlan } from "@/lib/subscription";
 import { currentMonthDate } from "@/lib/utils";
@@ -29,18 +30,29 @@ export default async function DashboardLayout({
 
   const totalUsage = usageRows?.reduce((sum, row) => sum + (row.count ?? 0), 0) ?? 0;
 
-  // Check for stripe_customer_id for reconciliation
-  const { data: userData } = await supabase
-    .from("users")
-    .select("stripe_customer_id")
-    .eq("id", user.id)
-    .single();
+  // Reconcile once per session (not on every page load)
+  const cookieStore = await cookies();
+  const alreadyReconciled = cookieStore.get("reconciled");
 
-  // Reconcile on page load if user has a stripe customer
-  if (userData?.stripe_customer_id && plan.plan === "pro") {
-    // Dynamic import to avoid loading stripe client unnecessarily
-    const { reconcileSubscription } = await import("@/lib/subscription");
-    await reconcileSubscription(user.id, userData.stripe_customer_id);
+  if (!alreadyReconciled && plan.plan === "pro") {
+    const { data: userData } = await supabase
+      .from("users")
+      .select("stripe_customer_id")
+      .eq("id", user.id)
+      .single();
+
+    if (userData?.stripe_customer_id) {
+      const { reconcileSubscription } = await import("@/lib/subscription");
+      await reconcileSubscription(user.id, userData.stripe_customer_id);
+    }
+
+    // Set session cookie so we don't reconcile again until next login
+    cookieStore.set("reconciled", "1", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      // No maxAge = session cookie, cleared when browser closes
+    });
   }
 
   return (

@@ -45,6 +45,7 @@ export function PricingSection({ isLoggedIn, isPro }: Props) {
           subtitle={interval === "annual" ? "\u00A315.83/mo \u2014 save \u00A338" : undefined}
           features={[
             "Unlimited tool uses",
+            "All available tools",
             "Saved history",
             "Priority AI responses",
           ]}

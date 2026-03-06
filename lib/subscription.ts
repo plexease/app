@@ -1,14 +1,7 @@
 import { stripe } from "@/lib/stripe";
 import { GRACE_PERIOD_DAYS } from "@/lib/constants";
-import { createClient as createServiceClient, type SupabaseClient } from "@supabase/supabase-js";
-
-// Service role client for server-side operations that bypass RLS
-function getServiceClient() {
-  return createServiceClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-}
+import { getServiceClient } from "@/lib/supabase/service";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export type UserPlan = {
   plan: "free" | "pro";
@@ -52,7 +45,7 @@ export async function isProUser(userId: string): Promise<boolean> {
   const plan = await getUserPlan(userId);
 
   if (plan.plan !== "pro") return false;
-  if (plan.status === "active") return true;
+  if (plan.status === "active" || plan.status === "past_due") return true;
 
   // Check grace period
   if (plan.gracePeriodEnd) {

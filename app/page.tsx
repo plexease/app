@@ -1,20 +1,13 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { isProUser } from "@/lib/subscription";
 import { PricingSection } from "@/components/landing/pricing-section";
 
 export default async function Home() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  let isPro = false;
-  if (user) {
-    const { data: subscription } = await supabase
-      .from("subscriptions")
-      .select("plan")
-      .eq("user_id", user.id)
-      .maybeSingle();
-    isPro = subscription?.plan === "pro";
-  }
+  const isPro = user ? await isProUser(user.id) : false;
 
   return (
     <main className="min-h-screen bg-gray-950 text-white">

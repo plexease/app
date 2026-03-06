@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 type Props = {
   name: string;
@@ -16,6 +19,19 @@ type Props = {
 };
 
 export function PricingCard({ name, price, subtitle, features, cta, highlighted, badge }: Props) {
+  const [displayPrice, setDisplayPrice] = useState(price);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    if (price === displayPrice) return;
+    setFading(true);
+    const timeout = setTimeout(() => {
+      setDisplayPrice(price);
+      setFading(false);
+    }, 150);
+    return () => clearTimeout(timeout);
+  }, [price, displayPrice]);
+
   return (
     <div
       className={`relative rounded-lg border p-6 ${
@@ -28,8 +44,14 @@ export function PricingCard({ name, price, subtitle, features, cta, highlighted,
         </span>
       )}
       <h3 className="text-lg font-semibold text-white">{name}</h3>
-      <p className="mt-2 text-3xl font-bold text-white">{price}</p>
-      {subtitle && <p className="mt-1 text-sm text-gray-400">{subtitle}</p>}
+      <p className={`mt-2 text-3xl font-bold text-white transition-opacity duration-150 ${fading ? "opacity-0" : "opacity-100"}`}>
+        {displayPrice}
+      </p>
+      {(subtitle || fading) && (
+        <p className={`mt-1 text-sm text-gray-400 transition-opacity duration-150 ${fading ? "opacity-0" : "opacity-100"}`}>
+          {subtitle ?? "\u00A0"}
+        </p>
+      )}
       <ul className="mt-6 space-y-3 text-sm text-gray-400">
         {features.map((feature) => (
           <li key={feature}>{feature}</li>

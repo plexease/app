@@ -1,28 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { calculateGracePeriodEnd } from "@/lib/subscription";
-import { createClient } from "@supabase/supabase-js";
+import { getServiceClient } from "@/lib/supabase/service";
 import Stripe from "stripe";
-
-// Service role client for webhook operations (bypasses RLS)
-function getServiceClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-}
 
 // Body size limit: 64KB
 const MAX_BODY_SIZE = 64 * 1024;
 
+// Simple in-memory rate limiter per IP
+const rateLimit = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_MAX = 100; // max requests per window
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimit.get(ip);
+
+  if (!entry || now >= entry.resetAt) {
+    rateLimit.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return false;
+  }
+
+  entry.count++;
+  return entry.count > RATE_LIMIT_MAX;
+}
+
 export async function POST(request: NextRequest) {
-  // Check body size
+  // Rate limiting
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (isRateLimited(ip)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
+  // Check body size via content-length header and enforce on actual body
   const contentLength = request.headers.get("content-length");
   if (contentLength && parseInt(contentLength) > MAX_BODY_SIZE) {
     return NextResponse.json({ error: "Payload too large" }, { status: 413 });
   }
 
   const body = await request.text();
+  if (body.length > MAX_BODY_SIZE) {
+    return NextResponse.json({ error: "Payload too large" }, { status: 413 });
+  }
   const signature = request.headers.get("stripe-signature");
 
   if (!signature) {
