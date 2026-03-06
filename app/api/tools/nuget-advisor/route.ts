@@ -22,11 +22,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const packageName = body?.packageName?.trim();
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+  const packageName = (body as { packageName?: string })?.packageName?.trim();
 
   if (!packageName) {
     return NextResponse.json({ error: "Package name is required" }, { status: 400 });
+  }
+
+  if (packageName.length > 200) {
+    return NextResponse.json({ error: "Package name is too long" }, { status: 400 });
   }
 
   // Check plan
@@ -34,7 +43,7 @@ export async function POST(request: NextRequest) {
     .from("subscriptions")
     .select("plan")
     .eq("user_id", user.id)
-    .single();
+    .maybeSingle();
 
   const isPro = subscription?.plan === "pro";
 
@@ -70,11 +79,14 @@ export async function POST(request: NextRequest) {
   }
 
   // Increment usage
-  await supabase.rpc("increment_usage", {
+  const { error: rpcError } = await supabase.rpc("increment_usage", {
     p_user_id: user.id,
     p_tool_name: TOOL_NAME,
     p_month: currentMonthDate(),
   });
+  if (rpcError) {
+    console.error("Failed to increment usage:", rpcError);
+  }
 
   return NextResponse.json(result);
 }
