@@ -7,7 +7,7 @@
 
 ## What Is Plexease?
 
-Plexease is a SaaS integration toolkit for small businesses, tech support staff, and .NET developers. The tagline is **"complex integrations, made easy"**. It provides a suite of AI-powered tools under a single membership, helping users navigate package management, code generation, e-commerce integrations, and more — without needing deep technical expertise.
+Plexease is a SaaS integration toolkit for small businesses, tech support staff, and .NET developers. The tagline is **"complex integrations, with ease"**. It provides a suite of AI-powered tools under a single membership, helping users navigate package management, code generation, e-commerce integrations, and more — without needing deep technical expertise.
 
 ---
 
@@ -71,7 +71,14 @@ plexease/
 │   │   ├── stripe/                     # webhooks & checkout
 │   │   └── tools/nuget-advisor/        # Claude API calls
 │   └── page.tsx                        # landing page
-├── components/                         # UI, auth, dashboard, tools
+├── components/
+│   ├── brand/                         # Logo components (icon, wordmark, combined)
+│   ├── auth/                          # Auth forms and headers
+│   ├── billing/                       # Pricing, usage, tier badges
+│   ├── dashboard/                     # Sidebar, content, sign-out
+│   ├── landing/                       # Pricing section
+│   ├── tools/                         # NuGet advisor form/results
+│   └── ui/                            # Spinner, cookie consent
 ├── lib/                                # supabase, stripe, claude clients
 ├── types/                              # TypeScript interfaces
 ├── proxy.ts                           # route protection (Next.js 16)
@@ -177,9 +184,16 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - 18 tests total, all passing (54.7s, single worker, serial execution)
 - Design doc: `docs/plans/2026-03-06-phase4.5-smoke-tests-design.md`
 
-### ⬜ Phase 5 — Branding
-- [ ] Visual identity, logo, colour palette, typography
-- [ ] Apply brand to all pages and components
+### ✅ Phase 5 — Branding (complete)
+- [x] Visual identity — purple colour system (brand/surface/muted tokens via Tailwind v4 @theme)
+- [x] Typography — Plus Jakarta Sans (headings) + Inter (body) via next/font/google
+- [x] Logo — organic cluster icon (4 purple nodes), "Plex" white + "ease" purple wordmark
+- [x] Favicon — SVG icon + web manifest with branded theme_color
+- [x] Colour migration — all 26+ files migrated from blue/gray to brand/surface/muted tokens
+- [x] Visual polish — button glow, card hover lift, hero gradient, shimmer tagline animation
+- [x] Accessibility — skip-to-content link, focus rings on all interactive elements, touch targets (44px), reduced motion support
+- [x] OG image — 1200x630 with logo, wordmark, tagline, bundled fonts
+- [x] Sonner toast theming — branded dark toasts
 - Design doc: `docs/plans/2026-03-07-phase5-branding-design.md`
 - Implementation plan: `docs/plans/2026-03-07-phase5-branding-implementation.md` (21 tasks)
 
@@ -249,6 +263,6 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 5 design complete, ready for build
-- Last action: Phase 5 design session — brainstormed brand identity, reviewed by code-reviewer agent, wrote design doc + implementation plan (21 tasks). Purple colour system, Plus Jakarta Sans + Inter fonts, organic cluster logo, accessibility pass.
-- Next step: Phase 5 build — implement `docs/plans/2026-03-07-phase5-branding-implementation.md`
+- Phase: 5 complete
+- Last action: Phase 5 branding — purple colour system, Plus Jakarta Sans + Inter typography, organic cluster logo, visual polish, accessibility improvements across all 26+ files
+- Next step: Phase 6 — Marketing & Trust
