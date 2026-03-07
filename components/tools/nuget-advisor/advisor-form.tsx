@@ -58,12 +58,12 @@ export function AdvisorForm({ usageCount, isPro }: Props) {
         <p className="text-sm font-medium text-yellow-300">
           You&apos;ve used all 20 free lookups this month.
         </p>
-        <p className="mt-1 text-sm text-gray-400">
+        <p className="mt-1 text-sm text-muted-400">
           Upgrade to Pro for unlimited access.
         </p>
         <a
           href="/upgrade"
-          className="mt-4 inline-block rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
+          className="mt-4 inline-block rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-600 transition-colors"
         >
           Upgrade to Pro
         </a>
@@ -73,7 +73,7 @@ export function AdvisorForm({ usageCount, isPro }: Props) {
 
   return (
     <div>
-      <label htmlFor="package-name" className="block text-sm font-medium text-gray-300">
+      <label htmlFor="package-name" className="block text-sm font-medium text-muted-300">
         Package name
       </label>
       <form onSubmit={handleSubmit} className="flex gap-3">
@@ -85,19 +85,19 @@ export function AdvisorForm({ usageCount, isPro }: Props) {
           placeholder="e.g. Newtonsoft.Json"
           required
           disabled={loading}
-          className="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+          className="flex-1 rounded-lg border border-surface-700 bg-surface-800 px-4 py-3 text-white placeholder-muted-500 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50"
         />
         <button
           type="submit"
           disabled={loading || !packageName.trim()}
-          className="rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50 transition-colors"
+          className="rounded-lg bg-brand-500 px-5 py-3 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 transition-colors"
         >
           {loading ? "Analysing..." : "Analyse"}
         </button>
       </form>
 
       {!isPro && (
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-2 text-xs text-muted-500">
           {currentUsage} of {FREE_MONTHLY_LIMIT} free lookups used this month
         </p>
       )}
