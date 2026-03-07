@@ -25,6 +25,9 @@
   --font-sans: var(--font-body), system-ui, sans-serif;
   --font-heading: var(--font-heading), system-ui, sans-serif;
 
+  /* Animations */
+  --animate-shimmer: shimmer 3s infinite;
+
   /* Shadows */
   --shadow-glow: 0 0 16px rgba(139, 92, 246, 0.25);
   --shadow-glow-lg: 0 0 24px rgba(139, 92, 246, 0.15);
