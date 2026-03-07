@@ -38,13 +38,13 @@ export function CancellationBanner({
           <button
             onClick={onResubscribe}
             disabled={resubscribing}
-            className="rounded-lg bg-blue-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-blue-500 disabled:opacity-50 transition-colors"
+            className="rounded-lg bg-brand-500 px-4 py-1.5 text-xs font-medium text-white hover:bg-brand-600 disabled:opacity-50 transition-colors"
           >
             {resubscribing ? "Resubscribing..." : "Resubscribe"}
           </button>
           <button
             onClick={() => setDismissed(true)}
-            className="text-gray-500 hover:text-gray-300 transition-colors"
+            className="text-muted-500 hover:text-muted-300 transition-colors"
             aria-label="Dismiss"
           >
             &times;
@@ -65,13 +65,13 @@ export function CancellationBanner({
         <button
           onClick={onResubscribe}
           disabled={resubscribing}
-          className="rounded-lg bg-blue-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-blue-500 disabled:opacity-50 transition-colors"
+          className="rounded-lg bg-brand-500 px-4 py-1.5 text-xs font-medium text-white hover:bg-brand-600 disabled:opacity-50 transition-colors"
         >
           {resubscribing ? "Resubscribing..." : "Resubscribe"}
         </button>
         <button
           onClick={() => setDismissed(true)}
-          className="text-gray-500 hover:text-gray-300 transition-colors"
+          className="text-muted-500 hover:text-muted-300 transition-colors"
           aria-label="Dismiss"
         >
           &times;

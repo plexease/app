@@ -34,25 +34,25 @@ export function PricingCard({ name, price, subtitle, features, cta, highlighted,
 
   return (
     <div
-      className={`relative rounded-lg border p-6 ${
-        highlighted ? "border-blue-600 bg-gray-900" : "border-gray-800 bg-gray-900"
+      className={`relative rounded-lg border p-6 transition-all duration-200 motion-safe:hover:-translate-y-0.5 hover:shadow-lg ${
+        highlighted ? "border-brand-500 bg-surface-900 shadow-glow-lg" : "border-surface-700 bg-surface-900"
       }`}
     >
       {badge && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-blue-600 px-3 py-0.5 text-xs font-medium text-white">
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-500 px-3 py-0.5 text-xs font-semibold text-white">
           {badge}
         </span>
       )}
-      <h3 className="text-lg font-semibold text-white">{name}</h3>
-      <p className={`mt-2 text-3xl font-bold text-white transition-opacity duration-150 ${fading ? "opacity-0" : "opacity-100"}`}>
+      <h3 className="font-heading text-lg font-semibold text-white">{name}</h3>
+      <p className={`mt-2 font-heading text-3xl font-bold text-white transition-opacity duration-150 ${fading ? "opacity-0" : "opacity-100"}`}>
         {displayPrice}
       </p>
       {(subtitle || fading) && (
-        <p className={`mt-1 text-sm text-gray-400 transition-opacity duration-150 ${fading ? "opacity-0" : "opacity-100"}`}>
+        <p className={`mt-1 text-sm text-muted-400 transition-opacity duration-150 ${fading ? "opacity-0" : "opacity-100"}`}>
           {subtitle ?? "\u00A0"}
         </p>
       )}
-      <ul className="mt-6 space-y-3 text-sm text-gray-400">
+      <ul className="mt-6 space-y-3 text-sm text-muted-400">
         {features.map((feature) => (
           <li key={feature}>{feature}</li>
         ))}
@@ -61,10 +61,10 @@ export function PricingCard({ name, price, subtitle, features, cta, highlighted,
         <button
           onClick={cta.onClick}
           disabled={cta.disabled}
-          className={`mt-8 block w-full rounded-lg px-4 py-2 text-center text-sm font-medium transition-colors disabled:opacity-50 ${
+          className={`mt-8 block w-full rounded-lg px-4 py-2 text-center text-sm font-medium transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950 ${
             highlighted
-              ? "bg-blue-600 text-white hover:bg-blue-500"
-              : "border border-gray-700 text-gray-300 hover:bg-gray-800"
+              ? "bg-brand-500 text-white hover:bg-brand-600 shadow-glow"
+              : "border border-surface-700 text-muted-300 hover:bg-surface-800"
           }`}
         >
           {cta.label}
@@ -72,10 +72,10 @@ export function PricingCard({ name, price, subtitle, features, cta, highlighted,
       ) : (
         <Link
           href={cta.href ?? "#"}
-          className={`mt-8 block rounded-lg px-4 py-2 text-center text-sm font-medium transition-colors ${
+          className={`mt-8 block rounded-lg px-4 py-2 text-center text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950 ${
             highlighted
-              ? "bg-blue-600 text-white hover:bg-blue-500"
-              : "border border-gray-700 text-gray-300 hover:bg-gray-800"
+              ? "bg-brand-500 text-white hover:bg-brand-600 shadow-glow"
+              : "border border-surface-700 text-muted-300 hover:bg-surface-800"
           }`}
         >
           {cta.label}
