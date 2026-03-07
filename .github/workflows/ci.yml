@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  TEST_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+  TEST_SUPABASE_ANON_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
+  TEST_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
+  TEST_FREE_USER_EMAIL: ${{ secrets.TEST_FREE_USER_EMAIL }}
+  TEST_FREE_USER_PASSWORD: ${{ secrets.TEST_FREE_USER_PASSWORD }}
+  TEST_PRO_USER_EMAIL: ${{ secrets.TEST_PRO_USER_EMAIL }}
+  TEST_PRO_USER_PASSWORD: ${{ secrets.TEST_PRO_USER_PASSWORD }}
+  STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
+  NEXT_PUBLIC_STRIPE_PRICE_MONTHLY: ${{ secrets.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY }}
+  NEXT_PUBLIC_STRIPE_PRICE_ANNUAL: ${{ secrets.NEXT_PUBLIC_STRIPE_PRICE_ANNUAL }}
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+jobs:
+  test-fast:
+    name: Fast Tests
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.2-noble
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run fast tests
+        run: npx playwright test --config playwright/playwright.config.ts --project=fast
+        env:
+          CI: true
+
+      - name: Upload test report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fast-test-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  test-slow:
+    name: Slow Tests
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.2-noble
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run slow tests
+        run: npx playwright test --config playwright/playwright.config.ts --project=slow
+        env:
+          CI: true
+
+      - name: Upload test report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: slow-test-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  cleanup:
+    name: Cleanup Test Users
+    needs: [test-fast, test-slow]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Purge stale test users
+        run: npx tsx -e "import { purgeStaleTestUsers } from './playwright/helpers/cleanup-users'; purgeStaleTestUsers().then(n => console.log('Purged', n, 'users'))"
+        env:
+          TEST_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          TEST_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
