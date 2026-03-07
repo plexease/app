@@ -64,12 +64,12 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-900">
+    <div className="flex min-h-screen bg-surface-900">
       <Sidebar
         plan={plan}
         usageCount={totalUsage}
       />
-      <main className="flex-1 p-8">{children}</main>
+      <main id="main-content" className="flex-1 p-8">{children}</main>
     </div>
   );
 }
