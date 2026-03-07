@@ -30,8 +30,8 @@ export default async function NuGetAdvisorPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white">NuGet Advisor</h1>
-      <p className="mt-2 text-gray-400">
+      <h1 className="font-heading text-2xl font-bold text-white">NuGet Advisor</h1>
+      <p className="mt-2 text-muted-400">
         Enter a NuGet package name to get an AI-powered advisory on what it does,
         alternatives, compatibility, and version advice.
       </p>

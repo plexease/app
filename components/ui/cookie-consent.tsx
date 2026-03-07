@@ -92,27 +92,27 @@ export function CookieConsent() {
     <div
       role="dialog"
       aria-label="Cookie consent"
-      className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-800 bg-gray-950 px-6 py-4"
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-surface-700 bg-surface-950 px-6 py-4"
     >
       <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 sm:flex-row sm:justify-between">
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-muted-400">
           We use essential cookies for authentication and site functionality.
           We&apos;d also like to use analytics cookies to understand how you use Plexease
           and improve your experience.{" "}
-          <a href="/privacy" className="text-blue-400 hover:text-blue-300">
+          <a href="/privacy" className="text-brand-400 hover:text-brand-300">
             Privacy policy
           </a>
         </p>
         <div className="flex gap-3">
           <button
             onClick={handleReject}
-            className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 transition-colors"
+            className="rounded-lg border border-surface-700 px-4 py-2 text-sm text-muted-300 hover:bg-surface-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950 transition-colors"
           >
             Reject
           </button>
           <button
             onClick={handleAccept}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
+            className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950 transition-colors"
           >
             Accept
           </button>

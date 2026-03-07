@@ -24,12 +24,12 @@ const faqs = [
 export function FaqSection() {
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-semibold text-white">Frequently asked questions</h3>
+      <h3 className="font-heading text-lg font-semibold text-white">Frequently asked questions</h3>
       <dl className="space-y-4">
         {faqs.map(({ question, answer }) => (
           <div key={question}>
-            <dt className="text-sm font-medium text-gray-300">{question}</dt>
-            <dd className="mt-1 text-sm text-gray-500">{answer}</dd>
+            <dt className="text-sm font-medium text-muted-300">{question}</dt>
+            <dd className="mt-1 text-sm text-muted-500">{answer}</dd>
           </div>
         ))}
       </dl>

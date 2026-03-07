@@ -7,11 +7,11 @@ type Props = {
 
 export function UsageCounter({ isPro, usageCount }: Props) {
   if (isPro) {
-    return <p className="text-xs text-gray-500">Unlimited</p>;
+    return <p className="text-xs text-muted-500">Unlimited</p>;
   }
 
   return (
-    <p className="text-xs text-gray-500">
+    <p className="text-xs text-muted-500">
       {usageCount}/{FREE_MONTHLY_LIMIT} uses
     </p>
   );

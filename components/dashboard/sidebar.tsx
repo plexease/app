@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { SignOutButton } from "./sign-out-button";
 import { TierBadge } from "@/components/billing/tier-badge";
 import { UsageCounter } from "@/components/billing/usage-counter";
+import { Logo } from "@/components/brand/logo";
 import { resetCookieConsent } from "@/components/ui/cookie-consent";
 import type { UserPlan } from "@/lib/subscription";
 
@@ -23,9 +24,9 @@ export function Sidebar({ plan, usageCount }: Props) {
   const isPro = plan.plan === "pro";
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-gray-800 bg-gray-950 px-4 py-6">
-      <Link href="/dashboard" className="text-xl font-bold text-white">
-        Plexease
+    <aside className="flex h-screen w-64 flex-col border-r border-surface-700 bg-surface-950 px-4 py-6">
+      <Link href="/dashboard" aria-label="Plexease dashboard" className="inline-block rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950">
+        <Logo iconSize={24} textSize={18} />
       </Link>
 
       {/* Tier badge + usage */}
@@ -34,7 +35,7 @@ export function Sidebar({ plan, usageCount }: Props) {
         {!isPro && (
           <Link
             href="/upgrade"
-            className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+            className="text-xs text-brand-400 hover:text-brand-300 transition-colors"
           >
             Upgrade
           </Link>
@@ -51,10 +52,10 @@ export function Sidebar({ plan, usageCount }: Props) {
             <Link
               key={href}
               href={href}
-              className={`flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              className={`flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 ${
                 isActive
-                  ? "bg-gray-800 text-white"
-                  : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                  ? "bg-surface-800 text-white"
+                  : "text-muted-300 hover:bg-surface-800 hover:text-white"
               }`}
             >
               {label}
@@ -63,10 +64,10 @@ export function Sidebar({ plan, usageCount }: Props) {
         })}
       </nav>
 
-      <div className="border-t border-gray-800 pt-4 space-y-1">
+      <div className="border-t border-surface-700 pt-4 space-y-1">
         <button
           onClick={() => resetCookieConsent()}
-          className="flex w-full items-center rounded-lg px-3 py-2 text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-colors"
+          className="flex w-full items-center rounded-lg px-3 py-2.5 text-sm text-muted-400 hover:bg-surface-800 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
         >
           Manage cookies
         </button>
