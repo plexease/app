@@ -263,8 +263,9 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 5 complete, merged to main
-- Last action: Phase 5 branding merged after code review — added missing focus rings (13 buttons), skip-link targets (8 pages), removed unnecessary "use client" from LogoIcon, added `playwright/setup-env.sh` for test env automation. 18/18 Playwright tests passing.
-- Next step: Phase 6 — Marketing & Trust
+- Phase: 6 design complete, ready for implementation
+- Last action: Phase 6 design session — brainstormed scope, wrote design doc and implementation plan (12 tasks)
+- Next step: Implement `docs/plans/2026-03-07-phase6-marketing-trust-implementation.md`
+- Design doc: `docs/plans/2026-03-07-phase6-marketing-trust-design.md`
 - Test setup: run `cd playwright && ./setup-env.sh` to generate `.env.test` from `.env.local`, then `npm test` for full Playwright suite
 - Brand guide: `docs/brand-style-guide.md` — reference for all future UI work
