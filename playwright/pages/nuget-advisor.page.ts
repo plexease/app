@@ -3,15 +3,16 @@ import type { Page } from "@playwright/test";
 export class NuGetAdvisorPage {
   constructor(private page: Page) {}
 
-  readonly packageInput = this.page.locator('input[id="package-name"]');
-  readonly submitButton = this.page.locator('button[type="submit"]');
-  readonly whatItDoesCard = this.page.getByText("What it does").locator("..");
-  readonly alternativesCard = this.page.getByText("Alternatives").locator("..");
-  readonly compatibilityCard = this.page.getByText("Compatibility").locator("..");
-  readonly versionAdviceCard = this.page.getByText("Version advice").locator("..");
-  readonly limitReachedMessage = this.page.getByText("You've used all 20 free lookups");
-  readonly upgradeButton = this.page.locator('a[href="/upgrade"]');
-  readonly usageCounter = this.page.getByText(/\d+ of 20 free lookups/);
+  private readonly main = this.page.locator("main");
+  readonly packageInput = this.main.locator('input[id="package-name"]');
+  readonly submitButton = this.main.locator('button[type="submit"]');
+  readonly whatItDoesCard = this.main.getByText("What it does").locator("..");
+  readonly alternativesCard = this.main.getByText("Alternatives").locator("..");
+  readonly compatibilityCard = this.main.getByText("Compatibility").locator("..");
+  readonly versionAdviceCard = this.main.getByText("Version advice").locator("..");
+  readonly limitReachedMessage = this.main.getByText("You've used all 20 free lookups");
+  readonly upgradeButton = this.main.locator('a[href="/upgrade"]');
+  readonly usageCounter = this.main.getByText(/\d+ of 20 free lookups/);
 
   async goto() {
     await this.page.goto("/tools/nuget-advisor");

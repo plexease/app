@@ -28,21 +28,21 @@ test.describe("Stripe Checkout", () => {
 
     // Soft assertion: attempt to fill card and complete
     // If Stripe changes their UI, this catches the error and passes with a warning
+    // Use short timeouts (2s) so failures don't eat the entire test timeout
     try {
       // Fill email if Stripe asks for it
       const emailField = freeUserPage.locator('input[name="email"]');
-      if (await emailField.isVisible({ timeout: 3000 }).catch(() => false)) {
+      if (await emailField.isVisible({ timeout: 2000 }).catch(() => false)) {
         await emailField.fill(process.env.TEST_FREE_USER_EMAIL!);
       }
 
-      // Fill card number
-      const cardFrame = freeUserPage.frameLocator("iframe").first();
-      await cardFrame.locator('[name="cardnumber"], [name="number"], [placeholder*="card number" i]')
-        .fill("4242424242424242");
-      await cardFrame.locator('[name="exp-date"], [name="expiry"], [placeholder*="MM" i]')
-        .fill("12/30");
-      await cardFrame.locator('[name="cvc"], [placeholder*="CVC" i]')
-        .fill("123");
+      // Fill card details directly on the page (Stripe hosted checkout)
+      await freeUserPage.locator('#cardNumber, [name="cardNumber"], [name="number"]')
+        .fill("4242424242424242", { timeout: 2000 });
+      await freeUserPage.locator('#cardExpiry, [name="cardExpiry"], [name="expiry"]')
+        .fill("12/30", { timeout: 2000 });
+      await freeUserPage.locator('#cardCvc, [name="cardCvc"], [name="cvc"]')
+        .fill("123", { timeout: 2000 });
 
       // Fill billing name/zip if present
       const nameField = freeUserPage.locator('[name="billingName"]');
@@ -56,7 +56,7 @@ test.describe("Stripe Checkout", () => {
       }
 
       // Submit payment
-      await freeUserPage.locator('button[type="submit"], .SubmitButton').click();
+      await freeUserPage.locator('button[type="submit"], .SubmitButton').click({ timeout: 2000 });
 
       // Wait for redirect back to success page
       await freeUserPage.waitForURL(/\/upgrade\/success/, { timeout: 30000 });

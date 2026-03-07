@@ -21,9 +21,12 @@ type TestFixtures = {
 
 async function hideDevOverlay(context: BrowserContext) {
   await context.addInitScript(() => {
-    // Hide the Next.js dev tools overlay that intercepts pointer events
+    // Disable pointer events on Next.js dev overlay.
+    // Note: CSS display:none doesn't work because it uses Shadow DOM.
+    // We use pointer-events:none so it doesn't intercept clicks.
+    // For buttons directly under the overlay, tests use evaluate() JS clicks.
     const style = document.createElement("style");
-    style.textContent = "nextjs-portal { display: none !important; pointer-events: none !important; }";
+    style.textContent = "nextjs-portal { pointer-events: none !important; }";
     document.head.appendChild(style);
   });
 }
