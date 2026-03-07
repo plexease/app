@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { isProUser } from "@/lib/subscription";
+import { Nav } from "@/components/landing/nav";
 import { PricingSection } from "@/components/landing/pricing-section";
 import { ManageCookiesButton } from "@/components/ui/manage-cookies-button";
-import { Logo } from "@/components/brand/logo";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -14,25 +14,7 @@ export default async function Home() {
   return (
     <main id="main-content" className="min-h-screen bg-surface-950 text-white">
       {/* Nav */}
-      <nav className="flex flex-wrap items-center justify-between gap-2 px-6 py-4 lg:px-12">
-        <Link href="/" aria-label="Plexease home" className="hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950 rounded-lg">
-          <Logo iconSize={28} textSize={22} />
-        </Link>
-        <div className="flex items-center gap-4">
-          <Link
-            href="/login"
-            className="text-sm text-muted-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950 rounded-lg px-2 py-1"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/signup"
-            className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium hover:bg-brand-600 shadow-glow transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950"
-          >
-            Get started
-          </Link>
-        </div>
-      </nav>
+      <Nav />
 
       {/* Hero */}
       <section className="relative mx-auto max-w-4xl px-6 py-24 text-center lg:py-32">
