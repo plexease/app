@@ -234,6 +234,24 @@ Build out remaining tools per the roadmap above.
 Update this file at the end of each Claude Code session:
 > "Update PLEXEASE.md to reflect what we just built"
 
+### Code Delivery
+
+| Tier | When | Path |
+|------|------|------|
+| **PR (default)** | Any change that affects behaviour | Branch → push → CI → open PR → CI fast+slow pass → Claude Code review → squash merge |
+| **Direct-to-main (exception)** | Emergency hotfix or purely cosmetic | Temporarily disable branch protection → push → re-enable |
+
+**Branch naming:** `feature/description`, `fix/description`, `refactor/description`
+
+**CI gates:**
+- Push to any branch: fast tests run
+- PR to main: fast + slow tests must both pass
+- Merge: requires passing CI + branch protection
+
+**Repo settings:** squash merge only, auto-delete branches after merge, branch protection on main (requires public repo — see design doc)
+
+**Design doc:** `docs/plans/2026-03-07-code-delivery-workflow-design.md`
+
 ### Session & Model Strategy
 
 All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for fresh context:
@@ -241,13 +259,13 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 | Session | Purpose | Output |
 |---------|---------|--------|
 | 1. Design | Brainstorm, architecture, edge cases, write plan | `docs/plans/YYYY-MM-DD-<feature>-design.md` |
-| 2. Build | Implement the plan, commit code | Working feature, pushed to GitHub |
-| 3. Review | Code review, fix issues, final push | Clean, reviewed code |
+| 2. Build | Implement plan on feature branch, open PR | Branch pushed, PR open, CI running |
+| 3. Review | Claude Code reviews PR diff, fixes issues, iterates until CI green | Squash merged to main via PR |
 
 **How to run this:**
 1. Start session → brainstorm & write plan → end session
 2. Start session → say "implement `docs/plans/<plan>.md`" → end session
-3. Start session → say "code review phase N" → end session
+3. Start session → say "code review phase N" → Claude Code reviews PR, merges when green
 
 **Why separate sessions:** each starts with a fresh context window. The plan files and `PLEXEASE.md` carry all context between sessions via the memory file at `~/.claude/projects/-home-deck/memory/plexease.md`.
 
