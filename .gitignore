@@ -45,6 +45,8 @@ next-env.d.ts
 playwright/auth/
 playwright/test-results/
 playwright/playwright-report/
+playwright-report/
+test-results/
 
 # worktrees
 .worktrees

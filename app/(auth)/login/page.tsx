@@ -6,7 +6,7 @@ import { AuthHeader } from "@/components/auth/auth-header";
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-surface-950 px-4">
+    <main id="main-content" className="flex min-h-screen items-center justify-center bg-surface-950 px-4">
       <div className="w-full max-w-md space-y-8">
         <AuthHeader />
         <div className="text-center">

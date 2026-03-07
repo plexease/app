@@ -14,7 +14,7 @@ export function PaymentFailedBanner({ onManageBilling, loading }: Props) {
       <button
         onClick={onManageBilling}
         disabled={loading}
-        className="rounded-lg bg-brand-500 px-4 py-1.5 text-xs font-medium text-white hover:bg-brand-600 disabled:opacity-50 transition-colors"
+        className="rounded-lg bg-brand-500 px-4 py-1.5 text-xs font-medium text-white hover:bg-brand-600 disabled:opacity-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950"
       >
         {loading ? "Opening..." : "Update payment method"}
       </button>

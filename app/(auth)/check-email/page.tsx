@@ -3,7 +3,7 @@ import { AuthHeader } from "@/components/auth/auth-header";
 
 export default function CheckEmailPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-surface-950 px-4">
+    <main id="main-content" className="flex min-h-screen items-center justify-center bg-surface-950 px-4">
       <div className="w-full max-w-md space-y-6 text-center">
         <AuthHeader />
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-brand-500/20">

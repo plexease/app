@@ -48,7 +48,7 @@ export default function CheckoutSuccessPage() {
           </p>
           <button
             onClick={() => router.push("/dashboard")}
-            className="mt-6 rounded-lg bg-brand-500 px-6 py-2 text-sm font-medium text-white hover:bg-brand-600 shadow-glow transition-colors"
+            className="mt-6 rounded-lg bg-brand-500 px-6 py-2 text-sm font-medium text-white hover:bg-brand-600 shadow-glow transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950"
           >
             Go to Dashboard
           </button>

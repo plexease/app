@@ -122,7 +122,7 @@ export function DashboardContent({ plan, usageCount }: Props) {
             <button
               onClick={handleManageBilling}
               disabled={portalLoading}
-              className="mt-3 text-xs text-brand-400 hover:text-brand-300 disabled:opacity-50 transition-colors"
+              className="mt-3 text-xs text-brand-400 hover:text-brand-300 disabled:opacity-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-lg"
             >
               {portalLoading ? "Opening..." : "Manage Subscription"}
             </button>

@@ -21,7 +21,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-surface-950 text-white">
+    <main id="main-content" className="flex min-h-screen flex-col items-center justify-center bg-surface-950 text-white">
       <h1 className="font-heading text-6xl font-bold">500</h1>
       <p className="mt-4 text-xl text-muted-400">Something went wrong</p>
       {process.env.NODE_ENV === "development" && (
