@@ -1,18 +1,38 @@
-import type { Page } from "@playwright/test";
+import type { Locator } from "@playwright/test";
+import { ToolPageBase } from "./tool-page.base";
 
-export class NuGetAdvisorPage {
-  constructor(private page: Page) {}
+export class NuGetAdvisorPage extends ToolPageBase {
+  get heading(): Locator {
+    return this.main.getByRole("heading", { name: /nuget advisor/i });
+  }
 
-  private readonly main = this.page.locator("main");
-  readonly packageInput = this.main.locator('input[id="package-name"]');
-  readonly submitButton = this.main.locator('button[type="submit"]');
-  readonly whatItDoesCard = this.main.getByText("What it does").locator("..");
-  readonly alternativesCard = this.main.getByText("Alternatives").locator("..");
-  readonly compatibilityCard = this.main.getByText("Compatibility").locator("..");
-  readonly versionAdviceCard = this.main.getByText("Version advice").locator("..");
-  readonly limitReachedMessage = this.main.getByText("You've used all 20 free lookups");
-  readonly upgradeButton = this.main.locator('a[href="/upgrade"]');
-  readonly usageCounter = this.main.getByText(/\d+ of 20 free lookups/);
+  get formInput(): Locator {
+    return this.packageInput;
+  }
+
+  get packageInput(): Locator {
+    return this.main.locator('input[id="package-name"]');
+  }
+
+  get submitButton(): Locator {
+    return this.main.locator('button[type="submit"]');
+  }
+
+  get whatItDoesCard(): Locator {
+    return this.main.getByText("What it does").locator("..");
+  }
+
+  get alternativesCard(): Locator {
+    return this.main.getByText("Alternatives").locator("..");
+  }
+
+  get compatibilityCard(): Locator {
+    return this.main.getByText("Compatibility").locator("..");
+  }
+
+  get versionAdviceCard(): Locator {
+    return this.main.getByText("Version advice").locator("..");
+  }
 
   async goto() {
     await this.page.goto("/tools/nuget-advisor");
