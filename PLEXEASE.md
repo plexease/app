@@ -160,20 +160,21 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - [x] Auth routes updated in middleware (check-email, reset-password)
 - [x] .env.local.example updated with Stripe price ID vars
 
-### ⬜ Phase 4.5 — Smoke Tests
-- [ ] Create `plexease-test` Supabase project (same org), apply schema + RPC
-- [ ] Install Playwright, configure `.env.test`
-- [ ] Global setup: auto-create test users via Supabase admin API, seed pro subscription, save storageState
-- [ ] Global teardown: reset usage counts, clean mutable state
-- [ ] Page Object Model: login, signup, dashboard, nuget-advisor, upgrade, error pages
-- [ ] Custom fixtures: freeUserPage, proUserPage, anonPage, supabaseAdmin
-- [ ] Test: auth flows (signup, login, logout, forgot password)
-- [ ] Test: dashboard rendering (free vs pro)
-- [ ] Test: NuGet Advisor (free + pro)
-- [ ] Test: usage limits (DB seed to 19, boundary test)
-- [ ] Test: Stripe checkout (redirect + soft-assert full flow) + manage billing portal
-- [ ] Test: protected routes (anon redirect, pro access)
-- [ ] Test: error pages (404)
+### ✅ Phase 4.5 — Smoke Tests (complete)
+- [x] Create `plexease-test` Supabase project (same org), apply schema + RPC
+- [x] Install Playwright, configure `.env.test`
+- [x] Global setup: auto-create test users via Supabase admin API, seed pro subscription, save storageState
+- [x] Global teardown: reset usage counts, clean mutable state
+- [x] Page Object Model: login, signup, dashboard, nuget-advisor, upgrade, error pages
+- [x] Custom fixtures: freeUserPage, proUserPage, anonPage, supabaseAdmin
+- [x] Test: auth flows (signup form, login, logout with session intercept, forgot password)
+- [x] Test: dashboard rendering (free vs pro)
+- [x] Test: NuGet Advisor (free + pro)
+- [x] Test: usage limits (DB seed to 19/20, boundary test)
+- [x] Test: Stripe checkout (redirect + soft-assert full flow) + manage billing portal
+- [x] Test: protected routes (anon redirect, pro access)
+- [x] Test: error pages (404)
+- 18 tests total, all passing (54.7s, single worker, serial execution)
 - Design doc: `docs/plans/2026-03-06-phase4.5-smoke-tests-design.md`
 
 ### ⬜ Phase 5 — Branding
@@ -245,6 +246,6 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 4 complete, Phase 4.5 design complete
-- Last action: Phase 4.5 smoke tests design — 7 spec files, ~15 tests, POM architecture, real services with test accounts
-- Next step: Phase 4.5 — implementation (create Supabase test project, install Playwright, write tests)
+- Phase: 4.5 complete
+- Last action: Phase 4.5 smoke tests — 18 tests across 6 spec files, all passing. Separate Supabase test project, POM architecture, real services with test accounts.
+- Next step: Phase 5 — Branding (visual identity, logo, colour palette, typography, apply to all pages)
