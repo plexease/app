@@ -180,12 +180,15 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 ### ⬜ Phase 5 — Branding
 - [ ] Visual identity, logo, colour palette, typography
 - [ ] Apply brand to all pages and components
+- Design doc: `docs/plans/2026-03-07-phase5-branding-design.md`
+- Implementation plan: `docs/plans/2026-03-07-phase5-branding-implementation.md` (21 tasks)
 
 ### ⬜ Phase 6 — Marketing & Trust
 - [ ] Landing page refresh
 - [ ] Legal pages (Terms of Service, Privacy Policy)
-- [ ] Trust signals (testimonials, social proof)
+- [ ] Trust signals (testimonials, social proof, "Powered by Claude AI" attribution)
 - [ ] Visibility and digital marketing (SEO, social, content strategy)
+- [ ] Twitter card configuration
 
 ### ⬜ Phase 7 — Testing & Environments
 - [ ] Dev/Test/Prod environment separation (Supabase projects, Stripe accounts, env configs)
@@ -246,6 +249,6 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 4.5 complete
-- Last action: Phase 4.5 smoke tests — 18 tests across 6 spec files, all passing. Separate Supabase test project, POM architecture, real services with test accounts.
-- Next step: Phase 5 — Branding (visual identity, logo, colour palette, typography, apply to all pages)
+- Phase: 5 design complete, ready for build
+- Last action: Phase 5 design session — brainstormed brand identity, reviewed by code-reviewer agent, wrote design doc + implementation plan (21 tasks). Purple colour system, Plus Jakarta Sans + Inter fonts, organic cluster logo, accessibility pass.
+- Next step: Phase 5 build — implement `docs/plans/2026-03-07-phase5-branding-implementation.md`
