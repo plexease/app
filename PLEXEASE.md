@@ -265,7 +265,7 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 > **Update this section each session.**
 
 - Phase: 6 complete, merged to main
-- Last action: Phase 6 marketing & trust — landing page refresh (How It Works, Attribution, enhanced footer), legal pages (ToS + Privacy), SEO (meta tags, JSON-LD, sitemap, robots), social cards, apple touch icon.
+- Last action: Phase 6 marketing & trust — landing page refresh, legal pages, SEO, social cards, apple touch icon. Post-review fixes: robots.ts auth route disallow, HowItWorks card styling, footer anchor scrolling, sitemap date hardcoding, attribution focus ring, legal page semantic sections.
 - Next step: Phase 7 — Testing & Environments
 - Test setup: run `cd playwright && ./setup-env.sh` to generate `.env.test` from `.env.local`, then `npm test` for full Playwright suite
 - Brand guide: `docs/brand-style-guide.md` — reference for all future UI work

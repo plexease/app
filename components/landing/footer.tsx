@@ -22,14 +22,14 @@ export function Footer() {
           <h3 className="font-heading text-sm font-semibold text-muted-300">Product</h3>
           <ul className="mt-3 space-y-2 text-sm">
             <li>
-              <Link href="/#tools" className="text-muted-500 hover:text-muted-300 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-lg px-1 py-0.5">
+              <a href="/#tools" className="text-muted-500 hover:text-muted-300 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-lg px-1 py-0.5">
                 Tools
-              </Link>
+              </a>
             </li>
             <li>
-              <Link href="/#pricing" className="text-muted-500 hover:text-muted-300 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-lg px-1 py-0.5">
+              <a href="/#pricing" className="text-muted-500 hover:text-muted-300 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-lg px-1 py-0.5">
                 Pricing
-              </Link>
+              </a>
             </li>
           </ul>
         </div>
