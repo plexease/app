@@ -21,12 +21,34 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Plexease",
-  description: "Complex integrations, with ease",
+  title: { default: "Plexease", template: "%s | Plexease" },
+  description:
+    "AI-powered integration tools for .NET developers, tech support staff, and small businesses.",
+  keywords: [
+    "NuGet",
+    ".NET",
+    "integration tools",
+    "AI",
+    "package advisor",
+    "code generation",
+  ],
+  // TODO: Replace with https://plexease.io when domain is purchased
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+  ),
   openGraph: {
     title: "Plexease",
     description: "Complex integrations, with ease",
+    siteName: "Plexease",
+    locale: "en_GB",
+    type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Plexease",
+    description: "Complex integrations, with ease",
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
