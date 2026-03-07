@@ -4,13 +4,13 @@ import path from "path";
 
 dotenv.config({ path: path.resolve(__dirname, ".env.test") });
 
+const isCI = !!process.env.CI;
+
 export default defineConfig({
-  testDir: "./tests",
   fullyParallel: false,
-  forbidOnly: !!process.env.CI,
+  forbidOnly: isCI,
   retries: 1,
-  workers: 1,
-  reporter: "html",
+  reporter: isCI ? [["html", { open: "never" }], ["github"]] : "html",
   use: {
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",
@@ -19,9 +19,9 @@ export default defineConfig({
   globalSetup: "./global-setup.ts",
   globalTeardown: "./global-teardown.ts",
   webServer: {
-    command: "npm run dev",
+    command: isCI ? "npm start" : "npm run dev",
     port: 3000,
-    reuseExistingServer: true,
+    reuseExistingServer: !isCI,
     cwd: path.resolve(__dirname, ".."),
     env: {
       NEXT_PUBLIC_SUPABASE_URL: process.env.TEST_SUPABASE_URL!,
@@ -34,4 +34,18 @@ export default defineConfig({
       ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY!,
     },
   },
+  projects: [
+    {
+      name: "fast",
+      testDir: "./tests/fast",
+      fullyParallel: true,
+      workers: isCI ? 2 : 4,
+    },
+    {
+      name: "slow",
+      testDir: "./tests/slow",
+      fullyParallel: false,
+      workers: 1,
+    },
+  ],
 });
