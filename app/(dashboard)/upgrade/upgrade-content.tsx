@@ -59,8 +59,8 @@ function UpgradePageContent() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="text-2xl font-bold text-white">Upgrade to Pro</h1>
-      <p className="mt-2 text-gray-400">
+      <h1 className="font-heading text-2xl font-bold text-white">Upgrade to Pro</h1>
+      <p className="mt-2 text-muted-400">
         Unlock unlimited tool uses, saved history, and priority AI responses.
       </p>
 
@@ -101,7 +101,7 @@ function UpgradePageContent() {
       </div>
 
       {/* Trust signal */}
-      <p className="mt-6 text-center text-xs text-gray-600">
+      <p className="mt-6 text-center text-xs text-muted-500">
         Powered by Stripe &mdash; secure payments. We never see your card details.
       </p>
 
