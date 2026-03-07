@@ -15,6 +15,40 @@ export default async function Home() {
 
   return (
     <main id="main-content" className="min-h-screen bg-surface-950 text-white">
+      {/* JSON-LD structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "Plexease",
+            description:
+              "AI-powered integration tools for .NET developers, tech support staff, and small businesses.",
+            applicationCategory: "DeveloperApplication",
+            operatingSystem: "Web",
+            offers: [
+              {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "GBP",
+                name: "Free",
+              },
+              {
+                "@type": "Offer",
+                price: "19",
+                priceCurrency: "GBP",
+                name: "Pro",
+                priceSpecification: {
+                  "@type": "UnitPriceSpecification",
+                  billingDuration: "P1M",
+                },
+              },
+            ],
+          }),
+        }}
+      />
+
       {/* Nav */}
       <Nav />
 
