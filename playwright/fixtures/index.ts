@@ -1,4 +1,5 @@
 import { test as base, type Page, type BrowserContext } from "@playwright/test";
+import { readFileSync } from "fs";
 import path from "path";
 import {
   setUsageCount,
@@ -7,10 +8,15 @@ import {
   currentMonth,
 } from "../helpers/supabase-admin";
 
+type MockApiFactory = {
+  nugetAdvisor: (page: Page, scenario?: "success" | "error") => Promise<void>;
+};
+
 type TestFixtures = {
   freeUserPage: Page;
   proUserPage: Page;
   anonPage: Page;
+  mockApi: MockApiFactory;
   supabaseAdmin: {
     setUsageCount: (userId: string, toolName: string, count: number) => Promise<void>;
     resetUsage: (userId: string) => Promise<void>;
@@ -66,6 +72,27 @@ export const test = base.extend<TestFixtures>({
     const page = await context.newPage();
     await use(page);
     await context.close();
+  },
+
+  mockApi: async ({}, use) => {
+    await use({
+      nugetAdvisor: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/nuget-advisor-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/nuget-advisor", (route) =>
+          route.fulfill({
+            status,
+            contentType: "application/json",
+            body,
+          })
+        );
+      },
+    });
   },
 
   supabaseAdmin: async ({}, use) => {
