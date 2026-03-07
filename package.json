@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "npx playwright test --config playwright/playwright.config.ts",
-    "test:ui": "npx playwright test --config playwright/playwright.config.ts --ui"
+    "test:ui": "npx playwright test --config playwright/playwright.config.ts --ui",
+    "test:setup": "bash scripts/generate-env-test.sh"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",

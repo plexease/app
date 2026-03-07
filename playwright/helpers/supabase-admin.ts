@@ -28,11 +28,12 @@ export async function ensureTestUser(email: string, password: string): Promise<s
   }
 
   if (createError && createError.message.includes("already been registered")) {
-    // Look up existing user
+    // Look up existing user and sync password
     const { data: { users }, error: listError } = await supabase.auth.admin.listUsers();
     if (listError) throw listError;
     const user = users.find((u) => u.email === email);
     if (!user) throw new Error(`User ${email} not found after creation conflict`);
+    await supabase.auth.admin.updateUserById(user.id, { password });
     return user.id;
   }
 
