@@ -2,6 +2,7 @@ import { test, expect } from "../../fixtures";
 import { NuGetAdvisorPage } from "../../pages/nuget-advisor.page";
 
 test.describe("Usage Limits", () => {
+  test.describe.configure({ mode: "serial" });
   test("free user at limit 20 sees block message", async ({
     freeUserPage,
     supabaseAdmin,
