@@ -205,12 +205,19 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - [x] Social card metadata (OG + Twitter cards)
 - [x] Apple touch icon
 
-### ⬜ Phase 7 — Testing & Environments
-- [ ] Dev/Test/Prod environment separation (Supabase projects, Stripe accounts, env configs)
-- [ ] Playwright test projects: separate suites per user type (free, pro, unauthenticated) for parallel execution
-- [ ] GitHub Actions CI: workflow running tests on push/PR with secrets configured
-- [ ] Wider test scope: resubscribe flow, cancellation/payment-failed banners, cookie consent, new tool tests
-- [ ] Staging environment strategy
+### ✅ Phase 7 — Testing & CI (complete)
+- [x] GitHub Actions CI: fast tests on push, slow tests on PR, cleanup job
+- [x] Fast/slow test split with Playwright projects (20 fast / 4 slow)
+- [x] Route intercept mocking for NuGet Advisor API (`mockApi` fixture)
+- [x] Base tool page object pattern for future tools (`ToolPageBase`)
+- [x] Validation tests: landing page, legal pages, mocked NuGet Advisor
+- [x] NuGet Advisor canary test (real Claude API, slow suite)
+- [x] Test user cleanup in teardown + CI
+- [x] Automated test env setup (`npm run test:setup` generates `.env.test` from `.env.local`)
+- [x] Session-safe `findTestUser` lookup (no password sync during tests)
+- Deferred: wider test scope (Phase 7.5), staging environment (future), MSW migration (when second API added)
+- Design doc: `docs/plans/2026-03-07-phase7-testing-ci-design.md`
+- Implementation plan: `docs/plans/2026-03-07-phase7-testing-ci-implementation.md`
 
 ### ⬜ Phase 8+ — Additional Tools
 Build out remaining tools per the roadmap above.
@@ -264,8 +271,9 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 6 complete, merged to main
-- Last action: Phase 6 marketing & trust — landing page refresh, legal pages, SEO, social cards, apple touch icon. Post-review fixes: robots.ts auth route disallow, HowItWorks card styling, footer anchor scrolling, sitemap date hardcoding, attribution focus ring, legal page semantic sections.
-- Next step: Phase 7 — Testing & Environments
-- Test setup: run `cd playwright && ./setup-env.sh` to generate `.env.test` from `.env.local`, then `npm test` for full Playwright suite
+- Phase: 7 complete, merged to main, CI green
+- Last action: Phase 7 testing & CI — fast/slow test split, GitHub Actions CI, mockApi fixtures, validation tests, canary test, cleanup job, automated env setup
+- Next step: Phase 8 — Additional Tools
+- Test setup: run `npm run test:setup` to generate `playwright/.env.test` from `.env.local`, then `npm test` for full Playwright suite
+- CI: fast tests run on every push to main, slow tests on PRs only
 - Brand guide: `docs/brand-style-guide.md` — reference for all future UI work
