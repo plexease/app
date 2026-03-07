@@ -76,7 +76,7 @@ plexease/
 │   ├── auth/                          # Auth forms and headers
 │   ├── billing/                       # Pricing, usage, tier badges
 │   ├── dashboard/                     # Sidebar, content, sign-out
-│   ├── landing/                       # Pricing section
+│   ├── landing/                       # Nav, Footer, HowItWorks, Attribution, Pricing
 │   ├── tools/                         # NuGet advisor form/results
 │   └── ui/                            # Spinner, cookie consent
 ├── lib/                                # supabase, stripe, claude clients
@@ -197,12 +197,13 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - Design doc: `docs/plans/2026-03-07-phase5-branding-design.md`
 - Implementation plan: `docs/plans/2026-03-07-phase5-branding-implementation.md` (21 tasks)
 
-### ⬜ Phase 6 — Marketing & Trust
-- [ ] Landing page refresh
-- [ ] Legal pages (Terms of Service, Privacy Policy)
-- [ ] Trust signals (testimonials, social proof, "Powered by Claude AI" attribution)
-- [ ] Visibility and digital marketing (SEO, social, content strategy)
-- [ ] Twitter card configuration
+### ✅ Phase 6 — Marketing & Trust (complete)
+- [x] Landing page refresh (How It Works, Attribution strip, enhanced footer)
+- [x] Legal pages (Terms of Service, Privacy Policy)
+- [x] Trust signals ("Powered by Claude AI" attribution)
+- [x] SEO fundamentals (meta tags, JSON-LD, sitemap.xml, robots.txt)
+- [x] Social card metadata (OG + Twitter cards)
+- [x] Apple touch icon
 
 ### ⬜ Phase 7 — Testing & Environments
 - [ ] Dev/Test/Prod environment separation (Supabase projects, Stripe accounts, env configs)
@@ -263,9 +264,8 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 6 design complete, ready for implementation
-- Last action: Phase 6 design session — brainstormed scope, wrote design doc and implementation plan (12 tasks)
-- Next step: Implement `docs/plans/2026-03-07-phase6-marketing-trust-implementation.md`
-- Design doc: `docs/plans/2026-03-07-phase6-marketing-trust-design.md`
+- Phase: 6 complete, merged to main
+- Last action: Phase 6 marketing & trust — landing page refresh (How It Works, Attribution, enhanced footer), legal pages (ToS + Privacy), SEO (meta tags, JSON-LD, sitemap, robots), social cards, apple touch icon.
+- Next step: Phase 7 — Testing & Environments
 - Test setup: run `cd playwright && ./setup-env.sh` to generate `.env.test` from `.env.local`, then `npm test` for full Playwright suite
 - Brand guide: `docs/brand-style-guide.md` — reference for all future UI work
