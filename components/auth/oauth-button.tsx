@@ -31,7 +31,7 @@ export function OAuthButton() {
     <button
       onClick={handleGoogleLogin}
       disabled={loading}
-      className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50 transition-colors"
+      className="flex w-full items-center justify-center gap-2 rounded-lg border border-surface-700 bg-surface-800 px-4 py-3 text-sm font-medium text-white hover:bg-surface-700 disabled:opacity-50 transition-colors"
     >
       <svg className="h-5 w-5" viewBox="0 0 24 24">
         <path
