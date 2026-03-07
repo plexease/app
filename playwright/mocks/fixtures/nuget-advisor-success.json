@@ -1,0 +1,10 @@
+{
+  "whatItDoes": "Newtonsoft.Json is a high-performance JSON framework for .NET. It provides flexible JSON serialization and deserialization, LINQ-to-JSON, JSON Path, and XML-to-JSON conversion.",
+  "alternatives": [
+    "System.Text.Json (built-in since .NET Core 3.0)",
+    "Utf8Json (high-performance, zero-allocation)",
+    "ServiceStack.Text (part of ServiceStack framework)"
+  ],
+  "compatibility": "Compatible with .NET Framework 4.5+, .NET Standard 1.0/2.0, and .NET 6/7/8. Works on Mono, Xamarin, and Unity.",
+  "versionAdvice": "Use 13.x for latest features and performance improvements. The library is stable and actively maintained. No deprecation planned."
+}
