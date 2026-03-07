@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { isProUser } from "@/lib/subscription";
 import { Nav } from "@/components/landing/nav";
+import { HowItWorks } from "@/components/landing/how-it-works";
 import { PricingSection } from "@/components/landing/pricing-section";
 import { Footer } from "@/components/landing/footer";
 
@@ -51,6 +52,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* How it works */}
+      <HowItWorks />
 
       {/* Tools preview */}
       <section id="tools" className="mx-auto max-w-4xl px-6 py-16">
