@@ -4,6 +4,7 @@ import { isProUser } from "@/lib/subscription";
 import { Nav } from "@/components/landing/nav";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { PricingSection } from "@/components/landing/pricing-section";
+import { Attribution } from "@/components/landing/attribution";
 import { Footer } from "@/components/landing/footer";
 
 export default async function Home() {
@@ -85,6 +86,9 @@ export default async function Home() {
 
       {/* Pricing */}
       <PricingSection isLoggedIn={!!user} isPro={isPro} />
+
+      {/* Attribution */}
+      <Attribution />
 
       {/* Footer */}
       <Footer />

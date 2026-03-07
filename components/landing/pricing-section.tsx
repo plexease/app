@@ -24,7 +24,7 @@ export function PricingSection({ isLoggedIn, isPro }: Props) {
     : { label: "Get started", href: "/signup" };
 
   return (
-    <section className="mx-auto max-w-4xl px-6 py-16">
+    <section id="pricing" className="mx-auto max-w-4xl px-6 py-16">
       <h2 className="font-heading text-center text-3xl font-bold">Pricing</h2>
       <div className="mt-8">
         <PricingToggle interval={interval} onChange={setInterval} />
