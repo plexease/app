@@ -1,4 +1,4 @@
-import { test, expect } from "../fixtures";
+import { test, expect } from "../../fixtures";
 
 test.describe("Protected Routes", () => {
   const protectedPaths = ["/dashboard", "/tools/nuget-advisor", "/upgrade"];

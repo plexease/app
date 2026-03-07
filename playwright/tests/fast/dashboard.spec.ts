@@ -1,5 +1,5 @@
-import { test, expect } from "../fixtures";
-import { DashboardPage } from "../pages/dashboard.page";
+import { test, expect } from "../../fixtures";
+import { DashboardPage } from "../../pages/dashboard.page";
 
 test.describe("Dashboard", () => {
   test("free user sees upgrade prompt, usage card, and tool links", async ({ freeUserPage }) => {

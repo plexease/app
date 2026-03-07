@@ -19,19 +19,19 @@ export class NuGetAdvisorPage extends ToolPageBase {
   }
 
   get whatItDoesCard(): Locator {
-    return this.main.getByText("What it does").locator("..");
+    return this.main.getByRole("heading", { name: "What it does" }).locator("..");
   }
 
   get alternativesCard(): Locator {
-    return this.main.getByText("Alternatives").locator("..");
+    return this.main.getByRole("heading", { name: "Alternatives" }).locator("..");
   }
 
   get compatibilityCard(): Locator {
-    return this.main.getByText("Compatibility").locator("..");
+    return this.main.getByRole("heading", { name: "Compatibility" }).locator("..");
   }
 
   get versionAdviceCard(): Locator {
-    return this.main.getByText("Version advice").locator("..");
+    return this.main.getByRole("heading", { name: "Version advice" }).locator("..");
   }
 
   async goto() {

@@ -40,6 +40,15 @@ export async function ensureTestUser(email: string, password: string): Promise<s
   throw createError;
 }
 
+export async function findTestUser(email: string): Promise<string> {
+  const supabase = getAdminClient();
+  const { data: { users }, error } = await supabase.auth.admin.listUsers();
+  if (error) throw error;
+  const user = users.find((u) => u.email === email);
+  if (!user) throw new Error(`Test user ${email} not found — run globalSetup first`);
+  return user.id;
+}
+
 export async function ensureProSubscription(userId: string): Promise<void> {
   const supabase = getAdminClient();
 

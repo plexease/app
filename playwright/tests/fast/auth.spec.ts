@@ -1,6 +1,6 @@
-import { test, expect } from "../fixtures";
-import { LoginPage } from "../pages/login.page";
-import { SignupPage } from "../pages/signup.page";
+import { test, expect } from "../../fixtures";
+import { LoginPage } from "../../pages/login.page";
+import { SignupPage } from "../../pages/signup.page";
 
 test.describe("Authentication", () => {
   test("signup page renders form correctly", async ({ anonPage }) => {

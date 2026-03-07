@@ -1,5 +1,5 @@
-import { test, expect } from "../fixtures";
-import { ErrorPage } from "../pages/error.page";
+import { test, expect } from "../../fixtures";
+import { ErrorPage } from "../../pages/error.page";
 
 test.describe("Error Pages", () => {
   test("visiting non-existent page shows 404 with navigation links", async ({ anonPage }) => {
