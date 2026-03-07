@@ -27,14 +27,14 @@ export default function GlobalError({
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#030712",
+          backgroundColor: "#0c0a14",
           color: "#ffffff",
           fontFamily: "system-ui, -apple-system, sans-serif",
           margin: 0,
         }}
       >
         <h1 style={{ fontSize: "3.75rem", fontWeight: "bold", margin: 0 }}>500</h1>
-        <p style={{ marginTop: "1rem", fontSize: "1.25rem", color: "#9ca3af" }}>
+        <p style={{ marginTop: "1rem", fontSize: "1.25rem", color: "#9490ad" }}>
           Something went wrong
         </p>
         {process.env.NODE_ENV === "development" && (
@@ -55,7 +55,7 @@ export default function GlobalError({
             onClick={reset}
             style={{
               borderRadius: "0.5rem",
-              backgroundColor: "#2563eb",
+              backgroundColor: "#8b5cf6",
               padding: "0.75rem 1.5rem",
               fontSize: "0.875rem",
               fontWeight: 500,
@@ -70,11 +70,11 @@ export default function GlobalError({
             href="/dashboard"
             style={{
               borderRadius: "0.5rem",
-              border: "1px solid #374151",
+              border: "1px solid #2e2946",
               padding: "0.75rem 1.5rem",
               fontSize: "0.875rem",
               fontWeight: 500,
-              color: "#d1d5db",
+              color: "#b8b4cc",
               textDecoration: "none",
             }}
           >
@@ -84,11 +84,11 @@ export default function GlobalError({
             href="/"
             style={{
               borderRadius: "0.5rem",
-              border: "1px solid #374151",
+              border: "1px solid #2e2946",
               padding: "0.75rem 1.5rem",
               fontSize: "0.875rem",
               fontWeight: 500,
-              color: "#d1d5db",
+              color: "#b8b4cc",
               textDecoration: "none",
             }}
           >
