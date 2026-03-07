@@ -263,6 +263,8 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 5 complete
-- Last action: Phase 5 branding — purple colour system, Plus Jakarta Sans + Inter typography, organic cluster logo, visual polish, accessibility improvements across all 26+ files
+- Phase: 5 complete, merged to main
+- Last action: Phase 5 branding merged after code review — added missing focus rings (13 buttons), skip-link targets (8 pages), removed unnecessary "use client" from LogoIcon, added `playwright/setup-env.sh` for test env automation. 18/18 Playwright tests passing.
 - Next step: Phase 6 — Marketing & Trust
+- Test setup: run `cd playwright && ./setup-env.sh` to generate `.env.test` from `.env.local`, then `npm test` for full Playwright suite
+- Brand guide: `docs/brand-style-guide.md` — reference for all future UI work
