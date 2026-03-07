@@ -102,18 +102,18 @@ export function DashboardContent({ plan, usageCount }: Props) {
         />
       )}
 
-      <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+      <h1 className="font-heading text-2xl font-bold text-white">Dashboard</h1>
 
       <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {/* Subscription card */}
-        <div className="rounded-lg border border-gray-700 bg-gray-800 p-5">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-400">
+        <div className="rounded-lg border border-surface-700 bg-surface-900 p-5">
+          <h3 className="font-heading text-sm font-semibold uppercase tracking-wide text-muted-400">
             Plan
           </h3>
           <div className="mt-2 flex items-center gap-2">
             <TierBadge plan={plan.plan} />
             {isPro && plan.currentPeriodEnd && !plan.cancelAtPeriodEnd && (
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted-500">
                 Renews {formatDate(plan.currentPeriodEnd)}
               </span>
             )}
@@ -122,7 +122,7 @@ export function DashboardContent({ plan, usageCount }: Props) {
             <button
               onClick={handleManageBilling}
               disabled={portalLoading}
-              className="mt-3 text-xs text-blue-400 hover:text-blue-300 disabled:opacity-50 transition-colors"
+              className="mt-3 text-xs text-brand-400 hover:text-brand-300 disabled:opacity-50 transition-colors"
             >
               {portalLoading ? "Opening..." : "Manage Subscription"}
             </button>
@@ -130,7 +130,7 @@ export function DashboardContent({ plan, usageCount }: Props) {
           {!isPro && (
             <a
               href="/upgrade"
-              className="mt-3 inline-block text-xs text-blue-400 hover:text-blue-300 transition-colors"
+              className="mt-3 inline-block text-xs text-brand-400 hover:text-brand-300 transition-colors"
             >
               Upgrade to Pro
             </a>
@@ -141,13 +141,13 @@ export function DashboardContent({ plan, usageCount }: Props) {
         <UsageCard isPro={isPro} usageCount={usageCount} />
 
         {/* Tools card */}
-        <div className="rounded-lg border border-gray-700 bg-gray-800 p-5">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-400">
+        <div className="rounded-lg border border-surface-700 bg-surface-900 p-5">
+          <h3 className="font-heading text-sm font-semibold uppercase tracking-wide text-muted-400">
             Tools
           </h3>
           <a
             href="/tools/nuget-advisor"
-            className="mt-2 block text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors"
+            className="mt-2 block text-sm font-medium text-brand-400 hover:text-brand-300 transition-colors"
           >
             NuGet Advisor &rarr;
           </a>
