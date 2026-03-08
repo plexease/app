@@ -119,6 +119,48 @@ export async function resetProSubscription(userId: string): Promise<void> {
   if (error) throw error;
 }
 
+export async function setSubscriptionState(
+  userId: string,
+  overrides: {
+    status?: string;
+    cancelAtPeriodEnd?: boolean;
+    currentPeriodEnd?: string;
+    gracePeriodEnd?: string | null;
+  }
+): Promise<void> {
+  const supabase = getAdminClient();
+
+  const { error } = await supabase
+    .from("subscriptions")
+    .upsert(
+      {
+        user_id: userId,
+        plan: "pro",
+        status: overrides.status ?? "active",
+        stripe_subscription_id: "test_sub_banner",
+        current_period_end:
+          overrides.currentPeriodEnd ??
+          new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        cancel_at_period_end: overrides.cancelAtPeriodEnd ?? false,
+        grace_period_end: overrides.gracePeriodEnd ?? null,
+      },
+      { onConflict: "user_id" }
+    );
+
+  if (error) throw error;
+}
+
+export async function deleteSubscription(userId: string): Promise<void> {
+  const supabase = getAdminClient();
+
+  const { error } = await supabase
+    .from("subscriptions")
+    .delete()
+    .eq("user_id", userId);
+
+  if (error) throw error;
+}
+
 export function currentMonth(): string {
   const now = new Date();
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
