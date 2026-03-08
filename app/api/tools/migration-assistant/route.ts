@@ -30,6 +30,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Migrating to is required" }, { status: 400 });
   }
 
+  if (migratingFrom.length > 200) {
+    return NextResponse.json({ error: "Migrating from exceeds 200 character limit" }, { status: 400 });
+  }
+
+  if (migratingTo.length > 200) {
+    return NextResponse.json({ error: "Migrating to exceeds 200 character limit" }, { status: 400 });
+  }
+
   if (!code?.trim()) {
     return NextResponse.json({ error: "Code is required" }, { status: 400 });
   }
