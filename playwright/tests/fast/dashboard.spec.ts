@@ -9,7 +9,7 @@ test.describe("Dashboard", () => {
     await expect(dashboard.heading).toBeVisible();
     await expect(dashboard.upgradeLink).toBeVisible();
     await expect(dashboard.usageCard).toBeVisible();
-    await expect(dashboard.nugetAdvisorLink).toBeVisible();
+    await expect(dashboard.toolLink).toBeVisible();
   });
 
   test("pro user sees manage subscription and tool links", async ({ proUserPage }) => {
@@ -18,6 +18,6 @@ test.describe("Dashboard", () => {
 
     await expect(dashboard.heading).toBeVisible();
     await expect(dashboard.manageBillingButton).toBeVisible();
-    await expect(dashboard.nugetAdvisorLink).toBeVisible();
+    await expect(dashboard.toolLink).toBeVisible();
   });
 });

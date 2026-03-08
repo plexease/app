@@ -7,7 +7,7 @@ export class DashboardPage {
   readonly heading = this.main.locator("h1", { hasText: "Dashboard" });
   readonly upgradeLink = this.main.locator('a[href="/upgrade"]');
   readonly usageCard = this.main.getByText("Usage").locator("..");
-  readonly nugetAdvisorLink = this.main.locator('a[href="/tools/nuget-advisor"]');
+  readonly toolLink = this.main.locator('a[href="/tools/code-explainer"]');
   readonly manageBillingButton = this.main.getByText("Manage Subscription");
 
   async goto() {
