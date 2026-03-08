@@ -289,9 +289,9 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 7 complete, merged to main, CI green
-- Last action: Phase 7 testing & CI — fast/slow test split, GitHub Actions CI, mockApi fixtures, validation tests, canary test, cleanup job, automated env setup
-- Next step: Phase 8 — Additional Tools
+- Phase: 7.5 in progress (PR open)
+- Last action: Phase 7.5 test backlog — 30 new fast tests for landing, cookie consent, auth, upgrade, billing banners, checkout success
+- Next step: Code review Phase 7.5 PR, merge, then make repo public
 - Test setup: run `npm run test:setup` to generate `playwright/.env.test` from `.env.local`, then `npm test` for full Playwright suite
 - CI: fast tests run on every push to main, slow tests on PRs only
 - Brand guide: `docs/brand-style-guide.md` — reference for all future UI work
