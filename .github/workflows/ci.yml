@@ -42,7 +42,7 @@ jobs:
           NEXT_PUBLIC_STRIPE_PRICE_ANNUAL: ${{ secrets.NEXT_PUBLIC_STRIPE_PRICE_ANNUAL }}
 
       - name: Run fast tests
-        run: npx playwright test --config playwright/playwright.config.ts --project=fast
+        run: npx playwright test --config playwright/playwright.config.ts --project=fast --project=fast-serial
         env:
           CI: true
 
@@ -58,6 +58,7 @@ jobs:
 
   test-slow:
     name: Slow Tests
+    needs: [test-fast]
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     container:
