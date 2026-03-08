@@ -219,6 +219,15 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - Design doc: `docs/plans/2026-03-07-phase7-testing-ci-design.md`
 - Implementation plan: `docs/plans/2026-03-07-phase7-testing-ci-implementation.md`
 
+### ⬜ Phase 7.5 — Test Backlog (complete)
+- [x] 30 new fast Playwright tests: landing sections, cookie consent, auth pages, upgrade page, billing banners, checkout success
+- [x] New fixtures: `freshAnonPage`, `mockApi.checkoutStatus`, `supabaseAdmin.setSubscriptionState/resetSubscription`
+- [x] New page object: `LandingPage`
+- [x] CI fix: sequential job execution, billing-banners isolation (`fast-serial` project), removed session-invalidating password sync
+- [x] Repo made public, branch protection enabled on main
+- Total: 51 fast tests, 4 slow tests (55 total)
+- Design doc: `docs/plans/2026-03-08-phase7.5-test-backlog-design.md`
+
 ### ⬜ Phase 8+ — Additional Tools
 Build out remaining tools per the roadmap above.
 
@@ -289,9 +298,10 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 7.5 in progress (PR open)
-- Last action: Phase 7.5 test backlog — 30 new fast tests for landing, cookie consent, auth, upgrade, billing banners, checkout success
-- Next step: Code review Phase 7.5 PR, merge, then make repo public
+- Phase: 7.5 complete, merged to main, repo public
+- Last action: Phase 7.5 test backlog — 30 new fast tests, CI race condition fix, repo made public with branch protection
+- Next step: Phase 8 — Additional Tools
 - Test setup: run `npm run test:setup` to generate `playwright/.env.test` from `.env.local`, then `npm test` for full Playwright suite
-- CI: fast tests run on every push to main, slow tests on PRs only
+- CI: fast tests on every push, fast + slow on PRs to main, branch protection requires both to pass
+- Repo: public, squash merge only, auto-delete branches, PRs required for main
 - Brand guide: `docs/brand-style-guide.md` — reference for all future UI work
