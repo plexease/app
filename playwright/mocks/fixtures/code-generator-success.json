@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "filename": "PaymentService.cs",
+      "description": "Service class wrapping Stripe SDK for payment intent creation and subscription management",
+      "code": "using Stripe;\n\npublic class PaymentService\n{\n    private readonly StripeClient _client;\n\n    public PaymentService(string apiKey)\n    {\n        _client = new StripeClient(apiKey);\n    }\n\n    public async Task<PaymentIntent> CreatePaymentIntent(long amount, string currency)\n    {\n        var options = new PaymentIntentCreateOptions\n        {\n            Amount = amount,\n            Currency = currency,\n        };\n        var service = new PaymentIntentService(_client);\n        return await service.CreateAsync(options);\n    }\n}"
+    },
+    {
+      "filename": "WebhookController.cs",
+      "description": "ASP.NET controller handling Stripe webhook events with signature verification",
+      "code": "using Microsoft.AspNetCore.Mvc;\nusing Stripe;\n\n[ApiController]\n[Route(\"api/webhooks/stripe\")]\npublic class WebhookController : ControllerBase\n{\n    [HttpPost]\n    public async Task<IActionResult> HandleWebhook()\n    {\n        var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();\n        var stripeEvent = EventUtility.ConstructEvent(json, Request.Headers[\"Stripe-Signature\"], \"whsec_...\");\n        \n        switch (stripeEvent.Type)\n        {\n            case \"payment_intent.succeeded\":\n                break;\n        }\n        return Ok();\n    }\n}"
+    }
+  ],
+  "setupInstructions": "1. Install Stripe.NET: dotnet add package Stripe.net\n2. Add your Stripe API key to appsettings.json\n3. Register PaymentService in DI container\n4. Configure webhook endpoint in Stripe Dashboard",
+  "nextStepSuggestion": "Generate unit tests for these integration components.",
+  "nextStepToolId": "unit-test-generator",
+  "nextStepDescription": "You now have a PaymentService and WebhookController. Generate unit tests to verify payment intent creation, webhook signature validation, and event handling."
+}

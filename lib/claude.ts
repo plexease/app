@@ -149,3 +149,58 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
     throw new Error(`Failed to parse Claude response: ${text}`);
   }
 }
+
+// --- Integration Code Generator ---
+
+const CodeGeneratorSchema = z.object({
+  files: z.array(z.object({
+    filename: z.string(),
+    description: z.string(),
+    code: z.string(),
+  })),
+  setupInstructions: z.string(),
+  nextStepSuggestion: z.string(),
+  nextStepToolId: z.string(),
+  nextStepDescription: z.string(),
+});
+
+export type CodeGeneratorResult = z.infer<typeof CodeGeneratorSchema>;
+
+export async function generateIntegrationCode(
+  spec: string,
+  language: string,
+  framework: string
+): Promise<CodeGeneratorResult> {
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 2048,
+    messages: [
+      {
+        role: "user",
+        content: `You are an integration code generator. Generate boilerplate code for this integration using ${language} (${framework}): "${spec}".
+
+Return ONLY valid JSON — no markdown, no explanation, no code fences:
+{
+  "files": [
+    {"filename": "FileName.ext", "description": "What this file does", "code": "// Full file contents"}
+  ],
+  "setupInstructions": "Step-by-step setup instructions (package install commands, config, env vars).",
+  "nextStepSuggestion": "Recommendation for next step.",
+  "nextStepToolId": "unit-test-generator",
+  "nextStepDescription": "Context-aware description for generating tests for this code."
+}
+
+Generate 2-4 files max. Keep code production-ready but concise.`,
+      },
+    ],
+  });
+
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+
+  try {
+    return CodeGeneratorSchema.parse(JSON.parse(text));
+  } catch {
+    throw new Error(`Failed to parse Claude response: ${text}`);
+  }
+}
