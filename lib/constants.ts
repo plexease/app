@@ -9,6 +9,12 @@ export const TOOL_NAME_CODE_EXPLAINER = "code-explainer";
 export const TOOL_NAME_INTEGRATION_PLANNER = "integration-planner";
 export const TOOL_NAME_CODE_GENERATOR = "integration-code-generator";
 export const TOOL_NAME_DEPENDENCY_AUDIT = "dependency-audit";
+export const TOOL_NAME_ERROR_EXPLAINER = "error-explainer";
+export const TOOL_NAME_PACKAGE_ADVISOR = "package-advisor";
+export const TOOL_NAME_API_WRAPPER_GENERATOR = "api-wrapper-generator";
+export const TOOL_NAME_UNIT_TEST_GENERATOR = "unit-test-generator";
+export const TOOL_NAME_HEALTH_CHECKER = "health-checker";
+export const TOOL_NAME_MIGRATION_ASSISTANT = "migration-assistant";
 
 // Billing
 export const GRACE_PERIOD_DAYS = 1;

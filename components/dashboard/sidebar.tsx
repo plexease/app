@@ -9,29 +9,40 @@ import { Logo } from "@/components/brand/logo";
 import { resetCookieConsent } from "@/components/ui/cookie-consent";
 import type { UserPlan } from "@/lib/subscription";
 
-const navGroups = [
+const navGroups: { label: string | null; items: { href: string; label: string; exact?: boolean }[] }[] = [
   {
     label: null,
     items: [{ href: "/dashboard", label: "Dashboard", exact: true }],
   },
   {
     label: "Understand",
-    items: [{ href: "/tools/code-explainer", label: "Code Explainer" }],
+    items: [
+      { href: "/tools/code-explainer", label: "Code Explainer" },
+      { href: "/tools/error-explainer", label: "Error Explainer" },
+    ],
   },
   {
     label: "Decide",
     items: [
-      { href: "/tools/nuget-advisor", label: "NuGet Advisor" },
+      { href: "/tools/package-advisor", label: "Package Advisor" },
       { href: "/tools/integration-planner", label: "Integration Planner" },
     ],
   },
   {
     label: "Build",
-    items: [{ href: "/tools/code-generator", label: "Code Generator" }],
+    items: [
+      { href: "/tools/code-generator", label: "Code Generator" },
+      { href: "/tools/api-wrapper-generator", label: "API Wrapper Generator" },
+      { href: "/tools/unit-test-generator", label: "Unit Test Generator" },
+    ],
   },
   {
     label: "Maintain",
-    items: [{ href: "/tools/dependency-audit", label: "Dependency Audit" }],
+    items: [
+      { href: "/tools/dependency-audit", label: "Dependency Audit" },
+      { href: "/tools/health-checker", label: "Health Checker" },
+      { href: "/tools/migration-assistant", label: "Migration Assistant" },
+    ],
   },
 ];
 

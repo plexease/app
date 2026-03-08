@@ -1,0 +1,53 @@
+import { NextRequest, NextResponse } from "next/server";
+import { getErrorExplanation } from "@/lib/claude";
+import { TOOL_NAME_ERROR_EXPLAINER } from "@/lib/constants";
+import { authenticateAndCheckUsage, incrementUsage } from "@/lib/api-helpers";
+
+export async function POST(request: NextRequest) {
+  const auth = await authenticateAndCheckUsage(TOOL_NAME_ERROR_EXPLAINER);
+  if ("error" in auth) return auth.error;
+
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
+  const { errorLog, language, framework } = body as {
+    errorLog?: string;
+    language?: string;
+    framework?: string;
+  };
+
+  if (!errorLog?.trim()) {
+    return NextResponse.json({ error: "Error log is required" }, { status: 400 });
+  }
+
+  if (errorLog.length > 3000) {
+    return NextResponse.json({ error: "Error log exceeds 3,000 character limit" }, { status: 400 });
+  }
+
+  if (!language) {
+    return NextResponse.json({ error: "Language is required" }, { status: 400 });
+  }
+
+  let result;
+  try {
+    result = await getErrorExplanation(
+      errorLog.trim(),
+      language,
+      framework || "unknown"
+    );
+  } catch (err) {
+    console.error("Claude API error:", err instanceof Error ? err.message : "Unknown error");
+    return NextResponse.json(
+      { error: "Failed to analyse error. Please try again." },
+      { status: 500 }
+    );
+  }
+
+  await incrementUsage(auth.context.userId, TOOL_NAME_ERROR_EXPLAINER);
+
+  return NextResponse.json(result);
+}

@@ -151,25 +151,36 @@ export function DashboardContent({ plan, usageCount }: Props) {
             {
               stage: "Understand",
               description: "Explain code and errors in plain English",
-              tools: [{ href: "/tools/code-explainer", label: "Code Explainer" }],
+              tools: [
+                { href: "/tools/code-explainer", label: "Code Explainer" },
+                { href: "/tools/error-explainer", label: "Error Explainer" },
+              ],
             },
             {
               stage: "Decide",
               description: "Plan integrations and choose packages",
               tools: [
-                { href: "/tools/nuget-advisor", label: "NuGet Advisor" },
+                { href: "/tools/package-advisor", label: "Package Advisor" },
                 { href: "/tools/integration-planner", label: "Integration Planner" },
               ],
             },
             {
               stage: "Build",
               description: "Generate integration code and tests",
-              tools: [{ href: "/tools/code-generator", label: "Code Generator" }],
+              tools: [
+                { href: "/tools/code-generator", label: "Code Generator" },
+                { href: "/tools/api-wrapper-generator", label: "API Wrapper Generator" },
+                { href: "/tools/unit-test-generator", label: "Unit Test Generator" },
+              ],
             },
             {
               stage: "Maintain",
               description: "Audit dependencies and check health",
-              tools: [{ href: "/tools/dependency-audit", label: "Dependency Audit" }],
+              tools: [
+                { href: "/tools/dependency-audit", label: "Dependency Audit" },
+                { href: "/tools/health-checker", label: "Health Checker" },
+                { href: "/tools/migration-assistant", label: "Migration Assistant" },
+              ],
             },
           ].map((stage) => (
             <div
