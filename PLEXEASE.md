@@ -65,11 +65,11 @@ plexease/
 ├── app/
 │   ├── (auth)/                         # login, signup
 │   ├── (dashboard)/                    # main dashboard
-│   │   └── tools/nuget-advisor/
+│   │   └── tools/                      # nuget-advisor, code-explainer, integration-planner, code-generator, dependency-audit
 │   ├── api/
 │   │   ├── auth/                       # Supabase endpoints
 │   │   ├── stripe/                     # webhooks & checkout
-│   │   └── tools/nuget-advisor/        # Claude API calls
+│   │   └── tools/                      # Claude API routes per tool
 │   └── page.tsx                        # landing page
 ├── components/
 │   ├── brand/                         # Logo components (icon, wordmark, combined)
@@ -77,7 +77,8 @@ plexease/
 │   ├── billing/                       # Pricing, usage, tier badges
 │   ├── dashboard/                     # Sidebar, content, sign-out
 │   ├── landing/                       # Nav, Footer, HowItWorks, Attribution, Pricing
-│   ├── tools/                         # NuGet advisor form/results
+│   ├── shared/                        # StackSelector, WorkflowNext, CharLimitedInput
+│   ├── tools/                         # Per-tool form/results (nuget-advisor, code-explainer, etc.)
 │   └── ui/                            # Spinner, cookie consent
 ├── lib/                                # supabase, stripe, claude clients
 ├── types/                              # TypeScript interfaces
@@ -228,7 +229,21 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - Total: 51 fast tests, 4 slow tests (55 total)
 - Design doc: `docs/plans/2026-03-08-phase7.5-test-backlog-design.md`
 
-### ⬜ Phase 8+ — Additional Tools
+### ✅ Phase 8a — Workflow Tools (complete)
+- [x] Shared infrastructure: workflow context (localStorage), StackSelector, WorkflowNext, CharLimitedInput, API auth helpers
+- [x] Sidebar updated with grouped navigation (Understand / Decide / Build / Maintain)
+- [x] Dashboard updated with workflow hub (4 stage cards)
+- [x] Code Explainer (Understand) — paste code, get plain English explanation + detected packages/patterns
+- [x] Integration Planner (Decide) — describe integration, get approach + packages + architecture + considerations
+- [x] Code Generator (Build) — describe spec, get generated files with copy button + setup instructions
+- [x] Dependency Audit (Maintain) — paste dependency file, get audit table with status badges + recommendations
+- [x] Workflow hand-off between tools via localStorage context
+- [x] 23 new fast Playwright tests (5 per tool + 3 shared component tests)
+- Total: 70 fast tests, 4 slow tests (74 total)
+- Design doc: `docs/plans/2026-03-08-phase8a-design.md`
+- Implementation plan: `docs/plans/2026-03-08-phase8a-implementation.md`
+
+### ⬜ Phase 8b+ — Additional Tools
 Build out remaining tools per the roadmap above.
 
 ---
@@ -298,9 +313,9 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 7.5 complete, merged to main, repo public
-- Last action: Phase 7.5 test backlog — 30 new fast tests, CI race condition fix, repo made public with branch protection
-- Next step: Phase 8 — Additional Tools
+- Phase: 8a complete (on feature/phase8a branch)
+- Last action: Phase 8a — 4 new workflow tools, shared infrastructure, 23 new tests (70 fast total)
+- Next step: PR review, merge, then Phase 8b
 - Test setup: run `npm run test:setup` to generate `playwright/.env.test` from `.env.local`, then `npm test` for full Playwright suite
 - CI: fast tests on every push, fast + slow on PRs to main, branch protection requires both to pass
 - Repo: public, squash merge only, auto-delete branches, PRs required for main
