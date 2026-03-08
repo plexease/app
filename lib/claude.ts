@@ -95,3 +95,57 @@ ${code}`,
     throw new Error(`Failed to parse Claude response: ${text}`);
   }
 }
+
+// --- Integration Planner ---
+
+const IntegrationPlannerSchema = z.object({
+  approach: z.string(),
+  recommendedPackages: z.array(z.object({
+    name: z.string(),
+    purpose: z.string(),
+  })),
+  architectureOverview: z.string(),
+  considerations: z.array(z.string()),
+  nextStepSuggestion: z.string(),
+  nextStepToolId: z.string(),
+  nextStepDescription: z.string(),
+});
+
+export type IntegrationPlannerResult = z.infer<typeof IntegrationPlannerSchema>;
+
+export async function getIntegrationPlan(
+  description: string,
+  language: string,
+  framework: string
+): Promise<IntegrationPlannerResult> {
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 1024,
+    messages: [
+      {
+        role: "user",
+        content: `You are an integration planning advisor. The user wants to build an integration using ${language} (${framework}): "${description}".
+
+Return ONLY valid JSON — no markdown, no explanation, no code fences:
+{
+  "approach": "A clear, plain English summary of the recommended approach.",
+  "recommendedPackages": [{"name": "PackageName", "purpose": "What it's used for"}],
+  "architectureOverview": "High-level architecture description — components, data flow, key patterns.",
+  "considerations": ["Security consideration", "Error handling note", "Testing approach"],
+  "nextStepSuggestion": "A 1-2 sentence recommendation for what to do next.",
+  "nextStepToolId": "integration-code-generator or api-wrapper-generator",
+  "nextStepDescription": "Context-aware description referencing specifics from this plan."
+}`,
+      },
+    ],
+  });
+
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+
+  try {
+    return IntegrationPlannerSchema.parse(JSON.parse(text));
+  } catch {
+    throw new Error(`Failed to parse Claude response: ${text}`);
+  }
+}
