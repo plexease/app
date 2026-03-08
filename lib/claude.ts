@@ -204,3 +204,63 @@ Generate 2-4 files max. Keep code production-ready but concise.`,
     throw new Error(`Failed to parse Claude response: ${text}`);
   }
 }
+
+// --- Dependency Audit ---
+
+const DependencyAuditSchema = z.object({
+  summary: z.string(),
+  dependencies: z.array(z.object({
+    name: z.string(),
+    currentVersion: z.string(),
+    latestVersion: z.string(),
+    status: z.enum(["up-to-date", "outdated", "vulnerable", "deprecated"]),
+    note: z.string(),
+  })),
+  recommendations: z.array(z.string()),
+  nextStepSuggestion: z.string(),
+  nextStepToolId: z.string(),
+  nextStepDescription: z.string(),
+});
+
+export type DependencyAuditResult = z.infer<typeof DependencyAuditSchema>;
+
+export async function auditDependencies(
+  dependencyFile: string,
+  language: string,
+  framework: string
+): Promise<DependencyAuditResult> {
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 1024,
+    messages: [
+      {
+        role: "user",
+        content: `You are a dependency audit tool. Analyse this ${language} (${framework}) dependency file and check for outdated, vulnerable, or deprecated packages.
+
+Return ONLY valid JSON — no markdown, no explanation, no code fences:
+{
+  "summary": "Overall health summary (e.g. '3 of 8 packages need attention').",
+  "dependencies": [
+    {"name": "PackageName", "currentVersion": "1.0.0", "latestVersion": "2.0.0", "status": "outdated", "note": "Major version available with breaking changes."}
+  ],
+  "recommendations": ["Priority action 1", "Priority action 2"],
+  "nextStepSuggestion": "Recommendation for next step.",
+  "nextStepToolId": "migration-assistant",
+  "nextStepDescription": "Context-aware description for migrating outdated dependencies."
+}
+
+The dependency file:
+${dependencyFile}`,
+      },
+    ],
+  });
+
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+
+  try {
+    return DependencyAuditSchema.parse(JSON.parse(text));
+  } catch {
+    throw new Error(`Failed to parse Claude response: ${text}`);
+  }
+}
