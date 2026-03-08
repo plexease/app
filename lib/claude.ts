@@ -42,3 +42,56 @@ Return ONLY valid JSON in this exact shape — no markdown, no explanation, no c
     throw new Error(`Failed to parse Claude response: ${text}`);
   }
 }
+
+// --- Code Explainer ---
+
+const CodeExplainerSchema = z.object({
+  explanation: z.string(),
+  detectedPackages: z.array(z.string()),
+  detectedPatterns: z.array(z.string()),
+  nextStepSuggestion: z.string(),
+  nextStepToolId: z.string(),
+  nextStepDescription: z.string(),
+});
+
+export type CodeExplainerResult = z.infer<typeof CodeExplainerSchema>;
+
+export async function getCodeExplanation(
+  code: string,
+  scopeQuestion: string,
+  language: string,
+  framework: string
+): Promise<CodeExplainerResult> {
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 1024,
+    messages: [
+      {
+        role: "user",
+        content: `You are a code explainer for developers and non-developers. The user has pasted ${language} code (${framework}) and wants to understand: "${scopeQuestion}".
+
+Analyse this code and return ONLY valid JSON — no markdown, no explanation, no code fences:
+{
+  "explanation": "A clear, plain English explanation accessible to non-developers. Explain what the code does, not how.",
+  "detectedPackages": ["List", "of", "packages/libraries used"],
+  "detectedPatterns": ["List", "of", "design patterns or integration patterns detected"],
+  "nextStepSuggestion": "A 1-2 sentence recommendation for what the user should do next, referencing a specific tool.",
+  "nextStepToolId": "integration-planner or package-advisor (whichever is most relevant)",
+  "nextStepDescription": "Context-aware description for why the recommended tool would help, referencing specifics from this code."
+}
+
+The code:
+${code}`,
+      },
+    ],
+  });
+
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+
+  try {
+    return CodeExplainerSchema.parse(JSON.parse(text));
+  } catch {
+    throw new Error(`Failed to parse Claude response: ${text}`);
+  }
+}

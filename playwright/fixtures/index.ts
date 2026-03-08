@@ -12,6 +12,10 @@ import {
 
 type MockApiFactory = {
   nugetAdvisor: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  codeExplainer: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  integrationPlanner: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  codeGenerator: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  dependencyAudit: (page: Page, scenario?: "success" | "error") => Promise<void>;
   checkoutStatus: (page: Page, response: { plan: string }) => Promise<void>;
 };
 
@@ -112,6 +116,54 @@ export const test = base.extend<TestFixtures>({
             contentType: "application/json",
             body,
           })
+        );
+      },
+      codeExplainer: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/code-explainer-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/code-explainer", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      integrationPlanner: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/integration-planner-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/integration-planner", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      codeGenerator: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/code-generator-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/code-generator", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      dependencyAudit: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/dependency-audit-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/dependency-audit", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
         );
       },
       checkoutStatus: async (page: Page, response: { plan: string }) => {
