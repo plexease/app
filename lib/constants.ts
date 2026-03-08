@@ -5,6 +5,10 @@ export const USAGE_DANGER_THRESHOLD = 19;   // 95% — red state
 
 // Tool names
 export const TOOL_NAME_NUGET_ADVISOR = "nuget-advisor";
+export const TOOL_NAME_CODE_EXPLAINER = "code-explainer";
+export const TOOL_NAME_INTEGRATION_PLANNER = "integration-planner";
+export const TOOL_NAME_CODE_GENERATOR = "integration-code-generator";
+export const TOOL_NAME_DEPENDENCY_AUDIT = "dependency-audit";
 
 // Billing
 export const GRACE_PERIOD_DAYS = 1;

@@ -140,17 +140,55 @@ export function DashboardContent({ plan, usageCount }: Props) {
         {/* Usage card */}
         <UsageCard isPro={isPro} usageCount={usageCount} />
 
-        {/* Tools card */}
-        <div className="rounded-lg border border-surface-700 bg-surface-900 p-5">
-          <h3 className="font-heading text-sm font-semibold uppercase tracking-wide text-muted-400">
-            Tools
-          </h3>
-          <a
-            href="/tools/nuget-advisor"
-            className="mt-2 block text-sm font-medium text-brand-400 hover:text-brand-300 transition-colors"
-          >
-            NuGet Advisor &rarr;
-          </a>
+      </div>
+
+      {/* Workflow stages */}
+      <div className="mt-8">
+        <h2 className="font-heading text-lg font-bold text-white">Tools</h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            {
+              stage: "Understand",
+              description: "Explain code and errors in plain English",
+              tools: [{ href: "/tools/code-explainer", label: "Code Explainer" }],
+            },
+            {
+              stage: "Decide",
+              description: "Plan integrations and choose packages",
+              tools: [{ href: "/tools/integration-planner", label: "Integration Planner" }],
+            },
+            {
+              stage: "Build",
+              description: "Generate integration code and tests",
+              tools: [{ href: "/tools/code-generator", label: "Code Generator" }],
+            },
+            {
+              stage: "Maintain",
+              description: "Audit dependencies and check health",
+              tools: [{ href: "/tools/dependency-audit", label: "Dependency Audit" }],
+            },
+          ].map((stage) => (
+            <div
+              key={stage.stage}
+              className="rounded-lg border border-surface-700 bg-surface-900 p-5"
+            >
+              <h3 className="font-heading text-sm font-semibold uppercase tracking-wide text-brand-400">
+                {stage.stage}
+              </h3>
+              <p className="mt-1 text-xs text-muted-500">{stage.description}</p>
+              <div className="mt-3 space-y-1">
+                {stage.tools.map((tool) => (
+                  <a
+                    key={tool.href}
+                    href={tool.href}
+                    className="block text-sm font-medium text-muted-300 hover:text-white transition-colors"
+                  >
+                    {tool.label} &rarr;
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
