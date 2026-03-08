@@ -1,0 +1,19 @@
+{
+  "files": [
+    {
+      "filename": "StripeClient.cs",
+      "description": "Main Stripe API client with typed methods for charges and customers",
+      "code": "using System.Net.Http;\nusing System.Text.Json;\n\npublic class StripeClient\n{\n    private readonly HttpClient _http;\n    private readonly string _apiKey;\n\n    public StripeClient(string apiKey)\n    {\n        _apiKey = apiKey;\n        _http = new HttpClient();\n        _http.DefaultRequestHeaders.Add(\"Authorization\", $\"Bearer {_apiKey}\");\n    }\n\n    public async Task<Charge> CreateCharge(int amount, string currency)\n    {\n        var response = await _http.PostAsync(\"https://api.stripe.com/v1/charges\", null);\n        return JsonSerializer.Deserialize<Charge>(await response.Content.ReadAsStringAsync())!;\n    }\n}"
+    },
+    {
+      "filename": "StripeModels.cs",
+      "description": "Data models for Stripe API responses",
+      "code": "public record Charge(string Id, int Amount, string Currency, string Status);\npublic record Customer(string Id, string Email, string Name);"
+    }
+  ],
+  "authenticationSetup": "1. Get your API key from the Stripe Dashboard → Developers → API keys.\n2. Store the secret key in an environment variable: STRIPE_SECRET_KEY.\n3. Pass it to the StripeClient constructor: new StripeClient(Environment.GetEnvironmentVariable(\"STRIPE_SECRET_KEY\")!).",
+  "usageExample": "var client = new StripeClient(apiKey);\nvar charge = await client.CreateCharge(2000, \"usd\");\nConsole.WriteLine($\"Charge {charge.Id}: {charge.Status}\");",
+  "nextStepSuggestion": "Generate unit tests for your new Stripe wrapper.",
+  "nextStepToolId": "unit-test-generator",
+  "nextStepDescription": "Your Stripe wrapper has methods for creating charges and managing customers. The Unit Test Generator can create comprehensive tests covering happy paths, error handling, and edge cases."
+}

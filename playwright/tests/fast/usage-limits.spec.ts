@@ -1,5 +1,5 @@
 import { test, expect } from "../../fixtures";
-import { NuGetAdvisorPage } from "../../pages/nuget-advisor.page";
+import { PackageAdvisorPage } from "../../pages/package-advisor.page";
 
 test.describe("Usage Limits", () => {
   test.describe.configure({ mode: "serial" });
@@ -9,9 +9,9 @@ test.describe("Usage Limits", () => {
   }) => {
     const userId = await supabaseAdmin.getFreeUserId();
 
-    await supabaseAdmin.setUsageCount(userId, "nuget-advisor", 20);
+    await supabaseAdmin.setUsageCount(userId, "package-advisor", 20);
 
-    const advisor = new NuGetAdvisorPage(freeUserPage);
+    const advisor = new PackageAdvisorPage(freeUserPage);
     await advisor.goto();
 
     await expect(advisor.limitReachedMessage).toBeVisible();
@@ -25,18 +25,18 @@ test.describe("Usage Limits", () => {
     supabaseAdmin,
     mockApi,
   }) => {
-    await mockApi.nugetAdvisor(freeUserPage, "success");
+    await mockApi.packageAdvisor(freeUserPage, "success");
     const userId = await supabaseAdmin.getFreeUserId();
 
-    await supabaseAdmin.setUsageCount(userId, "nuget-advisor", 19);
+    await supabaseAdmin.setUsageCount(userId, "package-advisor", 19);
 
-    const advisor = new NuGetAdvisorPage(freeUserPage);
+    const advisor = new PackageAdvisorPage(freeUserPage);
     await advisor.goto();
 
-    await expect(advisor.packageInput).toBeVisible();
+    await expect(advisor.queryInput).toBeVisible();
     await expect(advisor.usageCounter).toBeVisible();
 
-    await advisor.analysePackage("Moq");
+    await advisor.advise("Moq");
 
     // Client increments currentUsage locally from 19→20, triggering limit message
     await expect(advisor.limitReachedMessage).toBeVisible({ timeout: 5000 });

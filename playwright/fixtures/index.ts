@@ -16,6 +16,12 @@ type MockApiFactory = {
   integrationPlanner: (page: Page, scenario?: "success" | "error") => Promise<void>;
   codeGenerator: (page: Page, scenario?: "success" | "error") => Promise<void>;
   dependencyAudit: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  errorExplainer: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  packageAdvisor: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  apiWrapperGenerator: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  unitTestGenerator: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  healthChecker: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  migrationAssistant: (page: Page, scenario?: "success" | "error") => Promise<void>;
   checkoutStatus: (page: Page, response: { plan: string }) => Promise<void>;
 };
 
@@ -163,6 +169,78 @@ export const test = base.extend<TestFixtures>({
         const status = scenario === "error" ? 500 : 200;
 
         await page.route("**/api/tools/dependency-audit", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      errorExplainer: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/error-explainer-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/error-explainer", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      packageAdvisor: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/package-advisor-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/package-advisor", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      apiWrapperGenerator: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/api-wrapper-generator-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/api-wrapper-generator", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      unitTestGenerator: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/unit-test-generator-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/unit-test-generator", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      healthChecker: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/health-checker-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/health-checker", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      migrationAssistant: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/migration-assistant-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/migration-assistant", (route) =>
           route.fulfill({ status, contentType: "application/json", body })
         );
       },

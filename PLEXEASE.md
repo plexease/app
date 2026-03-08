@@ -65,7 +65,7 @@ plexease/
 ├── app/
 │   ├── (auth)/                         # login, signup
 │   ├── (dashboard)/                    # main dashboard
-│   │   └── tools/                      # nuget-advisor, code-explainer, integration-planner, code-generator, dependency-audit
+│   │   └── tools/                      # all 10 workflow tools + nuget-advisor redirect
 │   ├── api/
 │   │   ├── auth/                       # Supabase endpoints
 │   │   ├── stripe/                     # webhooks & checkout
@@ -77,7 +77,7 @@ plexease/
 │   ├── billing/                       # Pricing, usage, tier badges
 │   ├── dashboard/                     # Sidebar, content, sign-out
 │   ├── landing/                       # Nav, Footer, HowItWorks, Attribution, Pricing
-│   ├── shared/                        # StackSelector, WorkflowNext, CharLimitedInput
+│   ├── shared/                        # StackSelector, WorkflowNext, CharLimitedInput, CopyButton
 │   ├── tools/                         # Per-tool form/results (nuget-advisor, code-explainer, etc.)
 │   └── ui/                            # Spinner, cookie consent
 ├── lib/                                # supabase, stripe, claude clients
@@ -90,32 +90,29 @@ plexease/
 
 ---
 
-## Tools Roadmap
+## Tools (10 total, all complete)
 
-### Phase 2 — Launch Tool
-- **NuGet Package Advisor** ← *first tool to build*
-  - User inputs a .NET package name
-  - Claude returns: what it does, alternatives, compatibility notes, version advice
+### Understand
+- **Code Explainer** — paste code, get plain English explanation + detected packages/patterns
+- **Error Explainer** — paste error/stack trace, get root cause + fix suggestions + related docs
 
-### Future .NET Tools
-- Unit Test Generator
-- Integration Code Generator
-- API Wrapper Generator
-- .NET Migration Assistant (.NET Framework → .NET 8/9)
+### Decide
+- **Package Advisor** — multi-language package recommendations (replaces NuGet Advisor)
+- **Integration Planner** — describe integration, get approach + packages + architecture
 
-### Future E-Commerce Tools
-- Shipping & Logistics Integration Advisor (Shiptheory, Royal Mail, DPD)
-- Payment Gateway Integration Assistant (Stripe, PayPal, Square)
-- Inventory Management Connector (Linnworks, Brightpearl)
-- E-Commerce Platform Integration (Shopify, WooCommerce, Magento)
-- CRM Integration Assistant (HubSpot, Salesforce, Zoho)
-- Accounting Software Connector (Xero, QuickBooks, Sage)
+### Build
+- **Code Generator** — describe spec, get generated files with copy button + setup instructions
+- **API Wrapper Generator** — describe API, get typed wrapper with auth setup + usage example
+- **Unit Test Generator** — paste code, get test files with framework info + mocking approach
 
-### Future Support & Maintenance Tools
-- Error Log Explainer
-- Integration Health Checker
-- Dependency Audit Tool
-- Plain English Code Explainer
+### Maintain
+- **Dependency Audit** — paste dependency file, get audit table with status badges
+- **Health Checker** — paste config, get health assessment with severity badges
+- **Migration Assistant** — specify from/to versions, get migration steps + breaking changes
+
+### Future Tools
+- E-Commerce integrations (shipping, payments, inventory, CRM, accounting)
+- Platform-specific tools (Shopify, WooCommerce, Magento)
 
 ---
 
@@ -243,8 +240,19 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - Design doc: `docs/plans/2026-03-08-phase8a-design.md`
 - Implementation plan: `docs/plans/2026-03-08-phase8a-implementation.md`
 
-### ⬜ Phase 8b+ — Additional Tools
-Build out remaining tools per the roadmap above.
+### ✅ Phase 8b — Remaining Workflow Tools (complete)
+- [x] Error Explainer (Understand) — paste error/stack trace, get root cause + fix suggestions + related docs
+- [x] Package Advisor (Decide) — multi-language replacement for NuGet Advisor, recommendations + alternatives table + compatibility + version advice
+- [x] NuGet Advisor migration — page redirects to Package Advisor with `?language=csharp`, old API route preserved for usage data
+- [x] API Wrapper Generator (Build) — describe API, get typed wrapper files with copy button + auth setup + usage example
+- [x] Unit Test Generator (Build) — paste code, get test files with copy button + framework info + mocking approach
+- [x] Health Checker (Maintain) — paste config, get health assessment with severity badges (critical/warning/info) + recommendations
+- [x] Migration Assistant (Maintain) — specify from/to versions, get numbered migration steps with code changes + breaking changes (red-tinted) + effort estimate
+- [x] Shared CopyButton component extracted to `components/shared/copy-button.tsx` (used by Code Generator, API Wrapper, Unit Test Generator)
+- [x] 37 new Playwright tests + 3 updated existing tests
+- Total: 107 fast + 4 slow + 2 fast-serial (113 total)
+- Design doc: `docs/plans/2026-03-08-phase8-tool-workflow-platform-design.md`
+- Implementation plan: `docs/plans/2026-03-08-phase8b-implementation.md`
 
 ---
 
@@ -313,9 +321,9 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 8a complete (on feature/phase8a branch)
-- Last action: Phase 8a — 4 new workflow tools, shared infrastructure, 23 new tests (70 fast total)
-- Next step: PR review, merge, then Phase 8b
+- Phase: 8b complete (on feature/phase8b branch)
+- Last action: Phase 8b — 6 new workflow tools + NuGet migration + shared CopyButton, 37 new tests (113 total)
+- Next step: PR review, merge, then Phase 9 planning
 - Test setup: run `npm run test:setup` to generate `playwright/.env.test` from `.env.local`, then `npm test` for full Playwright suite
 - CI: fast tests on every push, fast + slow on PRs to main, branch protection requires both to pass
 - Repo: public, squash merge only, auto-delete branches, PRs required for main

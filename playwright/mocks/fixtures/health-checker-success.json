@@ -1,0 +1,28 @@
+{
+  "configurationStatus": "Needs attention — 2 issues found. Your Stripe webhook configuration is mostly correct but has a critical missing signature verification and a warning about the endpoint URL.",
+  "issues": [
+    {
+      "severity": "critical",
+      "description": "Webhook signature verification is not configured. Incoming webhook events are not validated, leaving the endpoint vulnerable to spoofed requests.",
+      "fix": "Add Stripe webhook signature verification using your webhook signing secret: StripeWebhookSignatures.VerifyHeader(payload, sigHeader, webhookSecret)"
+    },
+    {
+      "severity": "warning",
+      "description": "The webhook endpoint URL uses HTTP instead of HTTPS. Stripe requires HTTPS for production endpoints.",
+      "fix": "Update your endpoint URL to use HTTPS. If running locally, use a tool like ngrok to create an HTTPS tunnel."
+    },
+    {
+      "severity": "info",
+      "description": "Consider adding idempotency handling for webhook events to prevent duplicate processing.",
+      "fix": "Store processed event IDs in a database and check before processing new events."
+    }
+  ],
+  "recommendations": [
+    "Enable Stripe's test mode webhook events to verify your handler works correctly before going live",
+    "Add structured logging for all webhook events to aid debugging",
+    "Set up monitoring alerts for webhook failures"
+  ],
+  "nextStepSuggestion": "Use the Error Explainer if you encounter any errors during webhook setup.",
+  "nextStepToolId": "error-explainer",
+  "nextStepDescription": "If you encounter errors while implementing these fixes, the Error Explainer can analyse the stack trace and provide specific guidance for your Stripe webhook configuration."
+}

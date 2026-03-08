@@ -1,17 +1,17 @@
 import { test, expect } from "../../fixtures";
-import { NuGetAdvisorPage } from "../../pages/nuget-advisor.page";
+import { PackageAdvisorPage } from "../../pages/package-advisor.page";
 
-test.describe("NuGet Advisor Canary", () => {
+test.describe("Package Advisor Canary", () => {
   test("real Claude API call returns result cards", async ({ freeUserPage }) => {
     test.setTimeout(60000);
 
-    const advisor = new NuGetAdvisorPage(freeUserPage);
+    const advisor = new PackageAdvisorPage(freeUserPage);
     await advisor.goto();
 
-    await advisor.analysePackage("Newtonsoft.Json");
+    await advisor.advise("Newtonsoft.Json");
 
     // Real API call — may take up to 30s
-    await expect(advisor.whatItDoesCard).toBeVisible({ timeout: 30000 });
+    await expect(advisor.recommendationCard).toBeVisible({ timeout: 30000 });
     await expect(advisor.alternativesCard).toBeVisible();
     await expect(advisor.compatibilityCard).toBeVisible();
     await expect(advisor.versionAdviceCard).toBeVisible();

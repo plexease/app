@@ -1,7 +1,7 @@
-import type { CodeGeneratorResult } from "@/lib/claude";
+import type { ApiWrapperGeneratorResult } from "@/lib/claude";
 import { CopyButton } from "@/components/shared/copy-button";
 
-export function GeneratorResultCards({ result }: { result: CodeGeneratorResult }) {
+export function ApiWrapperResultCards({ result }: { result: ApiWrapperGeneratorResult }) {
   return (
     <div className="mt-8 space-y-4">
       {result.files.map((file) => (
@@ -19,9 +19,18 @@ export function GeneratorResultCards({ result }: { result: CodeGeneratorResult }
 
       <div className="rounded-lg border border-surface-700 bg-surface-900 p-5">
         <h3 className="font-heading text-sm font-semibold uppercase tracking-wide text-muted-400">
-          Setup instructions
+          Authentication Setup
         </h3>
-        <p className="mt-2 text-sm text-muted-300 whitespace-pre-line">{result.setupInstructions}</p>
+        <p className="mt-2 text-sm text-muted-300 whitespace-pre-line">{result.authenticationSetup}</p>
+      </div>
+
+      <div className="rounded-lg border border-surface-700 bg-surface-900 p-5">
+        <h3 className="font-heading text-sm font-semibold uppercase tracking-wide text-muted-400">
+          Usage Example
+        </h3>
+        <pre className="mt-2 overflow-x-auto rounded-lg bg-surface-950 p-4 text-xs text-muted-300 font-mono">
+          <code>{result.usageExample}</code>
+        </pre>
       </div>
     </div>
   );
