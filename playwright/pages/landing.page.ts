@@ -32,9 +32,7 @@ export class LandingPage {
     return this.page.getByRole("heading", { name: "Tools", exact: true });
   }
   get nugetCard(): Locator {
-    return this.page.locator("div", { hasText: "NuGet Package Advisor" }).filter({
-      has: this.page.getByText("Available now"),
-    });
+    return this.page.locator("h3", { hasText: "NuGet Package Advisor" });
   }
 
   // Pricing
@@ -51,9 +49,7 @@ export class LandingPage {
     return this.page.locator("#pricing h3", { hasText: "Pro" });
   }
   get proCardPrice(): Locator {
-    return this.page
-      .locator("#pricing div", { has: this.proCardHeading })
-      .locator("p.font-heading.text-3xl");
+    return this.proCardHeading.locator("xpath=..").locator("p.font-heading");
   }
 
   // Attribution
