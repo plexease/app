@@ -38,8 +38,17 @@ export default defineConfig({
     {
       name: "fast",
       testDir: "./tests/fast",
+      testIgnore: ["**/billing-banners*"],
       fullyParallel: true,
       workers: isCI ? 2 : 4,
+    },
+    {
+      name: "fast-serial",
+      testDir: "./tests/fast",
+      testMatch: ["**/billing-banners*"],
+      fullyParallel: false,
+      workers: 1,
+      dependencies: ["fast"],
     },
     {
       name: "slow",

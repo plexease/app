@@ -28,12 +28,12 @@ export async function ensureTestUser(email: string, password: string): Promise<s
   }
 
   if (createError && createError.message.includes("already been registered")) {
-    // Look up existing user and sync password
+    // Look up existing user — don't update password as it can invalidate sessions
+    // in parallel CI jobs sharing the same Supabase project
     const { data: { users }, error: listError } = await supabase.auth.admin.listUsers();
     if (listError) throw listError;
     const user = users.find((u) => u.email === email);
     if (!user) throw new Error(`User ${email} not found after creation conflict`);
-    await supabase.auth.admin.updateUserById(user.id, { password });
     return user.id;
   }
 
@@ -115,6 +115,48 @@ export async function resetProSubscription(userId: string): Promise<void> {
       },
       { onConflict: "user_id" }
     );
+
+  if (error) throw error;
+}
+
+export async function setSubscriptionState(
+  userId: string,
+  overrides: {
+    status?: string;
+    cancelAtPeriodEnd?: boolean;
+    currentPeriodEnd?: string;
+    gracePeriodEnd?: string | null;
+  }
+): Promise<void> {
+  const supabase = getAdminClient();
+
+  const { error } = await supabase
+    .from("subscriptions")
+    .upsert(
+      {
+        user_id: userId,
+        plan: "pro",
+        status: overrides.status ?? "active",
+        stripe_subscription_id: "test_sub_banner",
+        current_period_end:
+          overrides.currentPeriodEnd ??
+          new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        cancel_at_period_end: overrides.cancelAtPeriodEnd ?? false,
+        grace_period_end: overrides.gracePeriodEnd ?? null,
+      },
+      { onConflict: "user_id" }
+    );
+
+  if (error) throw error;
+}
+
+export async function deleteSubscription(userId: string): Promise<void> {
+  const supabase = getAdminClient();
+
+  const { error } = await supabase
+    .from("subscriptions")
+    .delete()
+    .eq("user_id", userId);
 
   if (error) throw error;
 }

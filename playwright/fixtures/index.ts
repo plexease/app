@@ -6,22 +6,36 @@ import {
   resetUsageForUser,
   findTestUser,
   currentMonth,
+  setSubscriptionState,
+  deleteSubscription,
 } from "../helpers/supabase-admin";
 
 type MockApiFactory = {
   nugetAdvisor: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  checkoutStatus: (page: Page, response: { plan: string }) => Promise<void>;
 };
 
 type TestFixtures = {
   freeUserPage: Page;
   proUserPage: Page;
   anonPage: Page;
+  freshAnonPage: Page;
   mockApi: MockApiFactory;
   supabaseAdmin: {
     setUsageCount: (userId: string, toolName: string, count: number) => Promise<void>;
     resetUsage: (userId: string) => Promise<void>;
     getFreeUserId: () => Promise<string>;
     getProUserId: () => Promise<string>;
+    setSubscriptionState: (
+      userId: string,
+      overrides: {
+        status?: string;
+        cancelAtPeriodEnd?: boolean;
+        currentPeriodEnd?: string;
+        gracePeriodEnd?: string | null;
+      }
+    ) => Promise<void>;
+    resetSubscription: (userId: string) => Promise<void>;
   };
 };
 
@@ -74,6 +88,14 @@ export const test = base.extend<TestFixtures>({
     await context.close();
   },
 
+  freshAnonPage: async ({ browser }, use) => {
+    const context = await browser.newContext();
+    await hideDevOverlay(context);
+    const page = await context.newPage();
+    await use(page);
+    await context.close();
+  },
+
   mockApi: async ({}, use) => {
     await use({
       nugetAdvisor: async (page: Page, scenario: "success" | "error" = "success") => {
@@ -92,6 +114,15 @@ export const test = base.extend<TestFixtures>({
           })
         );
       },
+      checkoutStatus: async (page: Page, response: { plan: string }) => {
+        await page.route("**/api/stripe/checkout/status", (route) =>
+          route.fulfill({
+            status: 200,
+            contentType: "application/json",
+            body: JSON.stringify(response),
+          })
+        );
+      },
     });
   },
 
@@ -105,6 +136,16 @@ export const test = base.extend<TestFixtures>({
       resetUsage: (userId: string) => resetUsageForUser(userId),
       getFreeUserId: () => findTestUser(freeEmail),
       getProUserId: () => findTestUser(proEmail),
+      setSubscriptionState: (
+        userId: string,
+        overrides: {
+          status?: string;
+          cancelAtPeriodEnd?: boolean;
+          currentPeriodEnd?: string;
+          gracePeriodEnd?: string | null;
+        }
+      ) => setSubscriptionState(userId, overrides),
+      resetSubscription: (userId: string) => deleteSubscription(userId),
     });
   },
 });
