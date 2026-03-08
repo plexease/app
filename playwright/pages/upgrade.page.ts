@@ -5,7 +5,7 @@ export class UpgradePage {
 
   readonly heading = this.page.locator("h1", { hasText: "Upgrade to Pro" });
   readonly monthlyToggle = this.page.getByText("Monthly");
-  readonly annualToggle = this.page.getByText("Annual");
+  readonly annualToggle = this.page.getByText("Annual", { exact: true });
   readonly subscribeButton = this.page.getByRole("button", { name: "Subscribe" });
 
   async goto() {
