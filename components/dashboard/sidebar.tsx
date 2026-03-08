@@ -20,7 +20,10 @@ const navGroups = [
   },
   {
     label: "Decide",
-    items: [{ href: "/tools/integration-planner", label: "Integration Planner" }],
+    items: [
+      { href: "/tools/nuget-advisor", label: "NuGet Advisor" },
+      { href: "/tools/integration-planner", label: "Integration Planner" },
+    ],
   },
   {
     label: "Build",

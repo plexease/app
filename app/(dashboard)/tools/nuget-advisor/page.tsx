@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AdvisorForm } from "@/components/tools/nuget-advisor/advisor-form";
-import { TOOL_NAME_NUGET_ADVISOR } from "@/lib/constants";
 import { currentMonthDate } from "@/lib/utils";
 import { isProUser } from "@/lib/subscription";
 
@@ -15,18 +14,16 @@ export default async function NuGetAdvisorPage() {
     redirect("/login");
   }
 
-  const [isPro, { data: usage }] = await Promise.all([
+  const [isPro, { data: usageRows }] = await Promise.all([
     isProUser(user.id),
     supabase
       .from("usage")
       .select("count")
       .eq("user_id", user.id)
-      .eq("tool_name", TOOL_NAME_NUGET_ADVISOR)
-      .eq("month", currentMonthDate())
-      .maybeSingle(),
+      .eq("month", currentMonthDate()),
   ]);
 
-  const usageCount = usage?.count ?? 0;
+  const usageCount = usageRows?.reduce((sum, row) => sum + (row.count ?? 0), 0) ?? 0;
 
   return (
     <div>

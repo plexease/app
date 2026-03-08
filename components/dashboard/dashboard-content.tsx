@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CancellationBanner } from "@/components/billing/cancellation-banner";
@@ -155,7 +156,10 @@ export function DashboardContent({ plan, usageCount }: Props) {
             {
               stage: "Decide",
               description: "Plan integrations and choose packages",
-              tools: [{ href: "/tools/integration-planner", label: "Integration Planner" }],
+              tools: [
+                { href: "/tools/nuget-advisor", label: "NuGet Advisor" },
+                { href: "/tools/integration-planner", label: "Integration Planner" },
+              ],
             },
             {
               stage: "Build",
@@ -178,13 +182,13 @@ export function DashboardContent({ plan, usageCount }: Props) {
               <p className="mt-1 text-xs text-muted-500">{stage.description}</p>
               <div className="mt-3 space-y-1">
                 {stage.tools.map((tool) => (
-                  <a
+                  <Link
                     key={tool.href}
                     href={tool.href}
                     className="block text-sm font-medium text-muted-300 hover:text-white transition-colors"
                   >
                     {tool.label} &rarr;
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>

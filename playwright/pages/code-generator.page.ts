@@ -23,7 +23,7 @@ export class CodeGeneratorPage extends ToolPageBase {
   }
 
   get firstFileCard(): Locator {
-    return this.main.getByText("PaymentService.cs").locator("..");
+    return this.main.getByRole("heading", { name: "PaymentService.cs" }).locator("..");
   }
 
   get setupInstructionsCard(): Locator {

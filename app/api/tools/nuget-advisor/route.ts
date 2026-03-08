@@ -1,21 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 import { getNuGetAdvice } from "@/lib/claude";
-import { FREE_MONTHLY_LIMIT, TOOL_NAME_NUGET_ADVISOR } from "@/lib/constants";
-import { currentMonthDate } from "@/lib/utils";
-import { isProUser } from "@/lib/subscription";
+import { TOOL_NAME_NUGET_ADVISOR } from "@/lib/constants";
+import { authenticateAndCheckUsage, incrementUsage } from "@/lib/api-helpers";
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await authenticateAndCheckUsage(TOOL_NAME_NUGET_ADVISOR);
+  if ("error" in auth) return auth.error;
 
   let body: unknown;
   try {
@@ -33,30 +23,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Package name is too long" }, { status: 400 });
   }
 
-  // Check plan using shared module
-  const isPro = await isProUser(user.id);
-
-  // Enforce monthly limit for free users
-  if (!isPro) {
-    const month = currentMonthDate();
-
-    const { data: usage } = await supabase
-      .from("usage")
-      .select("count")
-      .eq("user_id", user.id)
-      .eq("tool_name", TOOL_NAME_NUGET_ADVISOR)
-      .eq("month", month)
-      .maybeSingle();
-
-    if (usage && usage.count >= FREE_MONTHLY_LIMIT) {
-      return NextResponse.json(
-        { error: "Monthly limit reached", limitReached: true },
-        { status: 429 }
-      );
-    }
-  }
-
-  // Call Claude
   let result;
   try {
     result = await getNuGetAdvice(packageName);
@@ -68,15 +34,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Increment usage
-  const { error: rpcError } = await supabase.rpc("increment_usage", {
-    p_user_id: user.id,
-    p_tool_name: TOOL_NAME_NUGET_ADVISOR,
-    p_month: currentMonthDate(),
-  });
-  if (rpcError) {
-    console.error("Failed to increment usage:", rpcError);
-  }
+  await incrementUsage(auth.context.userId, TOOL_NAME_NUGET_ADVISOR);
 
   return NextResponse.json(result);
 }

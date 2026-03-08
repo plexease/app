@@ -43,6 +43,17 @@ test.describe("Code Generator", () => {
     await expect(generator.submitButton).toBeDisabled();
   });
 
+  test("shows error message on API failure", async ({ freeUserPage, mockApi }) => {
+    await mockApi.codeGenerator(freeUserPage, "error");
+
+    const generator = new CodeGeneratorPage(freeUserPage);
+    await generator.goto();
+
+    await generator.generateCode("Generate Stripe payment integration");
+
+    await expect(freeUserPage.getByText(/failed|please try again/i)).toBeVisible({ timeout: 5000 });
+  });
+
   test("pro user sees no usage counter", async ({ proUserPage, mockApi }) => {
     await mockApi.codeGenerator(proUserPage, "success");
 

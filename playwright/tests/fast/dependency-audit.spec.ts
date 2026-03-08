@@ -46,6 +46,17 @@ test.describe("Dependency Audit", () => {
     await expect(audit.submitButton).toBeDisabled();
   });
 
+  test("shows error message on API failure", async ({ freeUserPage, mockApi }) => {
+    await mockApi.dependencyAudit(freeUserPage, "error");
+
+    const audit = new DependencyAuditPage(freeUserPage);
+    await audit.goto();
+
+    await audit.auditDependencies('<PackageReference Include="Stripe.NET" Version="43.0.0" />');
+
+    await expect(freeUserPage.getByText(/failed|please try again/i)).toBeVisible({ timeout: 5000 });
+  });
+
   test("pro user sees no usage counter", async ({ proUserPage, mockApi }) => {
     await mockApi.dependencyAudit(proUserPage, "success");
 

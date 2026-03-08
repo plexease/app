@@ -45,6 +45,17 @@ test.describe("Integration Planner", () => {
     await expect(planner.submitButton).toBeDisabled();
   });
 
+  test("shows error message on API failure", async ({ freeUserPage, mockApi }) => {
+    await mockApi.integrationPlanner(freeUserPage, "error");
+
+    const planner = new IntegrationPlannerPage(freeUserPage);
+    await planner.goto();
+
+    await planner.planIntegration("I need to integrate Stripe for subscription billing");
+
+    await expect(freeUserPage.getByText(/failed|please try again/i)).toBeVisible({ timeout: 5000 });
+  });
+
   test("pro user sees no usage counter", async ({ proUserPage, mockApi }) => {
     await mockApi.integrationPlanner(proUserPage, "success");
 

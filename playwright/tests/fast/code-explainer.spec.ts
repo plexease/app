@@ -44,6 +44,17 @@ test.describe("Code Explainer", () => {
     await expect(explainer.submitButton).toBeDisabled();
   });
 
+  test("shows error message on API failure", async ({ freeUserPage, mockApi }) => {
+    await mockApi.codeExplainer(freeUserPage, "error");
+
+    const explainer = new CodeExplainerPage(freeUserPage);
+    await explainer.goto();
+
+    await explainer.explainCode("public class PaymentService { }");
+
+    await expect(freeUserPage.getByText(/failed|please try again/i)).toBeVisible({ timeout: 5000 });
+  });
+
   test("pro user sees no usage counter", async ({ proUserPage, mockApi }) => {
     await mockApi.codeExplainer(proUserPage, "success");
 

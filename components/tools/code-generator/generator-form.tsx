@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 import { GeneratorResultCards } from "./result-cards";
 import { StackSelector } from "@/components/shared/stack-selector";
 import { CharLimitedInput } from "@/components/shared/char-limited-input";
+import { WorkflowNext, type WorkflowRecommendation } from "@/components/shared/workflow-next";
 import { loadWorkflowContext } from "@/lib/workflow-context";
+import { LimitReachedCard } from "@/components/shared/limit-reached-card";
 import type { CodeGeneratorResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
 import { FREE_MONTHLY_LIMIT } from "@/lib/constants";
@@ -77,18 +79,18 @@ export function GeneratorForm({ usageCount, isPro }: Props) {
   };
 
   if (limitReached) {
-    return (
-      <div className="rounded-lg border border-yellow-700 bg-yellow-950/30 p-6 text-center">
-        <p className="text-sm font-medium text-yellow-300">
-          You&apos;ve used all {FREE_MONTHLY_LIMIT} free lookups this month.
-        </p>
-        <p className="mt-1 text-sm text-muted-400">Upgrade to Pro for unlimited access.</p>
-        <a href="/upgrade" className="mt-4 inline-block rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-600 transition-colors">
-          Upgrade to Pro
-        </a>
-      </div>
-    );
+    return <LimitReachedCard />;
   }
+
+  const recommendations: WorkflowRecommendation[] = result
+    ? [{
+        toolId: "dependency-audit",
+        toolName: "Dependency Audit",
+        href: "/tools/dependency-audit",
+        description: result.nextStepDescription,
+        contextSummary: `Language: ${stack?.language ?? "unknown"}, Files: ${result.files.map((f) => f.filename).join(", ")}`,
+      }]
+    : [];
 
   return (
     <div>
@@ -130,7 +132,21 @@ export function GeneratorForm({ usageCount, isPro }: Props) {
 
       <div aria-live="polite">
         {error && <p className="mt-3 text-sm text-red-400" role="alert">{error}</p>}
-        {result && <GeneratorResultCards result={result} />}
+        {result && (
+          <>
+            <GeneratorResultCards result={result} />
+            <WorkflowNext
+              recommendations={recommendations}
+              sourceToolId="integration-code-generator"
+              language={stack?.language ?? ""}
+              framework={stack?.framework ?? ""}
+              payload={{
+                files: result.files.map((f) => f.filename),
+                setupInstructions: result.setupInstructions.slice(0, 500),
+              }}
+            />
+          </>
+        )}
       </div>
     </div>
   );
