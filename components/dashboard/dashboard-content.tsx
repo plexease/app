@@ -1,21 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CancellationBanner } from "@/components/billing/cancellation-banner";
 import { PaymentFailedBanner } from "@/components/billing/payment-failed-banner";
 import { UsageCard } from "@/components/billing/usage-card";
 import { TierBadge } from "@/components/billing/tier-badge";
+import { BusinessOwnerView } from "./views/business-owner-view";
+import { SupportOpsView } from "./views/support-ops-view";
+import { ImplementerView } from "./views/implementer-view";
+import { getRecommendedTools } from "@/lib/tool-recommendations";
 import type { UserPlan } from "@/lib/subscription";
+import type { Persona, PrimaryGoal, ComfortLevel } from "@/lib/types/persona";
 
 type Props = {
   plan: UserPlan;
   usageCount: number;
+  viewingAs: Persona;
+  platforms: string[];
+  primaryGoal: PrimaryGoal | null;
+  comfortLevel: ComfortLevel | null;
 };
 
-export function DashboardContent({ plan, usageCount }: Props) {
+export function DashboardContent({ plan, usageCount, viewingAs, platforms, primaryGoal, comfortLevel }: Props) {
   const router = useRouter();
   const [resubscribing, setResubscribing] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
@@ -37,7 +45,6 @@ export function DashboardContent({ plan, usageCount }: Props) {
       const data = await res.json();
 
       if (!res.ok) {
-        // If subscription fully ended, redirect to upgrade
         if (res.status === 400) {
           router.push("/upgrade");
           return;
@@ -82,6 +89,8 @@ export function DashboardContent({ plan, usageCount }: Props) {
       year: "numeric",
     });
   };
+
+  const recommendedToolIds = getRecommendedTools(platforms, primaryGoal, comfortLevel);
 
   return (
     <div>
@@ -140,71 +149,22 @@ export function DashboardContent({ plan, usageCount }: Props) {
 
         {/* Usage card */}
         <UsageCard plan={plan.plan} usageCount={usageCount} />
-
       </div>
 
-      {/* Workflow stages */}
+      {/* Persona-specific content */}
       <div className="mt-8">
-        <h2 className="font-heading text-lg font-bold text-white">Tools</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            {
-              stage: "Explore",
-              description: "Figure out what you need — compare tools and plan integrations",
-              tools: [
-                { href: "/tools/package-advisor", label: "Package Advisor" },
-                { href: "/tools/integration-planner", label: "Integration Planner" },
-              ],
-            },
-            {
-              stage: "Set Up",
-              description: "Build and connect your services",
-              tools: [
-                { href: "/tools/code-generator", label: "Code Generator" },
-                { href: "/tools/api-wrapper-generator", label: "API Wrapper Generator" },
-              ],
-            },
-            {
-              stage: "Troubleshoot",
-              description: "Diagnose and fix integration issues",
-              tools: [
-                { href: "/tools/error-explainer", label: "Error Explainer" },
-                { href: "/tools/code-explainer", label: "Code Explainer" },
-              ],
-            },
-            {
-              stage: "Maintain",
-              description: "Keep your integrations healthy and up to date",
-              tools: [
-                { href: "/tools/dependency-audit", label: "Dependency Audit" },
-                { href: "/tools/health-checker", label: "Health Checker" },
-                { href: "/tools/migration-assistant", label: "Migration Assistant" },
-                { href: "/tools/unit-test-generator", label: "Unit Test Generator" },
-              ],
-            },
-          ].map((stage) => (
-            <div
-              key={stage.stage}
-              className="rounded-lg border border-surface-700 bg-surface-900 p-5"
-            >
-              <h3 className="font-heading text-sm font-semibold uppercase tracking-wide text-brand-400">
-                {stage.stage}
-              </h3>
-              <p className="mt-1 text-xs text-muted-500">{stage.description}</p>
-              <div className="mt-3 space-y-1">
-                {stage.tools.map((tool) => (
-                  <Link
-                    key={tool.href}
-                    href={tool.href}
-                    className="block text-sm font-medium text-muted-300 hover:text-white transition-colors"
-                  >
-                    {tool.label} &rarr;
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        {viewingAs === "business_owner" && (
+          <BusinessOwnerView
+            recommendedToolIds={recommendedToolIds}
+            platforms={platforms}
+          />
+        )}
+        {viewingAs === "support_ops" && (
+          <SupportOpsView recommendedToolIds={recommendedToolIds} />
+        )}
+        {viewingAs === "implementer" && (
+          <ImplementerView />
+        )}
       </div>
     </div>
   );
