@@ -39,6 +39,10 @@ export const TOOL_NAME_TROUBLESHOOTER = "troubleshooter";
 export const TOOL_NAME_CHANGE_IMPACT = "change-impact";
 export const TOOL_NAME_STACK_PLANNER = "stack-planner";
 
+// Tool router
+export const ROUTER_DAILY_LIMIT = 10;
+export const TOOL_NAME_ROUTER = "_router";
+
 // Billing
 export const GRACE_PERIOD_DAYS = 1;
 export const CHECKOUT_POLL_INTERVAL_MS = 2000;
