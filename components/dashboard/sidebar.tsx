@@ -7,7 +7,9 @@ import { TierBadge } from "@/components/billing/tier-badge";
 import { UsageCounter } from "@/components/billing/usage-counter";
 import { Logo } from "@/components/brand/logo";
 import { resetCookieConsent } from "@/components/ui/cookie-consent";
+import { ViewToggle } from "./view-toggle";
 import type { UserPlan } from "@/lib/subscription";
+import type { Persona } from "@/lib/types/persona";
 
 const navGroups: { label: string | null; items: { href: string; label: string; exact?: boolean }[] }[] = [
   {
@@ -49,9 +51,10 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
 type Props = {
   plan: UserPlan;
   usageCount: number;
+  viewingAs: Persona;
 };
 
-export function Sidebar({ plan, usageCount }: Props) {
+export function Sidebar({ plan, usageCount, viewingAs }: Props) {
   const pathname = usePathname();
   const isFree = plan.plan === "free";
 
@@ -76,6 +79,8 @@ export function Sidebar({ plan, usageCount }: Props) {
       <div className="mt-1">
         <UsageCounter plan={plan.plan} usageCount={usageCount} />
       </div>
+
+      <ViewToggle viewingAs={viewingAs} />
 
       <nav className="mt-6 flex-1 space-y-4">
         {navGroups.map((group) => (
