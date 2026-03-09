@@ -41,8 +41,9 @@ Plexease is a SaaS integration toolkit for small businesses, tech support staff,
 
 | Tier | Price | Limits |
 |---|---|---|
-| Free | £0 | 20 tool uses/month |
-| Pro | £19/month | Unlimited, saved history, priority AI |
+| Free | £0 | 10 tool uses/month |
+| Essentials | £5/month (£50/yr) | 100 tool uses/month, saved history |
+| Pro | £19/month (£190/yr) | 1,000 tool uses/month, saved history, priority AI |
 
 ---
 
@@ -50,10 +51,22 @@ Plexease is a SaaS integration toolkit for small businesses, tech support staff,
 
 ```sql
 users           (id, email, created_at, stripe_customer_id)
-subscriptions   (id, user_id, plan, status, stripe_subscription_id)
+subscriptions   (id, user_id, plan, status, stripe_subscription_id, stripe_price_id,
+                 current_period_end, cancel_at_period_end, grace_period_end)
+              -- plan: free | essentials | pro
+              -- stripe_price_id: used for accurate tier detection via determinePlan()
 usage           (id, user_id, tool_name, month, count)
               -- unique constraint on (user_id, tool_name, month)
               -- increment_usage() RPC for atomic upserts
+user_profiles   (id, persona, comfort_level, platforms[], primary_goal,
+                 onboarding_completed, created_at, updated_at)
+              -- RLS: users can only read/write their own profile
+sessions        (id, user_id, device_info, ip_hash, last_active, created_at)
+              -- RLS: users can only read/write their own sessions
+feedback        (id, user_id, text, trigger_type, tool_name, persona, tier,
+                 status, resolution, created_at)
+feedback_dismissals (id, user_id, trigger_type, dismissed_at)
+              -- unique on (user_id, trigger_type)
 ```
 
 ---
@@ -254,6 +267,22 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - Design doc: `docs/plans/2026-03-08-phase8-tool-workflow-platform-design.md`
 - Implementation plan: `docs/plans/2026-03-08-phase8b-implementation.md`
 
+### ✅ Phase 9a — Foundation (complete)
+- [x] Database migrations: `user_profiles`, `sessions`, `feedback`, `feedback_dismissals` tables with RLS
+- [x] Persona-based onboarding: 4-step questionnaire (role, comfort, platforms, goal) with middleware redirect + cookie caching (cookie bound to user ID)
+- [x] 3-tier pricing: Free (10/mo) → Essentials £5/mo (100/mo) → Pro £19/mo (1000/mo)
+- [x] Cross-cutting `isPro: boolean` → `plan: PlanTier` migration across ~35 files
+- [x] `PlanTier` type used consistently (imported from `lib/subscription.ts`)
+- [x] Stripe checkout updated for Essentials tier (tier param, price selection, upgrade guard)
+- [x] Webhook stores `stripe_price_id`, uses `determinePlan()` for accurate tier detection
+- [x] Reconciliation handles all paid tiers (not just Pro)
+- [x] Account settings page for persona/profile management
+- [x] All tool forms, billing components, sidebar, dashboard updated for 3-tier model
+- [x] 117 Playwright tests (107 fast + 4 fast-serial + 3 slow + 2 onboarding + 1 Essentials usage)
+- [x] CI updated with Essentials price ID secrets
+- Design doc: `docs/plans/2026-03-09-phase9-design.md`
+- Implementation plan: `docs/plans/2026-03-09-phase9a-implementation.md`
+
 ---
 
 ## Workflow
@@ -321,10 +350,13 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 8b complete (on feature/phase8b branch)
-- Last action: Phase 8b — 6 new workflow tools + NuGet migration + shared CopyButton, 37 new tests (113 total)
-- Next step: PR review, merge, then Phase 9 planning
+- Phase: 9a complete (merged to main), 9b design + implementation plan written
+- Last action: Phase 9b design brainstorm and implementation plan — 14 tasks covering persona-driven dashboard views, AI tool router, category rename, view toggle
+- Next step: Implement Phase 9b — say "implement `docs/plans/2026-03-09-phase9b-implementation.md`"
+- Design doc: `docs/plans/2026-03-09-phase9b-design.md`
+- Implementation plan: `docs/plans/2026-03-09-phase9b-implementation.md` (14 tasks)
 - Test setup: run `npm run test:setup` to generate `playwright/.env.test` from `.env.local`, then `npm test` for full Playwright suite
 - CI: fast tests on every push, fast + slow on PRs to main, branch protection requires both to pass
+- CI secrets: includes `NEXT_PUBLIC_STRIPE_PRICE_ESSENTIALS_MONTHLY` and `NEXT_PUBLIC_STRIPE_PRICE_ESSENTIALS_ANNUAL` (repo-level)
 - Repo: public, squash merge only, auto-delete branches, PRs required for main
 - Brand guide: `docs/brand-style-guide.md` — reference for all future UI work
