@@ -149,37 +149,37 @@ export function DashboardContent({ plan, usageCount }: Props) {
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             {
-              stage: "Understand",
-              description: "Explain code and errors in plain English",
-              tools: [
-                { href: "/tools/code-explainer", label: "Code Explainer" },
-                { href: "/tools/error-explainer", label: "Error Explainer" },
-              ],
-            },
-            {
-              stage: "Decide",
-              description: "Plan integrations and choose packages",
+              stage: "Explore",
+              description: "Figure out what you need — compare tools and plan integrations",
               tools: [
                 { href: "/tools/package-advisor", label: "Package Advisor" },
                 { href: "/tools/integration-planner", label: "Integration Planner" },
               ],
             },
             {
-              stage: "Build",
-              description: "Generate integration code and tests",
+              stage: "Set Up",
+              description: "Build and connect your services",
               tools: [
                 { href: "/tools/code-generator", label: "Code Generator" },
                 { href: "/tools/api-wrapper-generator", label: "API Wrapper Generator" },
-                { href: "/tools/unit-test-generator", label: "Unit Test Generator" },
+              ],
+            },
+            {
+              stage: "Troubleshoot",
+              description: "Diagnose and fix integration issues",
+              tools: [
+                { href: "/tools/error-explainer", label: "Error Explainer" },
+                { href: "/tools/code-explainer", label: "Code Explainer" },
               ],
             },
             {
               stage: "Maintain",
-              description: "Audit dependencies and check health",
+              description: "Keep your integrations healthy and up to date",
               tools: [
                 { href: "/tools/dependency-audit", label: "Dependency Audit" },
                 { href: "/tools/health-checker", label: "Health Checker" },
                 { href: "/tools/migration-assistant", label: "Migration Assistant" },
+                { href: "/tools/unit-test-generator", label: "Unit Test Generator" },
               ],
             },
           ].map((stage) => (

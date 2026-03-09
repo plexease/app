@@ -15,25 +15,24 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
     items: [{ href: "/dashboard", label: "Dashboard", exact: true }],
   },
   {
-    label: "Understand",
-    items: [
-      { href: "/tools/code-explainer", label: "Code Explainer" },
-      { href: "/tools/error-explainer", label: "Error Explainer" },
-    ],
-  },
-  {
-    label: "Decide",
+    label: "Explore",
     items: [
       { href: "/tools/package-advisor", label: "Package Advisor" },
       { href: "/tools/integration-planner", label: "Integration Planner" },
     ],
   },
   {
-    label: "Build",
+    label: "Set Up",
     items: [
       { href: "/tools/code-generator", label: "Code Generator" },
       { href: "/tools/api-wrapper-generator", label: "API Wrapper Generator" },
-      { href: "/tools/unit-test-generator", label: "Unit Test Generator" },
+    ],
+  },
+  {
+    label: "Troubleshoot",
+    items: [
+      { href: "/tools/error-explainer", label: "Error Explainer" },
+      { href: "/tools/code-explainer", label: "Code Explainer" },
     ],
   },
   {
@@ -42,6 +41,7 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
       { href: "/tools/dependency-audit", label: "Dependency Audit" },
       { href: "/tools/health-checker", label: "Health Checker" },
       { href: "/tools/migration-assistant", label: "Migration Assistant" },
+      { href: "/tools/unit-test-generator", label: "Unit Test Generator" },
     ],
   },
 ];
