@@ -127,12 +127,7 @@ export function OnboardingFlow() {
               key={opt.value}
               onClick={() => {
                 setComfortLevel(opt.value);
-                if (opt.value === "writes_code") {
-                  // Skip remaining questions for code writers
-                  saveProfile(false);
-                } else {
-                  setStep(3);
-                }
+                setStep(3);
               }}
               disabled={saving}
               className="w-full p-4 rounded-lg border border-surface-700 bg-surface-900

@@ -10,12 +10,13 @@ import { LimitReachedCard } from "@/components/shared/limit-reached-card";
 import type { CodeGeneratorResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
+import type { PlanTier } from "@/lib/subscription";
 
 const ACCEPTED_FROM = ["integration-planner", "package-advisor", "migration-assistant"];
 
 type Props = {
   usageCount: number;
-  plan: "free" | "essentials" | "pro";
+  plan: PlanTier;
 };
 
 export function GeneratorForm({ usageCount, plan }: Props) {

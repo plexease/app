@@ -12,10 +12,10 @@ async function dismissCookieConsent(page: import("@playwright/test").Page) {
   });
 }
 
-async function setOnboardedCookie(context: import("@playwright/test").BrowserContext) {
+async function setOnboardedCookie(context: import("@playwright/test").BrowserContext, userId: string) {
   await context.addCookies([{
     name: "plexease_onboarded",
-    value: "true",
+    value: userId,
     domain: "localhost",
     path: "/",
     httpOnly: true,
@@ -54,7 +54,7 @@ async function globalSetup() {
   // Free user login
   console.log("Logging in as free user...");
   const freeContext = await browser.newContext();
-  await setOnboardedCookie(freeContext);
+  await setOnboardedCookie(freeContext, freeUserId);
   const freePage = await freeContext.newPage();
   await freePage.goto("http://localhost:3000/login");
   await dismissCookieConsent(freePage);
@@ -68,7 +68,7 @@ async function globalSetup() {
   // Pro user login
   console.log("Logging in as pro user...");
   const proContext = await browser.newContext();
-  await setOnboardedCookie(proContext);
+  await setOnboardedCookie(proContext, proUserId);
   const proPage = await proContext.newPage();
   await proPage.goto("http://localhost:3000/login");
   await dismissCookieConsent(proPage);

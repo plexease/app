@@ -140,6 +140,7 @@ export async function resetProSubscription(userId: string): Promise<void> {
 export async function setSubscriptionState(
   userId: string,
   overrides: {
+    plan?: string;
     status?: string;
     cancelAtPeriodEnd?: boolean;
     currentPeriodEnd?: string;
@@ -153,7 +154,7 @@ export async function setSubscriptionState(
     .upsert(
       {
         user_id: userId,
-        plan: "pro",
+        plan: overrides.plan ?? "pro",
         status: overrides.status ?? "active",
         stripe_subscription_id: "test_sub_banner",
         current_period_end:
@@ -175,6 +176,17 @@ export async function deleteSubscription(userId: string): Promise<void> {
     .from("subscriptions")
     .delete()
     .eq("user_id", userId);
+
+  if (error) throw error;
+}
+
+export async function deleteUserProfile(userId: string): Promise<void> {
+  const supabase = getAdminClient();
+
+  const { error } = await supabase
+    .from("user_profiles")
+    .delete()
+    .eq("id", userId);
 
   if (error) throw error;
 }

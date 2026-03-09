@@ -20,5 +20,5 @@ export default async function UpgradePage() {
     redirect("/dashboard");
   }
 
-  return <UpgradeContent />;
+  return <UpgradeContent currentPlan={plan.plan} />;
 }

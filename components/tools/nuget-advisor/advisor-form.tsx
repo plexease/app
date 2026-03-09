@@ -5,10 +5,11 @@ import { ResultCards } from "./result-cards";
 import { LimitReachedCard } from "@/components/shared/limit-reached-card";
 import type { NuGetAdvisorResult } from "@/lib/claude";
 import { getUsageLimit } from "@/lib/constants";
+import type { PlanTier } from "@/lib/subscription";
 
 type Props = {
   usageCount: number;
-  plan: "free" | "essentials" | "pro";
+  plan: PlanTier;
 };
 
 export function AdvisorForm({ usageCount, plan }: Props) {

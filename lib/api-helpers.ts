@@ -1,27 +1,12 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import {
-  FREE_MONTHLY_LIMIT,
-  ESSENTIALS_MONTHLY_LIMIT,
-  PRO_MONTHLY_LIMIT,
-} from "@/lib/constants";
+import { getUsageLimit } from "@/lib/constants";
 import { currentMonthDate } from "@/lib/utils";
 import { getUserPlan, type PlanTier } from "@/lib/subscription";
 
 export interface AuthenticatedContext {
   userId: string;
   plan: PlanTier;
-}
-
-function getLimit(plan: PlanTier): number {
-  switch (plan) {
-    case "pro":
-      return PRO_MONTHLY_LIMIT;
-    case "essentials":
-      return ESSENTIALS_MONTHLY_LIMIT;
-    default:
-      return FREE_MONTHLY_LIMIT;
-  }
 }
 
 /**
@@ -43,7 +28,7 @@ export async function authenticateAndCheckUsage(
 
   const userPlan = await getUserPlan(user.id);
   const plan = userPlan.plan;
-  const limit = getLimit(plan);
+  const limit = getUsageLimit(plan);
 
   const month = currentMonthDate();
   const { data: usageRows } = await supabase

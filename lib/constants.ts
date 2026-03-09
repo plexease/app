@@ -1,3 +1,5 @@
+import type { PlanTier } from "@/lib/subscription";
+
 // Usage limits per tier
 export const FREE_MONTHLY_LIMIT = 10;
 export const ESSENTIALS_MONTHLY_LIMIT = 100;
@@ -12,7 +14,7 @@ export const PRO_USAGE_WARNING = 750;
 export const PRO_USAGE_DANGER = 950;
 
 /** Get the usage limit for a plan tier. */
-export function getUsageLimit(plan: "free" | "essentials" | "pro"): number {
+export function getUsageLimit(plan: PlanTier): number {
   switch (plan) {
     case "pro": return PRO_MONTHLY_LIMIT;
     case "essentials": return ESSENTIALS_MONTHLY_LIMIT;
@@ -32,6 +34,10 @@ export const TOOL_NAME_API_WRAPPER_GENERATOR = "api-wrapper-generator";
 export const TOOL_NAME_UNIT_TEST_GENERATOR = "unit-test-generator";
 export const TOOL_NAME_HEALTH_CHECKER = "health-checker";
 export const TOOL_NAME_MIGRATION_ASSISTANT = "migration-assistant";
+export const TOOL_NAME_INTEGRATION_HUB = "integration-hub";
+export const TOOL_NAME_TROUBLESHOOTER = "troubleshooter";
+export const TOOL_NAME_CHANGE_IMPACT = "change-impact";
+export const TOOL_NAME_STACK_PLANNER = "stack-planner";
 
 // Billing
 export const GRACE_PERIOD_DAYS = 1;

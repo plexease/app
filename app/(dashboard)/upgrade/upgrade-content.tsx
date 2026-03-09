@@ -8,8 +8,9 @@ import { PricingCard } from "@/components/billing/pricing-card";
 import { FeatureComparison } from "@/components/billing/feature-comparison";
 import { FaqSection } from "@/components/billing/faq-section";
 import { FREE_MONTHLY_LIMIT, ESSENTIALS_MONTHLY_LIMIT, PRO_MONTHLY_LIMIT } from "@/lib/constants";
+import type { PlanTier } from "@/lib/subscription";
 
-function UpgradePageContent() {
+function UpgradePageContent({ currentPlan }: { currentPlan: PlanTier }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [interval, setInterval] = useState<"monthly" | "annual">("monthly");
@@ -74,7 +75,7 @@ function UpgradePageContent() {
             `${FREE_MONTHLY_LIMIT} tool uses per month`,
             "All available tools",
           ]}
-          cta={{ label: "Current plan", disabled: true }}
+          cta={{ label: currentPlan === "free" ? "Current plan" : "Free tier", disabled: true }}
         />
         <PricingCard
           name="Essentials"
@@ -85,11 +86,14 @@ function UpgradePageContent() {
             "All available tools",
             "Saved history",
           ]}
-          cta={{
-            label: loading === "essentials" ? "Redirecting..." : "Subscribe",
-            onClick: () => handleSubscribe("essentials"),
-            disabled: loading !== null,
-          }}
+          cta={currentPlan === "essentials"
+            ? { label: "Current plan", disabled: true }
+            : {
+                label: loading === "essentials" ? "Redirecting..." : "Subscribe",
+                onClick: () => handleSubscribe("essentials"),
+                disabled: loading !== null,
+              }
+          }
           badge={interval === "annual" ? "Save 17%" : undefined}
         />
         <PricingCard
@@ -130,10 +134,10 @@ function UpgradePageContent() {
   );
 }
 
-export function UpgradeContent() {
+export function UpgradeContent({ currentPlan }: { currentPlan: PlanTier }) {
   return (
     <Suspense>
-      <UpgradePageContent />
+      <UpgradePageContent currentPlan={currentPlan} />
     </Suspense>
   );
 }

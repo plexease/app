@@ -9,6 +9,8 @@ export function SignOutButton() {
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
+    // Clear onboarding cookie so it doesn't leak to the next user
+    document.cookie = "plexease_onboarded=; path=/; max-age=0";
     router.push("/login");
   };
 

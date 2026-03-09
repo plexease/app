@@ -10,6 +10,7 @@ import { LimitReachedCard } from "@/components/shared/limit-reached-card";
 import type { CodeExplainerResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
+import type { PlanTier } from "@/lib/subscription";
 
 const SCOPE_OPTIONS = [
   { value: "how-it-works", label: "How does this code work?" },
@@ -22,7 +23,7 @@ const ACCEPTED_FROM = ["error-explainer", "health-checker"];
 
 type Props = {
   usageCount: number;
-  plan: "free" | "essentials" | "pro";
+  plan: PlanTier;
 };
 
 export function ExplainerForm({ usageCount, plan }: Props) {

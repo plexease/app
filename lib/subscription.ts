@@ -148,13 +148,15 @@ export async function reconcileSubscription(
   if (!dbSubscription) return;
 
   const hasActiveStripeSub = stripeSubscriptions.data.length > 0;
-  const dbSaysPro = dbSubscription.plan === "pro" && dbSubscription.status === "active";
+  const dbSaysPaid = dbSubscription.plan !== "free" && dbSubscription.status === "active";
 
-  if (hasActiveStripeSub && !dbSaysPro) {
+  if (hasActiveStripeSub && !dbSaysPaid) {
     // Stripe says active, DB says not — fix DB
     const sub = stripeSubscriptions.data[0];
     const priceId = sub.items.data[0]?.price.id ?? null;
-    const plan = determinePlan(priceId) === "free" ? "pro" : determinePlan(priceId);
+    const detectedPlan = determinePlan(priceId);
+    // If price ID is unrecognised, keep the existing DB plan rather than defaulting
+    const plan = detectedPlan !== "free" ? detectedPlan : (dbSubscription.plan as PlanTier);
     await supabase
       .from("subscriptions")
       .update({
@@ -166,8 +168,8 @@ export async function reconcileSubscription(
         cancel_at_period_end: sub.cancel_at_period_end,
       })
       .eq("user_id", userId);
-  } else if (!hasActiveStripeSub && dbSaysPro) {
-    // Stripe says no active sub, DB says pro — check for grace period
+  } else if (!hasActiveStripeSub && dbSaysPaid) {
+    // Stripe says no active sub, DB says paid — check for grace period
     // Only downgrade if no grace period or grace has expired
     const plan = await getUserPlan(userId);
     if (!plan.gracePeriodEnd || new Date() >= new Date(plan.gracePeriodEnd)) {

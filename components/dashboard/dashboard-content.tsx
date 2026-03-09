@@ -46,7 +46,7 @@ export function DashboardContent({ plan, usageCount }: Props) {
         return;
       }
 
-      toast.success("Welcome back! Your Pro plan has been reactivated.");
+      toast.success("Welcome back! Your plan has been reactivated.");
       router.refresh();
     } catch {
       toast.error("Network error. Please try again.");

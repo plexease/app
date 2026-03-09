@@ -1,5 +1,7 @@
+import type { PlanTier } from "@/lib/subscription";
+
 type Props = {
-  plan: "free" | "essentials" | "pro";
+  plan: PlanTier;
 };
 
 export function TierBadge({ plan }: Props) {

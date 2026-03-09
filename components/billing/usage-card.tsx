@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { PlanTier } from "@/lib/subscription";
 import {
   getUsageLimit,
   FREE_USAGE_WARNING,
@@ -10,11 +11,11 @@ import {
 } from "@/lib/constants";
 
 type Props = {
-  plan: "free" | "essentials" | "pro";
+  plan: PlanTier;
   usageCount: number;
 };
 
-function getThresholds(plan: "free" | "essentials" | "pro") {
+function getThresholds(plan: PlanTier) {
   switch (plan) {
     case "pro": return { warning: PRO_USAGE_WARNING, danger: PRO_USAGE_DANGER };
     case "essentials": return { warning: ESSENTIALS_USAGE_WARNING, danger: ESSENTIALS_USAGE_DANGER };

@@ -10,12 +10,13 @@ import { LimitReachedCard } from "@/components/shared/limit-reached-card";
 import type { MigrationAssistantResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
+import type { PlanTier } from "@/lib/subscription";
 
 const ACCEPTED_FROM = ["dependency-audit"];
 
 type Props = {
   usageCount: number;
-  plan: "free" | "essentials" | "pro";
+  plan: PlanTier;
 };
 
 export function MigrationAssistantForm({ usageCount, plan }: Props) {

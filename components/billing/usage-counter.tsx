@@ -1,7 +1,8 @@
 import { getUsageLimit } from "@/lib/constants";
+import type { PlanTier } from "@/lib/subscription";
 
 type Props = {
-  plan: "free" | "essentials" | "pro";
+  plan: PlanTier;
   usageCount: number;
 };
 

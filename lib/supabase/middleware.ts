@@ -58,8 +58,9 @@ export async function updateSession(request: NextRequest) {
 
   if (user && !isOnboardingExempt && protectedRoutes.some((route) => pathname.startsWith(route))) {
     // Check cookie first to avoid DB query on every request
+    // Cookie value is bound to user ID to prevent leaking across sessions
     const onboardedCookie = request.cookies.get("plexease_onboarded");
-    if (!onboardedCookie) {
+    if (!onboardedCookie || onboardedCookie.value !== user.id) {
       // Query DB to check onboarding status
       const { data: profile } = await supabase
         .from("user_profiles")
@@ -74,7 +75,7 @@ export async function updateSession(request: NextRequest) {
       }
 
       // User is onboarded — set cookie so we skip DB query next time
-      supabaseResponse.cookies.set("plexease_onboarded", "true", {
+      supabaseResponse.cookies.set("plexease_onboarded", user.id, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",

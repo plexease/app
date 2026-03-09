@@ -4,10 +4,11 @@ import { useState } from "react";
 import { PricingToggle } from "@/components/billing/pricing-toggle";
 import { PricingCard } from "@/components/billing/pricing-card";
 import { FREE_MONTHLY_LIMIT, ESSENTIALS_MONTHLY_LIMIT, PRO_MONTHLY_LIMIT } from "@/lib/constants";
+import type { PlanTier } from "@/lib/subscription";
 
 type Props = {
   isLoggedIn: boolean;
-  plan: "free" | "essentials" | "pro";
+  plan: PlanTier;
 };
 
 export function PricingSection({ isLoggedIn, plan }: Props) {
@@ -16,19 +17,19 @@ export function PricingSection({ isLoggedIn, plan }: Props) {
   const freeCta = isLoggedIn && plan === "free"
     ? { label: "Current plan", disabled: true }
     : isLoggedIn
-      ? { label: "Current plan", disabled: true }
+      ? { label: "Free tier", disabled: true }
       : { label: "Get started", href: "/signup" };
 
   const essentialsCta = plan === "essentials"
     ? { label: "Your current plan", disabled: true }
     : isLoggedIn
-      ? { label: "Upgrade to Essentials", href: "/upgrade" }
+      ? { label: "Upgrade to Essentials", href: "/upgrade?tier=essentials" }
       : { label: "Get started", href: "/signup" };
 
   const proCta = plan === "pro"
     ? { label: "Your current plan", disabled: true }
     : isLoggedIn
-      ? { label: "Upgrade to Pro", href: "/upgrade" }
+      ? { label: "Upgrade to Pro", href: "/upgrade?tier=pro" }
       : { label: "Get started", href: "/signup" };
 
   return (

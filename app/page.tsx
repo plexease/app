@@ -37,6 +37,16 @@ export default async function Home() {
               },
               {
                 "@type": "Offer",
+                price: "5",
+                priceCurrency: "GBP",
+                name: "Essentials",
+                priceSpecification: {
+                  "@type": "UnitPriceSpecification",
+                  billingDuration: "P1M",
+                },
+              },
+              {
+                "@type": "Offer",
                 price: "19",
                 priceCurrency: "GBP",
                 name: "Pro",

@@ -10,12 +10,13 @@ import { LimitReachedCard } from "@/components/shared/limit-reached-card";
 import type { IntegrationPlannerResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
+import type { PlanTier } from "@/lib/subscription";
 
 const ACCEPTED_FROM = ["code-explainer"];
 
 type Props = {
   usageCount: number;
-  plan: "free" | "essentials" | "pro";
+  plan: PlanTier;
 };
 
 export function PlannerForm({ usageCount, plan }: Props) {

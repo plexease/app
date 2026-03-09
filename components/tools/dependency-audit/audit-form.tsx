@@ -9,12 +9,13 @@ import { LimitReachedCard } from "@/components/shared/limit-reached-card";
 import type { DependencyAuditResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
+import type { PlanTier } from "@/lib/subscription";
 
 const ACCEPTED_FROM = ["unit-test-generator", "code-explainer"];
 
 type Props = {
   usageCount: number;
-  plan: "free" | "essentials" | "pro";
+  plan: PlanTier;
 };
 
 export function AuditForm({ usageCount, plan }: Props) {

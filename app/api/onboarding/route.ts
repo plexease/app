@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
 
   // Set onboarding cookie so middleware skips DB check
   const response = NextResponse.json({ success: true });
-  response.cookies.set("plexease_onboarded", "true", {
+  response.cookies.set("plexease_onboarded", user.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

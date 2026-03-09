@@ -43,4 +43,24 @@ test.describe("Usage Limits", () => {
 
     await supabaseAdmin.resetUsage(userId);
   });
+
+  test("essentials user at limit 100 sees block message", async ({
+    freeUserPage,
+    supabaseAdmin,
+  }) => {
+    const userId = await supabaseAdmin.getFreeUserId();
+
+    // Temporarily set free user to Essentials tier
+    await supabaseAdmin.setSubscriptionState(userId, { plan: "essentials" });
+    await supabaseAdmin.setUsageCount(userId, "package-advisor", 100);
+
+    const advisor = new PackageAdvisorPage(freeUserPage);
+    await advisor.goto();
+
+    await expect(advisor.limitReachedMessage).toBeVisible();
+
+    // Clean up
+    await supabaseAdmin.resetUsage(userId);
+    await supabaseAdmin.resetSubscription(userId);
+  });
 });
