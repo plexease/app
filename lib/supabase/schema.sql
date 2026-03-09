@@ -104,3 +104,86 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
+
+-- User profiles (persona and onboarding)
+create table public.user_profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  persona text not null default 'business_owner'
+    check (persona in ('business_owner', 'support_ops', 'implementer')),
+  comfort_level text
+    check (comfort_level in ('guided', 'docs_configs', 'writes_code')),
+  platforms text[] default '{}',
+  primary_goal text
+    check (primary_goal in ('setup', 'fixing', 'evaluating', 'exploring')),
+  onboarding_completed boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.user_profiles enable row level security;
+
+create policy "Users can read their own profile"
+  on public.user_profiles for select using (auth.uid() = id);
+create policy "Users can insert their own profile"
+  on public.user_profiles for insert with check (auth.uid() = id);
+create policy "Users can update their own profile"
+  on public.user_profiles for update using (auth.uid() = id);
+
+-- Sessions (concurrent session enforcement)
+create table public.sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  device_info text,
+  ip_hash text,
+  last_active timestamptz not null default now(),
+  created_at timestamptz not null default now()
+);
+
+create index idx_sessions_user_id on public.sessions(user_id);
+alter table public.sessions enable row level security;
+
+create policy "Users can read their own sessions"
+  on public.sessions for select using (auth.uid() = user_id);
+create policy "Users can delete their own sessions"
+  on public.sessions for delete using (auth.uid() = user_id);
+
+-- Feedback collection (CRM-ready)
+create table public.feedback (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  text text not null,
+  trigger_type text not null
+    check (trigger_type in ('fifth_use', 'cancellation', 'manual')),
+  tool_name text,
+  persona text,
+  tier text,
+  status text not null default 'new'
+    check (status in ('new', 'acknowledged', 'resolved')),
+  resolution text,
+  created_at timestamptz not null default now()
+);
+
+create index idx_feedback_status on public.feedback(status);
+create index idx_feedback_user_id on public.feedback(user_id);
+
+-- Feedback dismissal tracking
+create table public.feedback_dismissals (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  trigger_type text not null
+    check (trigger_type in ('fifth_use', 'cancellation')),
+  dismissed_at timestamptz not null default now(),
+  unique(user_id, trigger_type)
+);
+
+alter table public.feedback enable row level security;
+alter table public.feedback_dismissals enable row level security;
+
+create policy "Users can insert their own feedback"
+  on public.feedback for insert with check (auth.uid() = user_id);
+create policy "Users can read their own feedback"
+  on public.feedback for select using (auth.uid() = user_id);
+create policy "Users can insert their own dismissals"
+  on public.feedback_dismissals for insert with check (auth.uid() = user_id);
+create policy "Users can read their own dismissals"
+  on public.feedback_dismissals for select using (auth.uid() = user_id);
