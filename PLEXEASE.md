@@ -88,7 +88,7 @@ plexease/
 │   ├── brand/                         # Logo components (icon, wordmark, combined)
 │   ├── auth/                          # Auth forms and headers
 │   ├── billing/                       # Pricing, usage, tier badges
-│   ├── dashboard/                     # Sidebar, content, sign-out
+│   ├── dashboard/                     # Sidebar, content, sign-out, view-toggle, hero-input, views/
 │   ├── landing/                       # Nav, Footer, HowItWorks, Attribution, Pricing
 │   ├── shared/                        # StackSelector, WorkflowNext, CharLimitedInput, CopyButton
 │   ├── tools/                         # Per-tool form/results (nuget-advisor, code-explainer, etc.)
@@ -105,23 +105,23 @@ plexease/
 
 ## Tools (10 total, all complete)
 
-### Understand
-- **Code Explainer** — paste code, get plain English explanation + detected packages/patterns
-- **Error Explainer** — paste error/stack trace, get root cause + fix suggestions + related docs
-
-### Decide
+### Explore
 - **Package Advisor** — multi-language package recommendations (replaces NuGet Advisor)
 - **Integration Planner** — describe integration, get approach + packages + architecture
 
-### Build
+### Set Up
 - **Code Generator** — describe spec, get generated files with copy button + setup instructions
 - **API Wrapper Generator** — describe API, get typed wrapper with auth setup + usage example
-- **Unit Test Generator** — paste code, get test files with framework info + mocking approach
+
+### Troubleshoot
+- **Error Explainer** — paste error/stack trace, get root cause + fix suggestions + related docs
+- **Code Explainer** — paste code, get plain English explanation + detected packages/patterns
 
 ### Maintain
 - **Dependency Audit** — paste dependency file, get audit table with status badges
 - **Health Checker** — paste config, get health assessment with severity badges
 - **Migration Assistant** — specify from/to versions, get migration steps + breaking changes
+- **Unit Test Generator** — paste code, get test files with framework info + mocking approach
 
 ### Future Tools
 - E-Commerce integrations (shipping, payments, inventory, CRM, accounting)
@@ -283,6 +283,21 @@ Business model, brand name, tech stack, roadmap, legal requirements.
 - Design doc: `docs/plans/2026-03-09-phase9-design.md`
 - Implementation plan: `docs/plans/2026-03-09-phase9a-implementation.md`
 
+### ✅ Phase 9b — Persona-Driven UI (complete)
+- [x] Navigation categories renamed: Understand/Decide/Build/Maintain → Explore/Set Up/Troubleshoot/Maintain
+- [x] Tool remapping across categories (Unit Test Generator moved to Maintain, Code Explainer & Error Explainer to Troubleshoot)
+- [x] `lib/tool-descriptions.ts` — TOOL_CATALOG with persona-variant descriptions (3 per tool), `getToolsByCategory()`, `getAllTools()`
+- [x] `lib/tool-recommendations.ts` — profile-based recommendations (platform→tool, goal→category, comfort tiebreaker)
+- [x] `lib/tool-router.ts` — client-side keyword matching for hero input routing
+- [x] View-switching toggle in sidebar (Business/Support/Implementer) with `viewing_as` cookie + `/api/view-mode` endpoint
+- [x] Three dashboard views: Business Owner (hero input + prompts + recommendations), Support/Ops (category cards + recommendations), Implementer (dense tool grid)
+- [x] AI-powered tool router (`/api/tools/router`) — Claude Haiku fallback with daily rate limit (10/day)
+- [x] `lib/utils.ts` — `resolveViewingAs()` helper to DRY up cookie resolution
+- [x] 6 new Playwright tests (persona views, view toggle, router mock), 2 updated dashboard tests
+- [x] Total: 118 fast + 4 fast-serial + 3 slow (125 total)
+- Design doc: `docs/plans/2026-03-09-phase9b-design.md`
+- Implementation plan: `docs/plans/2026-03-09-phase9b-implementation.md`
+
 ---
 
 ## Workflow
@@ -350,12 +365,13 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 9a complete (merged to main), 9b design + implementation plan written
-- Last action: Phase 9b design brainstorm and implementation plan — 14 tasks covering persona-driven dashboard views, AI tool router, category rename, view toggle
-- Next step: Implement Phase 9b — say "implement `docs/plans/2026-03-09-phase9b-implementation.md`"
-- Design doc: `docs/plans/2026-03-09-phase9b-design.md`
-- Implementation plan: `docs/plans/2026-03-09-phase9b-implementation.md` (14 tasks)
+- Phase: 9b complete (merged to main via PR #5), ready for 9c design
+- Last action: Phase 9b implemented and merged — persona-driven dashboard views, AI tool router, lifecycle category rename, view toggle, 6 new tests
+- Next step: Design Phase 9c — brainstorm in Claude.ai, produce design doc + implementation plan
+- Key new files from 9b: `lib/tool-descriptions.ts` (TOOL_CATALOG), `lib/tool-recommendations.ts`, `lib/tool-router.ts`, `lib/utils.ts` (resolveViewingAs), `app/api/tools/router/route.ts`, `app/api/view-mode/route.ts`, `components/dashboard/views/` (3 view components), `components/dashboard/hero-input.tsx`, `components/dashboard/view-toggle.tsx`
+- Dashboard architecture: layout reads `viewing_as` cookie → passes to Sidebar; page reads cookie + fetches profile → passes to DashboardContent → renders BusinessOwnerView / SupportOpsView / ImplementerView
 - Test setup: run `npm run test:setup` to generate `playwright/.env.test` from `.env.local`, then `npm test` for full Playwright suite
+- Test count: 118 fast + 4 fast-serial + 3 slow (125 total)
 - CI: fast tests on every push, fast + slow on PRs to main, branch protection requires both to pass
 - CI secrets: includes `NEXT_PUBLIC_STRIPE_PRICE_ESSENTIALS_MONTHLY` and `NEXT_PUBLIC_STRIPE_PRICE_ESSENTIALS_ANNUAL` (repo-level)
 - Repo: public, squash merge only, auto-delete branches, PRs required for main
