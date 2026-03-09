@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PlannerForm } from "@/components/tools/integration-planner/planner-form";
 import { currentMonthDate } from "@/lib/utils";
-import { isProUser } from "@/lib/subscription";
+import { getUserPlan } from "@/lib/subscription";
 
 export default async function IntegrationPlannerPage() {
   const supabase = await createClient();
@@ -10,8 +10,8 @@ export default async function IntegrationPlannerPage() {
 
   if (!user) redirect("/login");
 
-  const [isPro, { data: usageRows }] = await Promise.all([
-    isProUser(user.id),
+  const [userPlan, { data: usageRows }] = await Promise.all([
+    getUserPlan(user.id),
     supabase.from("usage").select("count").eq("user_id", user.id).eq("month", currentMonthDate()),
   ]);
 
@@ -25,7 +25,7 @@ export default async function IntegrationPlannerPage() {
         packages, architecture, and key considerations.
       </p>
       <div className="mt-8">
-        <PlannerForm usageCount={totalUsage} isPro={isPro} />
+        <PlannerForm usageCount={totalUsage} plan={userPlan.plan} />
       </div>
     </div>
   );

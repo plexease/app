@@ -54,12 +54,12 @@ test.describe("Code Generator", () => {
     await expect(freeUserPage.getByText(/failed|please try again/i)).toBeVisible({ timeout: 5000 });
   });
 
-  test("pro user sees no usage counter", async ({ proUserPage, mockApi }) => {
+  test("pro user sees usage counter", async ({ proUserPage, mockApi }) => {
     await mockApi.codeGenerator(proUserPage, "success");
 
     const generator = new CodeGeneratorPage(proUserPage);
     await generator.goto();
 
-    await expect(generator.usageCounter).not.toBeVisible();
+    await expect(generator.usageCounter).toBeVisible();
   });
 });

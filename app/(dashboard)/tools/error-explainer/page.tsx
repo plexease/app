@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ErrorExplainerForm } from "@/components/tools/error-explainer/explainer-form";
 import { currentMonthDate } from "@/lib/utils";
-import { isProUser } from "@/lib/subscription";
+import { getUserPlan } from "@/lib/subscription";
 
 export default async function ErrorExplainerPage() {
   const supabase = await createClient();
@@ -14,8 +14,8 @@ export default async function ErrorExplainerPage() {
     redirect("/login");
   }
 
-  const [isPro, { data: usageRows }] = await Promise.all([
-    isProUser(user.id),
+  const [userPlan, { data: usageRows }] = await Promise.all([
+    getUserPlan(user.id),
     supabase
       .from("usage")
       .select("count")
@@ -34,7 +34,7 @@ export default async function ErrorExplainerPage() {
       </p>
 
       <div className="mt-8">
-        <ErrorExplainerForm usageCount={totalUsage} isPro={isPro} />
+        <ErrorExplainerForm usageCount={totalUsage} plan={userPlan.plan} />
       </div>
     </div>
   );

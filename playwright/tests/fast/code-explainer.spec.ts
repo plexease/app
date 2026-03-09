@@ -55,12 +55,12 @@ test.describe("Code Explainer", () => {
     await expect(freeUserPage.getByText(/failed|please try again/i)).toBeVisible({ timeout: 5000 });
   });
 
-  test("pro user sees no usage counter", async ({ proUserPage, mockApi }) => {
+  test("pro user sees usage counter", async ({ proUserPage, mockApi }) => {
     await mockApi.codeExplainer(proUserPage, "success");
 
     const explainer = new CodeExplainerPage(proUserPage);
     await explainer.goto();
 
-    await expect(explainer.usageCounter).not.toBeVisible();
+    await expect(explainer.usageCounter).toBeVisible();
   });
 });

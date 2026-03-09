@@ -57,12 +57,12 @@ test.describe("Dependency Audit", () => {
     await expect(freeUserPage.getByText(/failed|please try again/i)).toBeVisible({ timeout: 5000 });
   });
 
-  test("pro user sees no usage counter", async ({ proUserPage, mockApi }) => {
+  test("pro user sees usage counter", async ({ proUserPage, mockApi }) => {
     await mockApi.dependencyAudit(proUserPage, "success");
 
     const audit = new DependencyAuditPage(proUserPage);
     await audit.goto();
 
-    await expect(audit.usageCounter).not.toBeVisible();
+    await expect(audit.usageCounter).toBeVisible();
   });
 });

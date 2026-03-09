@@ -29,6 +29,6 @@ test.describe("Upgrade Page", () => {
 
   test("feature comparison table is visible", async ({ freeUserPage }) => {
     await expect(freeUserPage.getByText("Feature")).toBeVisible();
-    await expect(freeUserPage.getByText("Unlimited").first()).toBeVisible();
+    await expect(freeUserPage.getByText("1000/month").first()).toBeVisible();
   });
 });

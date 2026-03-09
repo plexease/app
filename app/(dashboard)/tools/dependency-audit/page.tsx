@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AuditForm } from "@/components/tools/dependency-audit/audit-form";
 import { currentMonthDate } from "@/lib/utils";
-import { isProUser } from "@/lib/subscription";
+import { getUserPlan } from "@/lib/subscription";
 
 export default async function DependencyAuditPage() {
   const supabase = await createClient();
@@ -10,8 +10,8 @@ export default async function DependencyAuditPage() {
 
   if (!user) redirect("/login");
 
-  const [isPro, { data: usageRows }] = await Promise.all([
-    isProUser(user.id),
+  const [userPlan, { data: usageRows }] = await Promise.all([
+    getUserPlan(user.id),
     supabase.from("usage").select("count").eq("user_id", user.id).eq("month", currentMonthDate()),
   ]);
 
@@ -25,7 +25,7 @@ export default async function DependencyAuditPage() {
         vulnerable, or deprecated packages with upgrade recommendations.
       </p>
       <div className="mt-8">
-        <AuditForm usageCount={totalUsage} isPro={isPro} />
+        <AuditForm usageCount={totalUsage} plan={userPlan.plan} />
       </div>
     </div>
   );

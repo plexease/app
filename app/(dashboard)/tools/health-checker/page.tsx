@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { HealthCheckerForm } from "@/components/tools/health-checker/checker-form";
 import { currentMonthDate } from "@/lib/utils";
-import { isProUser } from "@/lib/subscription";
+import { getUserPlan } from "@/lib/subscription";
 
 export default async function HealthCheckerPage() {
   const supabase = await createClient();
@@ -14,8 +14,8 @@ export default async function HealthCheckerPage() {
     redirect("/login");
   }
 
-  const [isPro, { data: usageRows }] = await Promise.all([
-    isProUser(user.id),
+  const [userPlan, { data: usageRows }] = await Promise.all([
+    getUserPlan(user.id),
     supabase
       .from("usage")
       .select("count")
@@ -34,7 +34,7 @@ export default async function HealthCheckerPage() {
       </p>
 
       <div className="mt-8">
-        <HealthCheckerForm usageCount={totalUsage} isPro={isPro} />
+        <HealthCheckerForm usageCount={totalUsage} plan={userPlan.plan} />
       </div>
     </div>
   );

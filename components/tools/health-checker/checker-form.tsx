@@ -9,16 +9,17 @@ import { loadWorkflowContext } from "@/lib/workflow-context";
 import { LimitReachedCard } from "@/components/shared/limit-reached-card";
 import type { HealthCheckerResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
-import { FREE_MONTHLY_LIMIT } from "@/lib/constants";
+import { getUsageLimit } from "@/lib/constants";
+import type { PlanTier } from "@/lib/subscription";
 
 const ACCEPTED_FROM = ["error-explainer"];
 
 type Props = {
   usageCount: number;
-  isPro: boolean;
+  plan: PlanTier;
 };
 
-export function HealthCheckerForm({ usageCount, isPro }: Props) {
+export function HealthCheckerForm({ usageCount, plan }: Props) {
   const [config, setConfig] = useState("");
   const [stack, setStack] = useState<SelectedStack | null>(null);
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,8 @@ export function HealthCheckerForm({ usageCount, isPro }: Props) {
   const [currentUsage, setCurrentUsage] = useState(usageCount);
   const [contextBanner, setContextBanner] = useState<string | null>(null);
 
-  const limitReached = !isPro && currentUsage >= FREE_MONTHLY_LIMIT;
+  const limit = getUsageLimit(plan);
+  const limitReached = currentUsage >= limit;
 
   useEffect(() => {
     const ctx = loadWorkflowContext(ACCEPTED_FROM);
@@ -63,7 +65,7 @@ export function HealthCheckerForm({ usageCount, isPro }: Props) {
 
       if (!res.ok) {
         if (data.limitReached) {
-          setCurrentUsage(FREE_MONTHLY_LIMIT);
+          setCurrentUsage(limit);
         } else {
           setError(data.error ?? "Something went wrong. Please try again.");
         }
@@ -126,11 +128,9 @@ export function HealthCheckerForm({ usageCount, isPro }: Props) {
         </button>
       </form>
 
-      {!isPro && (
-        <p className="mt-2 text-xs text-muted-500">
-          {currentUsage} of {FREE_MONTHLY_LIMIT} free lookups used this month
-        </p>
-      )}
+      <p className="mt-2 text-xs text-muted-500">
+        {currentUsage} of {limit} lookups used this month
+      </p>
 
       <div aria-live="polite">
         {error && <p className="mt-3 text-sm text-red-400" role="alert">{error}</p>}

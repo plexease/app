@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ApiWrapperGeneratorForm } from "@/components/tools/api-wrapper-generator/generator-form";
 import { currentMonthDate } from "@/lib/utils";
-import { isProUser } from "@/lib/subscription";
+import { getUserPlan } from "@/lib/subscription";
 
 export default async function ApiWrapperGeneratorPage() {
   const supabase = await createClient();
@@ -14,8 +14,8 @@ export default async function ApiWrapperGeneratorPage() {
     redirect("/login");
   }
 
-  const [isPro, { data: usageRows }] = await Promise.all([
-    isProUser(user.id),
+  const [userPlan, { data: usageRows }] = await Promise.all([
+    getUserPlan(user.id),
     supabase
       .from("usage")
       .select("count")
@@ -34,7 +34,7 @@ export default async function ApiWrapperGeneratorPage() {
       </p>
 
       <div className="mt-8">
-        <ApiWrapperGeneratorForm usageCount={totalUsage} isPro={isPro} />
+        <ApiWrapperGeneratorForm usageCount={totalUsage} plan={userPlan.plan} />
       </div>
     </div>
   );

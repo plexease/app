@@ -9,7 +9,8 @@ import { loadWorkflowContext } from "@/lib/workflow-context";
 import { LimitReachedCard } from "@/components/shared/limit-reached-card";
 import type { CodeExplainerResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
-import { FREE_MONTHLY_LIMIT } from "@/lib/constants";
+import { getUsageLimit } from "@/lib/constants";
+import type { PlanTier } from "@/lib/subscription";
 
 const SCOPE_OPTIONS = [
   { value: "how-it-works", label: "How does this code work?" },
@@ -22,10 +23,10 @@ const ACCEPTED_FROM = ["error-explainer", "health-checker"];
 
 type Props = {
   usageCount: number;
-  isPro: boolean;
+  plan: PlanTier;
 };
 
-export function ExplainerForm({ usageCount, isPro }: Props) {
+export function ExplainerForm({ usageCount, plan }: Props) {
   const [code, setCode] = useState("");
   const [scopeQuestion, setScopeQuestion] = useState(SCOPE_OPTIONS[0].value);
   const [stack, setStack] = useState<SelectedStack | null>(null);
@@ -35,7 +36,8 @@ export function ExplainerForm({ usageCount, isPro }: Props) {
   const [currentUsage, setCurrentUsage] = useState(usageCount);
   const [contextBanner, setContextBanner] = useState<string | null>(null);
 
-  const limitReached = !isPro && currentUsage >= FREE_MONTHLY_LIMIT;
+  const limit = getUsageLimit(plan);
+  const limitReached = currentUsage >= limit;
 
   // Load workflow context on mount
   useEffect(() => {
@@ -73,7 +75,7 @@ export function ExplainerForm({ usageCount, isPro }: Props) {
 
       if (!res.ok) {
         if (data.limitReached) {
-          setCurrentUsage(FREE_MONTHLY_LIMIT);
+          setCurrentUsage(limit);
         } else {
           setError(data.error ?? "Something went wrong. Please try again.");
         }
@@ -154,11 +156,9 @@ export function ExplainerForm({ usageCount, isPro }: Props) {
         </button>
       </form>
 
-      {!isPro && (
-        <p className="mt-2 text-xs text-muted-500">
-          {currentUsage} of {FREE_MONTHLY_LIMIT} free lookups used this month
-        </p>
-      )}
+      <p className="mt-2 text-xs text-muted-500">
+        {currentUsage} of {limit} lookups used this month
+      </p>
 
       <div aria-live="polite">
         {error && <p className="mt-3 text-sm text-red-400" role="alert">{error}</p>}

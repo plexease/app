@@ -1,10 +1,28 @@
 import { stripe } from "@/lib/stripe";
-import { GRACE_PERIOD_DAYS } from "@/lib/constants";
+import {
+  GRACE_PERIOD_DAYS,
+  STRIPE_PRICE_ESSENTIALS_MONTHLY,
+  STRIPE_PRICE_ESSENTIALS_ANNUAL,
+  STRIPE_PRICE_PRO_MONTHLY,
+  STRIPE_PRICE_PRO_ANNUAL,
+} from "@/lib/constants";
 import { getServiceClient } from "@/lib/supabase/service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+const ESSENTIALS_PRICES = [STRIPE_PRICE_ESSENTIALS_MONTHLY, STRIPE_PRICE_ESSENTIALS_ANNUAL];
+const PRO_PRICES = [STRIPE_PRICE_PRO_MONTHLY, STRIPE_PRICE_PRO_ANNUAL];
+
+function determinePlan(stripePriceId: string | null): PlanTier {
+  if (!stripePriceId) return "free";
+  if (PRO_PRICES.includes(stripePriceId)) return "pro";
+  if (ESSENTIALS_PRICES.includes(stripePriceId)) return "essentials";
+  return "free";
+}
+
+export type PlanTier = "free" | "essentials" | "pro";
+
 export type UserPlan = {
-  plan: "free" | "pro";
+  plan: PlanTier;
   status: "active" | "cancelled" | "past_due";
   currentPeriodEnd: string | null;
   cancelAtPeriodEnd: boolean;
@@ -16,7 +34,7 @@ export async function getUserPlan(userId: string): Promise<UserPlan> {
   const supabase = getServiceClient();
   const { data: subscription } = await supabase
     .from("subscriptions")
-    .select("plan, status, current_period_end, cancel_at_period_end, grace_period_end, stripe_subscription_id")
+    .select("plan, status, current_period_end, cancel_at_period_end, grace_period_end, stripe_subscription_id, stripe_price_id")
     .eq("user_id", userId)
     .maybeSingle();
 
@@ -31,8 +49,13 @@ export async function getUserPlan(userId: string): Promise<UserPlan> {
     };
   }
 
+  // Use stripe_price_id for accurate tier detection; fall back to plan column
+  const plan = subscription.stripe_price_id
+    ? determinePlan(subscription.stripe_price_id)
+    : (subscription.plan as PlanTier);
+
   return {
-    plan: subscription.plan as "free" | "pro",
+    plan: plan === "free" && subscription.plan !== "free" ? (subscription.plan as PlanTier) : plan,
     status: subscription.status as "active" | "cancelled" | "past_due",
     currentPeriodEnd: subscription.current_period_end,
     cancelAtPeriodEnd: subscription.cancel_at_period_end,
@@ -43,8 +66,17 @@ export async function getUserPlan(userId: string): Promise<UserPlan> {
 
 export async function isProUser(userId: string): Promise<boolean> {
   const plan = await getUserPlan(userId);
+  return isPaidTier(plan, "pro");
+}
 
-  if (plan.plan !== "pro") return false;
+export async function isEssentialsUser(userId: string): Promise<boolean> {
+  const plan = await getUserPlan(userId);
+  return isPaidTier(plan, "essentials");
+}
+
+/** Check if a user plan is on a specific paid tier and active (including grace period). */
+function isPaidTier(plan: UserPlan, tier: PlanTier): boolean {
+  if (plan.plan !== tier) return false;
   if (plan.status === "active" || plan.status === "past_due") return true;
 
   // Check grace period
@@ -116,23 +148,28 @@ export async function reconcileSubscription(
   if (!dbSubscription) return;
 
   const hasActiveStripeSub = stripeSubscriptions.data.length > 0;
-  const dbSaysPro = dbSubscription.plan === "pro" && dbSubscription.status === "active";
+  const dbSaysPaid = dbSubscription.plan !== "free" && dbSubscription.status === "active";
 
-  if (hasActiveStripeSub && !dbSaysPro) {
+  if (hasActiveStripeSub && !dbSaysPaid) {
     // Stripe says active, DB says not — fix DB
     const sub = stripeSubscriptions.data[0];
+    const priceId = sub.items.data[0]?.price.id ?? null;
+    const detectedPlan = determinePlan(priceId);
+    // If price ID is unrecognised, keep the existing DB plan rather than defaulting
+    const plan = detectedPlan !== "free" ? detectedPlan : (dbSubscription.plan as PlanTier);
     await supabase
       .from("subscriptions")
       .update({
-        plan: "pro",
+        plan,
         status: "active",
         stripe_subscription_id: sub.id,
+        stripe_price_id: priceId,
         current_period_end: new Date(sub.items.data[0].current_period_end * 1000).toISOString(),
         cancel_at_period_end: sub.cancel_at_period_end,
       })
       .eq("user_id", userId);
-  } else if (!hasActiveStripeSub && dbSaysPro) {
-    // Stripe says no active sub, DB says pro — check for grace period
+  } else if (!hasActiveStripeSub && dbSaysPaid) {
+    // Stripe says no active sub, DB says paid — check for grace period
     // Only downgrade if no grace period or grace has expired
     const plan = await getUserPlan(userId);
     if (!plan.gracePeriodEnd || new Date() >= new Date(plan.gracePeriodEnd)) {

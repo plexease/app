@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ExplainerForm } from "@/components/tools/code-explainer/explainer-form";
 import { currentMonthDate } from "@/lib/utils";
-import { isProUser } from "@/lib/subscription";
+import { getUserPlan } from "@/lib/subscription";
 
 export default async function CodeExplainerPage() {
   const supabase = await createClient();
@@ -14,8 +14,8 @@ export default async function CodeExplainerPage() {
     redirect("/login");
   }
 
-  const [isPro, { data: usageRows }] = await Promise.all([
-    isProUser(user.id),
+  const [userPlan, { data: usageRows }] = await Promise.all([
+    getUserPlan(user.id),
     supabase
       .from("usage")
       .select("count")
@@ -34,7 +34,7 @@ export default async function CodeExplainerPage() {
       </p>
 
       <div className="mt-8">
-        <ExplainerForm usageCount={totalUsage} isPro={isPro} />
+        <ExplainerForm usageCount={totalUsage} plan={userPlan.plan} />
       </div>
     </div>
   );

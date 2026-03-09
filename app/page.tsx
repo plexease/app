@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { isProUser } from "@/lib/subscription";
+import { getUserPlan } from "@/lib/subscription";
 import { Nav } from "@/components/landing/nav";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { PricingSection } from "@/components/landing/pricing-section";
@@ -11,7 +11,8 @@ export default async function Home() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const isPro = user ? await isProUser(user.id) : false;
+  const userPlan = user ? await getUserPlan(user.id) : null;
+  const plan = userPlan?.plan ?? "free";
 
   return (
     <main id="main-content" className="min-h-screen bg-surface-950 text-white">
@@ -33,6 +34,16 @@ export default async function Home() {
                 price: "0",
                 priceCurrency: "GBP",
                 name: "Free",
+              },
+              {
+                "@type": "Offer",
+                price: "5",
+                priceCurrency: "GBP",
+                name: "Essentials",
+                priceSpecification: {
+                  "@type": "UnitPriceSpecification",
+                  billingDuration: "P1M",
+                },
               },
               {
                 "@type": "Offer",
@@ -119,7 +130,7 @@ export default async function Home() {
       </section>
 
       {/* Pricing */}
-      <PricingSection isLoggedIn={!!user} isPro={isPro} />
+      <PricingSection isLoggedIn={!!user} plan={plan} />
 
       {/* Attribution */}
       <Attribution />

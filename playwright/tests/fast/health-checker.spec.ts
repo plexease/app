@@ -58,12 +58,12 @@ test.describe("Health Checker", () => {
     await expect(freeUserPage.getByText(/failed|please try again/i)).toBeVisible({ timeout: 5000 });
   });
 
-  test("pro user sees no usage counter", async ({ proUserPage, mockApi }) => {
+  test("pro user sees usage counter", async ({ proUserPage, mockApi }) => {
     await mockApi.healthChecker(proUserPage, "success");
 
     const checker = new HealthCheckerPage(proUserPage);
     await checker.goto();
 
-    await expect(checker.usageCounter).not.toBeVisible();
+    await expect(checker.usageCounter).toBeVisible();
   });
 });

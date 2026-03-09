@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { FREE_MONTHLY_LIMIT } from "@/lib/constants";
+import { getUsageLimit } from "@/lib/constants";
 import { currentMonthDate } from "@/lib/utils";
-import { isProUser } from "@/lib/subscription";
+import { getUserPlan, type PlanTier } from "@/lib/subscription";
 
 export interface AuthenticatedContext {
   userId: string;
-  isPro: boolean;
+  plan: PlanTier;
 }
 
 /**
@@ -26,29 +26,29 @@ export async function authenticateAndCheckUsage(
     return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
   }
 
-  const isPro = await isProUser(user.id);
+  const userPlan = await getUserPlan(user.id);
+  const plan = userPlan.plan;
+  const limit = getUsageLimit(plan);
 
-  if (!isPro) {
-    const month = currentMonthDate();
-    const { data: usageRows } = await supabase
-      .from("usage")
-      .select("count")
-      .eq("user_id", user.id)
-      .eq("month", month);
+  const month = currentMonthDate();
+  const { data: usageRows } = await supabase
+    .from("usage")
+    .select("count")
+    .eq("user_id", user.id)
+    .eq("month", month);
 
-    const totalUsage = usageRows?.reduce((sum, row) => sum + (row.count ?? 0), 0) ?? 0;
+  const totalUsage = usageRows?.reduce((sum, row) => sum + (row.count ?? 0), 0) ?? 0;
 
-    if (totalUsage >= FREE_MONTHLY_LIMIT) {
-      return {
-        error: NextResponse.json(
-          { error: "Monthly limit reached", limitReached: true },
-          { status: 429 }
-        ),
-      };
-    }
+  if (totalUsage >= limit) {
+    return {
+      error: NextResponse.json(
+        { error: "Monthly usage limit reached.", limitReached: true },
+        { status: 429 }
+      ),
+    };
   }
 
-  return { context: { userId: user.id, isPro } };
+  return { context: { userId: user.id, plan } };
 }
 
 /**

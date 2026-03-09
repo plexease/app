@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { GeneratorForm } from "@/components/tools/code-generator/generator-form";
 import { currentMonthDate } from "@/lib/utils";
-import { isProUser } from "@/lib/subscription";
+import { getUserPlan } from "@/lib/subscription";
 
 export default async function CodeGeneratorPage() {
   const supabase = await createClient();
@@ -10,8 +10,8 @@ export default async function CodeGeneratorPage() {
 
   if (!user) redirect("/login");
 
-  const [isPro, { data: usageRows }] = await Promise.all([
-    isProUser(user.id),
+  const [userPlan, { data: usageRows }] = await Promise.all([
+    getUserPlan(user.id),
     supabase.from("usage").select("count").eq("user_id", user.id).eq("month", currentMonthDate()),
   ]);
 
@@ -24,7 +24,7 @@ export default async function CodeGeneratorPage() {
         Describe what you need and get production-ready integration code with setup instructions.
       </p>
       <div className="mt-8">
-        <GeneratorForm usageCount={totalUsage} isPro={isPro} />
+        <GeneratorForm usageCount={totalUsage} plan={userPlan.plan} />
       </div>
     </div>
   );

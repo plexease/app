@@ -8,6 +8,8 @@ import {
   currentMonth,
   setSubscriptionState,
   deleteSubscription,
+  deleteUserProfile,
+  ensureUserProfile,
 } from "../helpers/supabase-admin";
 
 type MockApiFactory = {
@@ -39,6 +41,7 @@ type TestFixtures = {
     setSubscriptionState: (
       userId: string,
       overrides: {
+        plan?: string;
         status?: string;
         cancelAtPeriodEnd?: boolean;
         currentPeriodEnd?: string;
@@ -46,6 +49,8 @@ type TestFixtures = {
       }
     ) => Promise<void>;
     resetSubscription: (userId: string) => Promise<void>;
+    deleteUserProfile: (userId: string) => Promise<void>;
+    ensureUserProfile: (userId: string) => Promise<void>;
   };
 };
 
@@ -276,6 +281,8 @@ export const test = base.extend<TestFixtures>({
         }
       ) => setSubscriptionState(userId, overrides),
       resetSubscription: (userId: string) => deleteSubscription(userId),
+      deleteUserProfile: (userId: string) => deleteUserProfile(userId),
+      ensureUserProfile: (userId: string) => ensureUserProfile(userId),
     });
   },
 });
