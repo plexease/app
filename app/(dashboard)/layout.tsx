@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getUserPlan } from "@/lib/subscription";
-import { currentMonthDate } from "@/lib/utils";
+import { getUserProfile } from "@/lib/user-profile";
+import { currentMonthDate, resolveViewingAs } from "@/lib/utils";
 import { Sidebar } from "@/components/dashboard/sidebar";
 
 export default async function DashboardLayout({
@@ -20,6 +21,7 @@ export default async function DashboardLayout({
   }
 
   const plan = await getUserPlan(user.id);
+  const profile = await getUserProfile(user.id);
 
   // Get total usage across all tools for the current month
   const { data: usageRows } = await supabase
@@ -30,8 +32,14 @@ export default async function DashboardLayout({
 
   const totalUsage = usageRows?.reduce((sum, row) => sum + (row.count ?? 0), 0) ?? 0;
 
-  // Reconcile once per session (not on every page load)
+  // Read viewing_as cookie, default to user's persona
   const cookieStore = await cookies();
+  const viewingAs = resolveViewingAs(
+    cookieStore.get("viewing_as")?.value,
+    profile?.persona
+  );
+
+  // Reconcile once per session (not on every page load)
   const alreadyReconciled = cookieStore.get("reconciled");
 
   if (!alreadyReconciled && plan.plan !== "free") {
@@ -46,20 +54,14 @@ export default async function DashboardLayout({
       await reconcileSubscription(user.id, userData.stripe_customer_id);
     }
 
-    // Set session cookie so we don't reconcile again until next login
-    // Note: cookieStore.set() can throw in Server Components (Next.js 16+).
-    // It works in practice because layouts are rendered in a request context,
-    // but we guard against edge cases where the response is already streaming.
     try {
       cookieStore.set("reconciled", "1", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
-        // No maxAge = session cookie, cleared when browser closes
       });
     } catch {
       // Reconciliation still ran — the cookie just won't be set this time.
-      // Next page load will reconcile again (harmless, just an extra Stripe call).
     }
   }
 
@@ -68,6 +70,7 @@ export default async function DashboardLayout({
       <Sidebar
         plan={plan}
         usageCount={totalUsage}
+        viewingAs={viewingAs}
       />
       <main id="main-content" className="flex-1 p-8">{children}</main>
     </div>

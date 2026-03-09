@@ -7,7 +7,9 @@ import { TierBadge } from "@/components/billing/tier-badge";
 import { UsageCounter } from "@/components/billing/usage-counter";
 import { Logo } from "@/components/brand/logo";
 import { resetCookieConsent } from "@/components/ui/cookie-consent";
+import { ViewToggle } from "./view-toggle";
 import type { UserPlan } from "@/lib/subscription";
+import type { Persona } from "@/lib/types/persona";
 
 const navGroups: { label: string | null; items: { href: string; label: string; exact?: boolean }[] }[] = [
   {
@@ -15,25 +17,24 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
     items: [{ href: "/dashboard", label: "Dashboard", exact: true }],
   },
   {
-    label: "Understand",
-    items: [
-      { href: "/tools/code-explainer", label: "Code Explainer" },
-      { href: "/tools/error-explainer", label: "Error Explainer" },
-    ],
-  },
-  {
-    label: "Decide",
+    label: "Explore",
     items: [
       { href: "/tools/package-advisor", label: "Package Advisor" },
       { href: "/tools/integration-planner", label: "Integration Planner" },
     ],
   },
   {
-    label: "Build",
+    label: "Set Up",
     items: [
       { href: "/tools/code-generator", label: "Code Generator" },
       { href: "/tools/api-wrapper-generator", label: "API Wrapper Generator" },
-      { href: "/tools/unit-test-generator", label: "Unit Test Generator" },
+    ],
+  },
+  {
+    label: "Troubleshoot",
+    items: [
+      { href: "/tools/error-explainer", label: "Error Explainer" },
+      { href: "/tools/code-explainer", label: "Code Explainer" },
     ],
   },
   {
@@ -42,6 +43,7 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
       { href: "/tools/dependency-audit", label: "Dependency Audit" },
       { href: "/tools/health-checker", label: "Health Checker" },
       { href: "/tools/migration-assistant", label: "Migration Assistant" },
+      { href: "/tools/unit-test-generator", label: "Unit Test Generator" },
     ],
   },
 ];
@@ -49,9 +51,10 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
 type Props = {
   plan: UserPlan;
   usageCount: number;
+  viewingAs: Persona;
 };
 
-export function Sidebar({ plan, usageCount }: Props) {
+export function Sidebar({ plan, usageCount, viewingAs }: Props) {
   const pathname = usePathname();
   const isFree = plan.plan === "free";
 
@@ -76,6 +79,8 @@ export function Sidebar({ plan, usageCount }: Props) {
       <div className="mt-1">
         <UsageCounter plan={plan.plan} usageCount={usageCount} />
       </div>
+
+      <ViewToggle viewingAs={viewingAs} />
 
       <nav className="mt-6 flex-1 space-y-4">
         {navGroups.map((group) => (
