@@ -49,6 +49,24 @@ export async function findTestUser(email: string): Promise<string> {
   return user.id;
 }
 
+export async function ensureUserProfile(userId: string): Promise<void> {
+  const supabase = getAdminClient();
+
+  const { error } = await supabase
+    .from("user_profiles")
+    .upsert(
+      {
+        id: userId,
+        persona: "implementer",
+        comfort_level: "writes_code",
+        onboarding_completed: true,
+      },
+      { onConflict: "id" }
+    );
+
+  if (error) throw error;
+}
+
 export async function ensureProSubscription(userId: string): Promise<void> {
   const supabase = getAdminClient();
 

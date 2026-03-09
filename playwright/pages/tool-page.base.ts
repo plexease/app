@@ -19,11 +19,11 @@ export abstract class ToolPageBase {
   abstract get submitButton(): Locator;
 
   get usageCounter(): Locator {
-    return this.main.getByText(/\d+ of 20 free lookups/);
+    return this.main.getByText(/\d+ of \d+ lookups used this month/);
   }
 
   get limitReachedMessage(): Locator {
-    return this.main.getByText("You've used all 20 free lookups");
+    return this.main.getByText("You've reached your monthly usage limit.");
   }
 
   get upgradeButton(): Locator {
