@@ -108,6 +108,16 @@ export function Sidebar({ plan, usageCount }: Props) {
       </nav>
 
       <div className="border-t border-surface-700 pt-4 space-y-1">
+        <Link
+          href="/settings"
+          className={`flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 ${
+            pathname === "/settings"
+              ? "bg-surface-800 text-white font-medium"
+              : "text-muted-400 hover:bg-surface-800 hover:text-white"
+          }`}
+        >
+          Settings
+        </Link>
         <button
           onClick={() => resetCookieConsent()}
           className="flex w-full items-center rounded-lg px-3 py-2.5 text-sm text-muted-400 hover:bg-surface-800 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
