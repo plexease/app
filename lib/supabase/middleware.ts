@@ -52,5 +52,36 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Onboarding check for authenticated users on protected routes
+  const onboardingExemptPaths = ["/onboarding", "/api/", "/upgrade/success"];
+  const isOnboardingExempt = onboardingExemptPaths.some((p) => pathname.startsWith(p));
+
+  if (user && !isOnboardingExempt && protectedRoutes.some((route) => pathname.startsWith(route))) {
+    // Check cookie first to avoid DB query on every request
+    const onboardedCookie = request.cookies.get("plexease_onboarded");
+    if (!onboardedCookie) {
+      // Query DB to check onboarding status
+      const { data: profile } = await supabase
+        .from("user_profiles")
+        .select("onboarding_completed")
+        .eq("id", user.id)
+        .single();
+
+      if (!profile || !profile.onboarding_completed) {
+        const onboardingUrl = request.nextUrl.clone();
+        onboardingUrl.pathname = "/onboarding";
+        return NextResponse.redirect(onboardingUrl);
+      }
+
+      // User is onboarded — set cookie so we skip DB query next time
+      supabaseResponse.cookies.set("plexease_onboarded", "true", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+      });
+    }
+  }
+
   return supabaseResponse;
 }
