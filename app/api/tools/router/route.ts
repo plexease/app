@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { ROUTER_DAILY_LIMIT, TOOL_NAME_ROUTER } from "@/lib/constants";
 import { TOOL_CATALOG } from "@/lib/tool-descriptions";
+import { resolvePersona } from "@/lib/utils";
+import { getUserProfile } from "@/lib/user-profile";
 import Anthropic from "@anthropic-ai/sdk";
 
 const anthropic = new Anthropic({
@@ -51,9 +54,18 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Resolve persona
+  const profile = await getUserProfile(user.id);
+  const cookieStore = await cookies();
+  const persona = resolvePersona(
+    (body as { persona?: string }).persona,
+    cookieStore.get("viewing_as")?.value,
+    profile?.persona
+  );
+
   // Build tool list for Claude
   const toolList = Object.entries(TOOL_CATALOG)
-    .map(([id, tool]) => `- ${id}: ${tool.label} — ${tool.descriptions.business_owner}`)
+    .map(([id, tool]) => `- ${id}: ${tool.label} — ${tool.descriptions[persona]}`)
     .join("\n");
 
   try {
