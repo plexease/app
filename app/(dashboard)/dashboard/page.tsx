@@ -3,10 +3,13 @@ import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getUserPlan } from "@/lib/subscription";
 import { getUserProfile } from "@/lib/user-profile";
-import { currentMonthDate } from "@/lib/utils";
+import { currentMonthDate, resolveViewingAs } from "@/lib/utils";
 import { DashboardContent } from "@/components/dashboard/dashboard-content";
-import type { Persona } from "@/lib/types/persona";
 
+// Note: layout.tsx fetches plan/profile/usage for the sidebar. We re-fetch here because
+// Next.js layouts cannot pass data to pages. Supabase calls are not deduped by Next.js
+// cache, so this results in duplicate queries — an accepted trade-off vs. adding a
+// React context provider for layout-to-page data passing.
 export default async function DashboardPage() {
   const supabase = await createClient();
   const {
@@ -30,11 +33,10 @@ export default async function DashboardPage() {
 
   // Read viewing_as cookie, default to user's persona
   const cookieStore = await cookies();
-  const viewingAsCookie = cookieStore.get("viewing_as")?.value as Persona | undefined;
-  const validPersonas: Persona[] = ["business_owner", "support_ops", "implementer"];
-  const viewingAs: Persona = viewingAsCookie && validPersonas.includes(viewingAsCookie)
-    ? viewingAsCookie
-    : (profile?.persona ?? "business_owner");
+  const viewingAs = resolveViewingAs(
+    cookieStore.get("viewing_as")?.value,
+    profile?.persona
+  );
 
   return (
     <DashboardContent

@@ -65,7 +65,15 @@ export function HeroInput() {
   if (error === "rate_limited") {
     return (
       <div className="text-center">
-        <p className="text-sm text-muted-400">Try browsing by category instead.</p>
+        <p className="text-sm text-muted-400">
+          You&apos;ve reached the daily routing limit. Try browsing by category instead.
+        </p>
+        <button
+          onClick={() => setError(null)}
+          className="mt-2 text-xs text-brand-400 hover:text-brand-300 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-lg"
+        >
+          Dismiss
+        </button>
       </div>
     );
   }

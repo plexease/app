@@ -21,9 +21,6 @@ export const PERSONA_LABELS: Record<Persona, string> = {
   implementer: "Implementer",
 };
 
-/** Ephemeral view mode — which persona's UI to render. Stored in cookie, defaults to user's persona. */
-export type ViewingAs = Persona;
-
 export const PLATFORM_OPTIONS = [
   { id: "shopify", label: "Shopify" },
   { id: "woocommerce", label: "WooCommerce" },

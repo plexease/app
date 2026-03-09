@@ -11,7 +11,7 @@ type Props = {
 
 const STAGE_PROMPTS = [
   { label: "Something's broken", category: "troubleshoot" as const, href: "/tools/error-explainer" },
-  { label: "Connect two services", category: "setup" as const, href: "/tools/code-generator" },
+  { label: "Connect two services", category: "explore" as const, href: "/tools/integration-planner" },
   { label: "Help me choose tools", category: "explore" as const, href: "/tools/package-advisor" },
   { label: "Check my setup", category: "maintain" as const, href: "/tools/health-checker" },
 ];

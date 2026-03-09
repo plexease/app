@@ -3,9 +3,8 @@ import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getUserPlan } from "@/lib/subscription";
 import { getUserProfile } from "@/lib/user-profile";
-import { currentMonthDate } from "@/lib/utils";
+import { currentMonthDate, resolveViewingAs } from "@/lib/utils";
 import { Sidebar } from "@/components/dashboard/sidebar";
-import type { Persona } from "@/lib/types/persona";
 
 export default async function DashboardLayout({
   children,
@@ -35,11 +34,10 @@ export default async function DashboardLayout({
 
   // Read viewing_as cookie, default to user's persona
   const cookieStore = await cookies();
-  const viewingAsCookie = cookieStore.get("viewing_as")?.value as Persona | undefined;
-  const validPersonas: Persona[] = ["business_owner", "support_ops", "implementer"];
-  const viewingAs: Persona = viewingAsCookie && validPersonas.includes(viewingAsCookie)
-    ? viewingAsCookie
-    : (profile?.persona ?? "business_owner");
+  const viewingAs = resolveViewingAs(
+    cookieStore.get("viewing_as")?.value,
+    profile?.persona
+  );
 
   // Reconcile once per session (not on every page load)
   const alreadyReconciled = cookieStore.get("reconciled");

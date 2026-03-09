@@ -153,8 +153,10 @@ export function getAllTools(persona: Persona) {
   }));
 }
 
-function getStageDescription(stage: string, persona: Persona): string {
-  const descriptions: Record<string, Record<Persona, string>> = {
+type Category = "explore" | "setup" | "troubleshoot" | "maintain";
+
+function getStageDescription(stage: Category, persona: Persona): string {
+  const descriptions: Record<Category, Record<Persona, string>> = {
     explore: {
       business_owner: "Figure out what you need",
       support_ops: "Research tools and plan integrations",
@@ -176,5 +178,5 @@ function getStageDescription(stage: string, persona: Persona): string {
       implementer: "Audit, test, migrate, monitor health",
     },
   };
-  return descriptions[stage]?.[persona] ?? "";
+  return descriptions[stage][persona];
 }
