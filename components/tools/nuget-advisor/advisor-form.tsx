@@ -4,21 +4,22 @@ import { useState } from "react";
 import { ResultCards } from "./result-cards";
 import { LimitReachedCard } from "@/components/shared/limit-reached-card";
 import type { NuGetAdvisorResult } from "@/lib/claude";
-import { FREE_MONTHLY_LIMIT } from "@/lib/constants";
+import { getUsageLimit } from "@/lib/constants";
 
 type Props = {
   usageCount: number;
-  isPro: boolean;
+  plan: "free" | "essentials" | "pro";
 };
 
-export function AdvisorForm({ usageCount, isPro }: Props) {
+export function AdvisorForm({ usageCount, plan }: Props) {
   const [packageName, setPackageName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<NuGetAdvisorResult | null>(null);
   const [currentUsage, setCurrentUsage] = useState(usageCount);
 
-  const limitReached = !isPro && currentUsage >= FREE_MONTHLY_LIMIT;
+  const limit = getUsageLimit(plan);
+  const limitReached = currentUsage >= limit;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +38,7 @@ export function AdvisorForm({ usageCount, isPro }: Props) {
 
       if (!res.ok) {
         if (data.limitReached) {
-          setCurrentUsage(FREE_MONTHLY_LIMIT);
+          setCurrentUsage(limit);
         } else {
           setError(data.error ?? "Something went wrong. Please try again.");
         }
@@ -82,11 +83,9 @@ export function AdvisorForm({ usageCount, isPro }: Props) {
         </button>
       </form>
 
-      {!isPro && (
-        <p className="mt-2 text-xs text-muted-500">
-          {currentUsage} of {FREE_MONTHLY_LIMIT} free lookups used this month
-        </p>
-      )}
+      <p className="mt-2 text-xs text-muted-500">
+        {currentUsage} of {limit} lookups used this month
+      </p>
 
       <div aria-live="polite">
         {error && (

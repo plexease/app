@@ -53,7 +53,7 @@ type Props = {
 
 export function Sidebar({ plan, usageCount }: Props) {
   const pathname = usePathname();
-  const isPro = plan.plan === "pro";
+  const isFree = plan.plan === "free";
 
   return (
     <aside className="flex h-screen w-64 flex-col border-r border-surface-700 bg-surface-950 px-4 py-6">
@@ -64,7 +64,7 @@ export function Sidebar({ plan, usageCount }: Props) {
       {/* Tier badge + usage */}
       <div className="mt-4 flex items-center gap-2">
         <TierBadge plan={plan.plan} />
-        {!isPro && (
+        {isFree && (
           <Link
             href="/upgrade"
             className="text-xs text-brand-400 hover:text-brand-300 transition-colors"
@@ -74,7 +74,7 @@ export function Sidebar({ plan, usageCount }: Props) {
         )}
       </div>
       <div className="mt-1">
-        <UsageCounter isPro={isPro} usageCount={usageCount} />
+        <UsageCounter plan={plan.plan} usageCount={usageCount} />
       </div>
 
       <nav className="mt-6 flex-1 space-y-4">

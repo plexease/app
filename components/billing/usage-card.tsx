@@ -1,29 +1,35 @@
 import Link from "next/link";
-import { FREE_MONTHLY_LIMIT, USAGE_WARNING_THRESHOLD, USAGE_DANGER_THRESHOLD } from "@/lib/constants";
+import {
+  getUsageLimit,
+  FREE_USAGE_WARNING,
+  FREE_USAGE_DANGER,
+  ESSENTIALS_USAGE_WARNING,
+  ESSENTIALS_USAGE_DANGER,
+  PRO_USAGE_WARNING,
+  PRO_USAGE_DANGER,
+} from "@/lib/constants";
 
 type Props = {
-  isPro: boolean;
+  plan: "free" | "essentials" | "pro";
   usageCount: number;
 };
 
-export function UsageCard({ isPro, usageCount }: Props) {
-  if (isPro) {
-    return (
-      <div className="rounded-lg border border-surface-700 bg-surface-900 p-5">
-        <h3 className="font-heading text-sm font-semibold uppercase tracking-wide text-muted-400">
-          Usage
-        </h3>
-        <p className="mt-2 text-lg font-semibold text-white">Unlimited</p>
-        <p className="mt-1 text-xs text-muted-500">Pro plan — no limits</p>
-      </div>
-    );
+function getThresholds(plan: "free" | "essentials" | "pro") {
+  switch (plan) {
+    case "pro": return { warning: PRO_USAGE_WARNING, danger: PRO_USAGE_DANGER };
+    case "essentials": return { warning: ESSENTIALS_USAGE_WARNING, danger: ESSENTIALS_USAGE_DANGER };
+    default: return { warning: FREE_USAGE_WARNING, danger: FREE_USAGE_DANGER };
   }
+}
 
-  const percentage = Math.min((usageCount / FREE_MONTHLY_LIMIT) * 100, 100);
+export function UsageCard({ plan, usageCount }: Props) {
+  const limit = getUsageLimit(plan);
+  const { warning, danger } = getThresholds(plan);
+  const percentage = Math.min((usageCount / limit) * 100, 100);
   const barColor =
-    usageCount >= USAGE_DANGER_THRESHOLD
+    usageCount >= danger
       ? "bg-red-500"
-      : usageCount >= USAGE_WARNING_THRESHOLD
+      : usageCount >= warning
         ? "bg-amber-500"
         : "bg-green-500";
 
@@ -33,7 +39,7 @@ export function UsageCard({ isPro, usageCount }: Props) {
         Usage
       </h3>
       <p className="mt-2 text-lg font-semibold text-white">
-        {usageCount} / {FREE_MONTHLY_LIMIT}
+        {usageCount} / {limit}
       </p>
       <div className="mt-3 h-2 w-full rounded-full bg-surface-700">
         <div
@@ -42,14 +48,14 @@ export function UsageCard({ isPro, usageCount }: Props) {
         />
       </div>
       <p className="mt-2 text-xs text-muted-500">
-        Free lookups used this month
+        Lookups used this month
       </p>
-      {usageCount >= USAGE_WARNING_THRESHOLD && (
+      {plan === "free" && usageCount >= warning && (
         <Link
           href="/upgrade"
           className="mt-3 inline-block text-xs font-medium text-brand-400 hover:text-brand-300 transition-colors"
         >
-          Upgrade to Pro for unlimited access
+          Upgrade for more access
         </Link>
       )}
     </div>

@@ -11,6 +11,15 @@ export const ESSENTIALS_USAGE_DANGER = 95;
 export const PRO_USAGE_WARNING = 750;
 export const PRO_USAGE_DANGER = 950;
 
+/** Get the usage limit for a plan tier. */
+export function getUsageLimit(plan: "free" | "essentials" | "pro"): number {
+  switch (plan) {
+    case "pro": return PRO_MONTHLY_LIMIT;
+    case "essentials": return ESSENTIALS_MONTHLY_LIMIT;
+    default: return FREE_MONTHLY_LIMIT;
+  }
+}
+
 // Tool names
 export const TOOL_NAME_NUGET_ADVISOR = "nuget-advisor";
 export const TOOL_NAME_CODE_EXPLAINER = "code-explainer";

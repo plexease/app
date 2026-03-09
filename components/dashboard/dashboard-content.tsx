@@ -20,7 +20,7 @@ export function DashboardContent({ plan, usageCount }: Props) {
   const [resubscribing, setResubscribing] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
 
-  const isPro = plan.plan === "pro";
+  const isPaid = plan.plan !== "free";
 
   // Determine cancellation state
   let cancellationState: "cancelled" | "grace" | null = null;
@@ -113,13 +113,13 @@ export function DashboardContent({ plan, usageCount }: Props) {
           </h3>
           <div className="mt-2 flex items-center gap-2">
             <TierBadge plan={plan.plan} />
-            {isPro && plan.currentPeriodEnd && !plan.cancelAtPeriodEnd && (
+            {isPaid && plan.currentPeriodEnd && !plan.cancelAtPeriodEnd && (
               <span className="text-xs text-muted-500">
                 Renews {formatDate(plan.currentPeriodEnd)}
               </span>
             )}
           </div>
-          {isPro && (
+          {isPaid && (
             <button
               onClick={handleManageBilling}
               disabled={portalLoading}
@@ -128,18 +128,18 @@ export function DashboardContent({ plan, usageCount }: Props) {
               {portalLoading ? "Opening..." : "Manage Subscription"}
             </button>
           )}
-          {!isPro && (
+          {!isPaid && (
             <a
               href="/upgrade"
               className="mt-3 inline-block text-xs text-brand-400 hover:text-brand-300 transition-colors"
             >
-              Upgrade to Pro
+              Upgrade
             </a>
           )}
         </div>
 
         {/* Usage card */}
-        <UsageCard isPro={isPro} usageCount={usageCount} />
+        <UsageCard plan={plan.plan} usageCount={usageCount} />
 
       </div>
 

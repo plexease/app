@@ -7,13 +7,13 @@ import { PricingToggle } from "@/components/billing/pricing-toggle";
 import { PricingCard } from "@/components/billing/pricing-card";
 import { FeatureComparison } from "@/components/billing/feature-comparison";
 import { FaqSection } from "@/components/billing/faq-section";
-import { FREE_MONTHLY_LIMIT } from "@/lib/constants";
+import { FREE_MONTHLY_LIMIT, ESSENTIALS_MONTHLY_LIMIT, PRO_MONTHLY_LIMIT } from "@/lib/constants";
 
 function UpgradePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [interval, setInterval] = useState<"monthly" | "annual">("monthly");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<"essentials" | "pro" | null>(null);
 
   // Show toast if redirected from cancelled checkout
   useEffect(() => {
@@ -23,20 +23,20 @@ function UpgradePageContent() {
     }
   }, [searchParams, router]);
 
-  const handleSubscribe = async () => {
-    setLoading(true);
+  const handleSubscribe = async (tier: "essentials" | "pro") => {
+    setLoading(tier);
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ interval }),
+        body: JSON.stringify({ interval, tier }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        if (data.alreadyPro) {
-          toast.error("You're already on Pro!");
+        if (data.alreadySubscribed) {
+          toast.error("You're already subscribed to this plan!");
           router.push("/dashboard");
           return;
         }
@@ -49,19 +49,15 @@ function UpgradePageContent() {
     } catch {
       toast.error("Network error. Please check your connection and try again.");
     } finally {
-      setLoading(false);
+      setLoading(null);
     }
   };
 
-  const monthlyPrice = "\u00A319";
-  const annualPrice = "\u00A3190";
-  const annualMonthly = "\u00A315.83";
-
   return (
-    <div className="mx-auto max-w-4xl">
-      <h1 className="font-heading text-2xl font-bold text-white">Upgrade to Pro</h1>
+    <div className="mx-auto max-w-5xl">
+      <h1 className="font-heading text-2xl font-bold text-white">Upgrade</h1>
       <p className="mt-2 text-muted-400">
-        Unlock unlimited tool uses, saved history, and priority AI responses.
+        Choose the plan that fits your needs.
       </p>
 
       {/* Pricing toggle */}
@@ -70,7 +66,7 @@ function UpgradePageContent() {
       </div>
 
       {/* Pricing cards */}
-      <div className="mt-8 grid gap-6 md:grid-cols-2">
+      <div className="mt-8 grid gap-6 md:grid-cols-3">
         <PricingCard
           name="Free"
           price={"\u00A30"}
@@ -81,19 +77,35 @@ function UpgradePageContent() {
           cta={{ label: "Current plan", disabled: true }}
         />
         <PricingCard
-          name="Pro"
-          price={interval === "monthly" ? `${monthlyPrice}/mo` : `${annualPrice}/yr`}
-          subtitle={interval === "annual" ? `${annualMonthly}/mo \u2014 save \u00A338` : undefined}
+          name="Essentials"
+          price={interval === "monthly" ? "\u00A35/mo" : "\u00A350/yr"}
+          subtitle={interval === "annual" ? "\u00A34.17/mo \u2014 save \u00A310" : undefined}
           features={[
-            "Unlimited tool uses",
+            `${ESSENTIALS_MONTHLY_LIMIT} tool uses per month`,
+            "All available tools",
+            "Saved history",
+          ]}
+          cta={{
+            label: loading === "essentials" ? "Redirecting..." : "Subscribe",
+            onClick: () => handleSubscribe("essentials"),
+            disabled: loading !== null,
+          }}
+          badge={interval === "annual" ? "Save 17%" : undefined}
+        />
+        <PricingCard
+          name="Pro"
+          price={interval === "monthly" ? "\u00A319/mo" : "\u00A3190/yr"}
+          subtitle={interval === "annual" ? "\u00A315.83/mo \u2014 save \u00A338" : undefined}
+          features={[
+            `${PRO_MONTHLY_LIMIT} tool uses per month`,
             "All available tools",
             "Saved history",
             "Priority AI responses",
           ]}
           cta={{
-            label: loading ? "Redirecting..." : "Subscribe",
-            onClick: handleSubscribe,
-            disabled: loading,
+            label: loading === "pro" ? "Redirecting..." : "Subscribe",
+            onClick: () => handleSubscribe("pro"),
+            disabled: loading !== null,
           }}
           highlighted
           badge={interval === "annual" ? "Best value" : undefined}

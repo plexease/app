@@ -1,5 +1,5 @@
 type Props = {
-  plan: "free" | "pro";
+  plan: "free" | "essentials" | "pro";
 };
 
 export function TierBadge({ plan }: Props) {
@@ -7,6 +7,14 @@ export function TierBadge({ plan }: Props) {
     return (
       <span className="inline-flex items-center rounded-full bg-brand-500 px-2.5 py-0.5 text-xs font-semibold text-white">
         Pro
+      </span>
+    );
+  }
+
+  if (plan === "essentials") {
+    return (
+      <span className="inline-flex items-center rounded-full bg-brand-500/60 px-2.5 py-0.5 text-xs font-semibold text-white">
+        Essentials
       </span>
     );
   }

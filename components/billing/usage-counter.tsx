@@ -1,18 +1,16 @@
-import { FREE_MONTHLY_LIMIT } from "@/lib/constants";
+import { getUsageLimit } from "@/lib/constants";
 
 type Props = {
-  isPro: boolean;
+  plan: "free" | "essentials" | "pro";
   usageCount: number;
 };
 
-export function UsageCounter({ isPro, usageCount }: Props) {
-  if (isPro) {
-    return <p className="text-xs text-muted-500">Unlimited</p>;
-  }
+export function UsageCounter({ plan, usageCount }: Props) {
+  const limit = getUsageLimit(plan);
 
   return (
     <p className="text-xs text-muted-500">
-      {usageCount}/{FREE_MONTHLY_LIMIT} uses
+      {usageCount}/{limit} uses
     </p>
   );
 }

@@ -34,7 +34,7 @@ export default async function DashboardLayout({
   const cookieStore = await cookies();
   const alreadyReconciled = cookieStore.get("reconciled");
 
-  if (!alreadyReconciled && plan.plan === "pro") {
+  if (!alreadyReconciled && plan.plan !== "free") {
     const { data: userData } = await supabase
       .from("users")
       .select("stripe_customer_id")
