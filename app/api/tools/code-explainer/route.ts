@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCodeExplanation } from "@/lib/claude";
 import { TOOL_NAME_CODE_EXPLAINER } from "@/lib/constants";
 import { authenticateAndCheckUsage, incrementUsage } from "@/lib/api-helpers";
+import { cookies } from "next/headers";
+import { resolvePersona } from "@/lib/utils";
+import { getPersonaInstruction } from "@/lib/persona-prompts";
+import { getUserProfile } from "@/lib/user-profile";
 
 export async function POST(request: NextRequest) {
   const auth = await authenticateAndCheckUsage(TOOL_NAME_CODE_EXPLAINER);
@@ -33,13 +37,24 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Language is required" }, { status: 400 });
   }
 
+  // Resolve persona
+  const profile = await getUserProfile(auth.context.userId);
+  const cookieStore = await cookies();
+  const persona = resolvePersona(
+    (body as { persona?: string }).persona,
+    cookieStore.get("viewing_as")?.value,
+    profile?.persona
+  );
+  const personaInstruction = getPersonaInstruction(persona);
+
   let result;
   try {
     result = await getCodeExplanation(
       code.trim(),
       scopeQuestion?.trim() || "How does this code work?",
       language,
-      framework || "unknown"
+      framework || "unknown",
+      personaInstruction
     );
   } catch (err) {
     console.error("Claude API error:", err instanceof Error ? err.message : "Unknown error");

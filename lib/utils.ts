@@ -12,3 +12,17 @@ export function resolveViewingAs(cookieValue: string | undefined, userPersona: P
   if (cookieValue && VALID_PERSONAS.includes(cookieValue as Persona)) return cookieValue as Persona;
   return userPersona ?? "business_owner";
 }
+
+/**
+ * Resolve persona for API routes.
+ * Priority: request body → viewing_as cookie → user profile → default (implementer).
+ */
+export function resolvePersona(
+  bodyPersona: string | undefined,
+  cookieValue: string | undefined,
+  profilePersona: Persona | undefined
+): Persona {
+  if (bodyPersona && VALID_PERSONAS.includes(bodyPersona as Persona)) return bodyPersona as Persona;
+  if (cookieValue && VALID_PERSONAS.includes(cookieValue as Persona)) return cookieValue as Persona;
+  return profilePersona ?? "implementer";
+}

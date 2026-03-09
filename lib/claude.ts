@@ -14,7 +14,7 @@ const NuGetAdvisorSchema = z.object({
 
 export type NuGetAdvisorResult = z.infer<typeof NuGetAdvisorSchema>;
 
-export async function getNuGetAdvice(packageName: string): Promise<NuGetAdvisorResult> {
+export async function getNuGetAdvice(packageName: string, personaInstruction?: string): Promise<NuGetAdvisorResult> {
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
     max_tokens: 1024,
@@ -28,7 +28,7 @@ Return ONLY valid JSON in this exact shape — no markdown, no explanation, no c
   "alternatives": ["Package1", "Package2", "Package3"],
   "compatibility": "Which .NET versions are supported, any known issues.",
   "versionAdvice": "Latest stable version, whether to upgrade, any deprecation notes."
-}`,
+}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },
     ],
   });
@@ -59,7 +59,8 @@ export type ErrorExplainerResult = z.infer<typeof ErrorExplainerSchema>;
 export async function getErrorExplanation(
   errorLog: string,
   language: string,
-  framework: string
+  framework: string,
+  personaInstruction?: string
 ): Promise<ErrorExplainerResult> {
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
@@ -80,7 +81,7 @@ Analyse the error and return ONLY valid JSON — no markdown, no explanation, no
 }
 
 The error log:
-${errorLog}`,
+${errorLog}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },
     ],
   });
@@ -112,7 +113,8 @@ export async function getCodeExplanation(
   code: string,
   scopeQuestion: string,
   language: string,
-  framework: string
+  framework: string,
+  personaInstruction?: string
 ): Promise<CodeExplainerResult> {
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
@@ -133,7 +135,7 @@ Analyse this code and return ONLY valid JSON — no markdown, no explanation, no
 }
 
 The code:
-${code}`,
+${code}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },
     ],
   });
@@ -168,7 +170,8 @@ export type IntegrationPlannerResult = z.infer<typeof IntegrationPlannerSchema>;
 export async function getIntegrationPlan(
   description: string,
   language: string,
-  framework: string
+  framework: string,
+  personaInstruction?: string
 ): Promise<IntegrationPlannerResult> {
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
@@ -187,7 +190,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
   "nextStepSuggestion": "A 1-2 sentence recommendation for what to do next.",
   "nextStepToolId": "integration-code-generator or api-wrapper-generator",
   "nextStepDescription": "Context-aware description referencing specifics from this plan."
-}`,
+}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },
     ],
   });
@@ -221,7 +224,8 @@ export type CodeGeneratorResult = z.infer<typeof CodeGeneratorSchema>;
 export async function generateIntegrationCode(
   spec: string,
   language: string,
-  framework: string
+  framework: string,
+  personaInstruction?: string
 ): Promise<CodeGeneratorResult> {
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
@@ -242,7 +246,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
   "nextStepDescription": "Context-aware description for generating tests for this code."
 }
 
-Generate 2-4 files max. Keep code production-ready but concise.`,
+Generate 2-4 files max. Keep code production-ready but concise.${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },
     ],
   });
@@ -277,7 +281,8 @@ export type HealthCheckerResult = z.infer<typeof HealthCheckerSchema>;
 export async function checkHealth(
   config: string,
   language: string,
-  framework: string
+  framework: string,
+  personaInstruction?: string
 ): Promise<HealthCheckerResult> {
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
@@ -300,7 +305,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
 }
 
 The configuration/setup:
-${config}`,
+${config}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },
     ],
   });
@@ -338,7 +343,8 @@ export async function getMigrationPlan(
   migratingTo: string,
   code: string,
   language: string,
-  framework: string
+  framework: string,
+  personaInstruction?: string
 ): Promise<MigrationAssistantResult> {
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
@@ -361,7 +367,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
 }
 
 The relevant code:
-${code}`,
+${code}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },
     ],
   });
@@ -396,7 +402,8 @@ export type UnitTestGeneratorResult = z.infer<typeof UnitTestGeneratorSchema>;
 export async function generateUnitTests(
   code: string,
   language: string,
-  framework: string
+  framework: string,
+  personaInstruction?: string
 ): Promise<UnitTestGeneratorResult> {
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
@@ -421,7 +428,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
 Generate 1-3 test files. Cover happy paths, error cases, and edge cases.
 
 The code to test:
-${code}`,
+${code}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },
     ],
   });
@@ -456,7 +463,8 @@ export type ApiWrapperGeneratorResult = z.infer<typeof ApiWrapperGeneratorSchema
 export async function generateApiWrapper(
   apiDescription: string,
   language: string,
-  framework: string
+  framework: string,
+  personaInstruction?: string
 ): Promise<ApiWrapperGeneratorResult> {
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
@@ -478,7 +486,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
   "nextStepDescription": "Context-aware description for generating tests for this wrapper."
 }
 
-Generate 2-4 files max. Include proper typing, error handling, and authentication support.`,
+Generate 2-4 files max. Include proper typing, error handling, and authentication support.${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },
     ],
   });
@@ -513,7 +521,8 @@ export type PackageAdvisorResult = z.infer<typeof PackageAdvisorSchema>;
 export async function getPackageAdvice(
   query: string,
   language: string,
-  framework: string
+  framework: string,
+  personaInstruction?: string
 ): Promise<PackageAdvisorResult> {
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
@@ -532,7 +541,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
   "nextStepSuggestion": "A 1-2 sentence recommendation for what to do next.",
   "nextStepToolId": "integration-code-generator",
   "nextStepDescription": "Context-aware description for generating integration code with the recommended package."
-}`,
+}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },
     ],
   });
@@ -569,7 +578,8 @@ export type DependencyAuditResult = z.infer<typeof DependencyAuditSchema>;
 export async function auditDependencies(
   dependencyFile: string,
   language: string,
-  framework: string
+  framework: string,
+  personaInstruction?: string
 ): Promise<DependencyAuditResult> {
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
@@ -592,7 +602,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
 }
 
 The dependency file:
-${dependencyFile}`,
+${dependencyFile}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },
     ],
   });

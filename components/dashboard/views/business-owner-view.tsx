@@ -28,7 +28,7 @@ export function BusinessOwnerView({ recommendedToolIds, platforms }: Props) {
       <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {STAGE_PROMPTS.map((prompt) => (
           <Link
-            key={prompt.category}
+            key={prompt.label}
             href={prompt.href}
             className="rounded-lg border border-surface-700 bg-surface-900 px-4 py-3 text-center text-sm font-medium text-muted-300 hover:border-brand-500/50 hover:bg-surface-800 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
           >
