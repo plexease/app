@@ -20,9 +20,10 @@ create policy "Users can update own data"
 create table public.subscriptions (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references public.users(id) on delete cascade not null unique,
-  plan text default 'free' not null check (plan in ('free', 'pro')),
+  plan text default 'free' not null check (plan in ('free', 'essentials', 'pro')),
   status text default 'active' not null check (status in ('active', 'cancelled', 'past_due')),
   stripe_subscription_id text,
+  stripe_price_id text,
   current_period_end timestamptz,
   cancel_at_period_end boolean default false not null,
   grace_period_end timestamptz,

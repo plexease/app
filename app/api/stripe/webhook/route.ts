@@ -2,7 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { calculateGracePeriodEnd } from "@/lib/subscription";
 import { getServiceClient } from "@/lib/supabase/service";
+import {
+  STRIPE_PRICE_PRO_MONTHLY,
+  STRIPE_PRICE_PRO_ANNUAL,
+  STRIPE_PRICE_ESSENTIALS_MONTHLY,
+  STRIPE_PRICE_ESSENTIALS_ANNUAL,
+} from "@/lib/constants";
 import Stripe from "stripe";
+
+const PRO_PRICES = [STRIPE_PRICE_PRO_MONTHLY, STRIPE_PRICE_PRO_ANNUAL];
+const ESSENTIALS_PRICES = [STRIPE_PRICE_ESSENTIALS_MONTHLY, STRIPE_PRICE_ESSENTIALS_ANNUAL];
+
+function determinePlanFromPrice(priceId: string): "essentials" | "pro" {
+  if (ESSENTIALS_PRICES.includes(priceId)) return "essentials";
+  // Default to pro for any recognized price, including PRO_PRICES
+  return "pro";
+}
 
 // Body size limit: 64KB
 const MAX_BODY_SIZE = 64 * 1024;
@@ -133,14 +148,19 @@ async function handleCheckoutCompleted(
     return;
   }
 
+  // Detect plan from price ID
+  const priceId = subscription.items.data[0]?.price.id;
+  const plan = priceId ? determinePlanFromPrice(priceId) : "pro";
+
   // Upsert subscription in Supabase
   const { error } = await supabase
     .from("subscriptions")
     .upsert({
       user_id: userId,
-      plan: "pro",
+      plan,
       status: "active",
       stripe_subscription_id: subscriptionId,
+      stripe_price_id: priceId ?? null,
       current_period_end: new Date(subscription.items.data[0].current_period_end * 1000).toISOString(),
       cancel_at_period_end: false,
       grace_period_end: null,
@@ -168,10 +188,15 @@ async function handleSubscriptionUpdated(
   const status = verified.status === "active" ? "active" :
     verified.status === "past_due" ? "past_due" : "cancelled";
 
+  const priceId = verified.items.data[0]?.price.id;
+  const plan = priceId ? determinePlanFromPrice(priceId) : undefined;
+
   const { error } = await supabase
     .from("subscriptions")
     .update({
       status,
+      ...(plan && { plan }),
+      ...(priceId && { stripe_price_id: priceId }),
       current_period_end: new Date(verified.items.data[0].current_period_end * 1000).toISOString(),
       cancel_at_period_end: verified.cancel_at_period_end,
     })
