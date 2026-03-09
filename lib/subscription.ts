@@ -3,8 +3,10 @@ import { GRACE_PERIOD_DAYS } from "@/lib/constants";
 import { getServiceClient } from "@/lib/supabase/service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+export type PlanTier = "free" | "essentials" | "pro";
+
 export type UserPlan = {
-  plan: "free" | "pro";
+  plan: PlanTier;
   status: "active" | "cancelled" | "past_due";
   currentPeriodEnd: string | null;
   cancelAtPeriodEnd: boolean;
