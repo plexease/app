@@ -57,13 +57,13 @@ test.describe("Package Advisor", () => {
     await expect(freeUserPage.getByText(/failed|please try again/i)).toBeVisible({ timeout: 5000 });
   });
 
-  test("pro user sees no usage counter", async ({ proUserPage, mockApi }) => {
+  test("pro user sees usage counter", async ({ proUserPage, mockApi }) => {
     await mockApi.packageAdvisor(proUserPage, "success");
 
     const advisor = new PackageAdvisorPage(proUserPage);
     await advisor.goto();
 
-    await expect(advisor.usageCounter).not.toBeVisible();
+    await expect(advisor.usageCounter).toBeVisible();
   });
 
   test("NuGet Advisor URL redirects to Package Advisor", async ({ freeUserPage }) => {

@@ -56,12 +56,12 @@ test.describe("Integration Planner", () => {
     await expect(freeUserPage.getByText(/failed|please try again/i)).toBeVisible({ timeout: 5000 });
   });
 
-  test("pro user sees no usage counter", async ({ proUserPage, mockApi }) => {
+  test("pro user sees usage counter", async ({ proUserPage, mockApi }) => {
     await mockApi.integrationPlanner(proUserPage, "success");
 
     const planner = new IntegrationPlannerPage(proUserPage);
     await planner.goto();
 
-    await expect(planner.usageCounter).not.toBeVisible();
+    await expect(planner.usageCounter).toBeVisible();
   });
 });
