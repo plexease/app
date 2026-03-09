@@ -25,6 +25,7 @@ type MockApiFactory = {
   healthChecker: (page: Page, scenario?: "success" | "error") => Promise<void>;
   migrationAssistant: (page: Page, scenario?: "success" | "error") => Promise<void>;
   checkoutStatus: (page: Page, response: { plan: string }) => Promise<void>;
+  router: (page: Page, scenario?: "success" | "error" | "rate_limited") => Promise<void>;
 };
 
 type TestFixtures = {
@@ -257,6 +258,27 @@ export const test = base.extend<TestFixtures>({
             body: JSON.stringify(response),
           })
         );
+      },
+      router: async (page: Page, scenario: "success" | "error" | "rate_limited" = "success") => {
+        await page.route("**/api/tools/router", (route) => {
+          if (scenario === "rate_limited") {
+            return route.fulfill({
+              status: 429,
+              contentType: "application/json",
+              body: JSON.stringify({ error: "Daily routing limit reached", rateLimited: true }),
+            });
+          }
+          if (scenario === "error") {
+            return route.fulfill({
+              status: 500,
+              contentType: "application/json",
+              body: JSON.stringify({ error: "Routing failed" }),
+            });
+          }
+          const fixturePath = path.resolve(__dirname, "../mocks/fixtures/router-success.json");
+          const body = readFileSync(fixturePath, "utf-8");
+          return route.fulfill({ status: 200, contentType: "application/json", body });
+        });
       },
     });
   },
