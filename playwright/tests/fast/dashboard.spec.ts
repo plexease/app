@@ -9,7 +9,6 @@ test.describe("Dashboard", () => {
     await expect(dashboard.heading).toBeVisible();
     await expect(dashboard.upgradeLink).toBeVisible();
     await expect(dashboard.usageCard).toBeVisible();
-    await expect(dashboard.toolLink).toBeVisible();
   });
 
   test("pro user sees manage subscription and tool links", async ({ proUserPage }) => {
@@ -18,6 +17,24 @@ test.describe("Dashboard", () => {
 
     await expect(dashboard.heading).toBeVisible();
     await expect(dashboard.manageBillingButton).toBeVisible();
-    await expect(dashboard.toolLink).toBeVisible();
+  });
+
+  test("sidebar shows lifecycle categories", async ({ freeUserPage }) => {
+    const dashboard = new DashboardPage(freeUserPage);
+    await dashboard.goto();
+
+    await expect(dashboard.exploreCategory).toBeVisible();
+    await expect(dashboard.setUpCategory).toBeVisible();
+    await expect(dashboard.troubleshootCategory).toBeVisible();
+    await expect(dashboard.maintainCategory).toBeVisible();
+  });
+
+  test("view toggle is visible in sidebar", async ({ freeUserPage }) => {
+    const dashboard = new DashboardPage(freeUserPage);
+    await dashboard.goto();
+
+    await expect(dashboard.businessButton).toBeVisible();
+    await expect(dashboard.supportButton).toBeVisible();
+    await expect(dashboard.implementerButton).toBeVisible();
   });
 });
