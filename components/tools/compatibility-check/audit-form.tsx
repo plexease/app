@@ -6,6 +6,8 @@ import { StackSelector } from "@/components/shared/stack-selector";
 import { CharLimitedInput } from "@/components/shared/char-limited-input";
 import { loadWorkflowContext } from "@/lib/workflow-context";
 import { LimitReachedCard } from "@/components/shared/limit-reached-card";
+import { useFeedback } from "@/hooks/use-feedback";
+import { InlineFeedbackCard } from "@/components/feedback/inline-feedback-card";
 import type { DependencyAuditResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
@@ -26,6 +28,7 @@ export function AuditForm({ usageCount, plan }: Props) {
   const [result, setResult] = useState<DependencyAuditResult | null>(null);
   const [currentUsage, setCurrentUsage] = useState(usageCount);
   const [contextBanner, setContextBanner] = useState<string | null>(null);
+  const { showFifthUseCard } = useFeedback();
 
   const limit = getUsageLimit(plan);
   const limitReached = currentUsage >= limit;
@@ -109,12 +112,17 @@ export function AuditForm({ usageCount, plan }: Props) {
       </form>
 
       <p className="mt-2 text-xs text-muted-500">
-        {currentUsage} of {limit} lookups used this month
+        {currentUsage} of {limit} credits used this month
       </p>
 
       <div aria-live="polite">
         {error && <p className="mt-3 text-sm text-red-400" role="alert">{error}</p>}
-        {result && <AuditResultCards result={result} />}
+        {result && (
+          <>
+            <AuditResultCards result={result} />
+            {showFifthUseCard && <InlineFeedbackCard toolName="compatibility-check" />}
+          </>
+        )}
       </div>
     </div>
   );

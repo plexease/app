@@ -19,11 +19,11 @@ export abstract class ToolPageBase {
   abstract get submitButton(): Locator;
 
   get usageCounter(): Locator {
-    return this.main.getByText(/\d+ of \d+ lookups used this month/);
+    return this.main.getByText(/\d+ of \d+ credits used this month/);
   }
 
   get limitReachedMessage(): Locator {
-    return this.main.getByText("You've reached your monthly usage limit.");
+    return this.main.getByText("You've used all your credits for this month.");
   }
 
   get upgradeButton(): Locator {

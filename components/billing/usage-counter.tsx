@@ -11,7 +11,7 @@ export function UsageCounter({ plan, usageCount }: Props) {
 
   return (
     <p className="text-xs text-muted-500">
-      {usageCount}/{limit} uses
+      {usageCount}/{limit} credits
     </p>
   );
 }

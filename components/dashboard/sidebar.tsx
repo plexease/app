@@ -7,6 +7,7 @@ import { TierBadge } from "@/components/billing/tier-badge";
 import { UsageCounter } from "@/components/billing/usage-counter";
 import { Logo } from "@/components/brand/logo";
 import { resetCookieConsent } from "@/components/ui/cookie-consent";
+import { FeedbackButton } from "@/components/feedback/feedback-button";
 import { ViewToggle } from "./view-toggle";
 import type { UserPlan } from "@/lib/subscription";
 import type { Persona } from "@/lib/types/persona";
@@ -137,6 +138,7 @@ export function Sidebar({ plan, usageCount, viewingAs }: Props) {
         >
           Manage cookies
         </button>
+        <FeedbackButton />
         <SignOutButton />
       </div>
     </aside>

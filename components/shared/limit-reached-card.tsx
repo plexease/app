@@ -2,7 +2,7 @@ export function LimitReachedCard() {
   return (
     <div className="rounded-lg border border-yellow-700 bg-yellow-950/30 p-6 text-center">
       <p className="text-sm font-medium text-yellow-300">
-        You&apos;ve reached your monthly usage limit.
+        You&apos;ve used all your credits for this month.
       </p>
       <p className="mt-1 text-sm text-muted-400">Upgrade your plan for more access.</p>
       <a

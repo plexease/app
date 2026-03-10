@@ -199,6 +199,7 @@ async function handleSubscriptionUpdated(
       ...(priceId && { stripe_price_id: priceId }),
       current_period_end: new Date(verified.items.data[0].current_period_end * 1000).toISOString(),
       cancel_at_period_end: verified.cancel_at_period_end,
+      ...(verified.cancel_at_period_end && { show_cancellation_feedback: true }),
     })
     .eq("user_id", userId);
 

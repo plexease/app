@@ -7,6 +7,8 @@ import { CharLimitedInput } from "@/components/shared/char-limited-input";
 import { WorkflowNext, type WorkflowRecommendation } from "@/components/shared/workflow-next";
 import { loadWorkflowContext } from "@/lib/workflow-context";
 import { LimitReachedCard } from "@/components/shared/limit-reached-card";
+import { useFeedback } from "@/hooks/use-feedback";
+import { InlineFeedbackCard } from "@/components/feedback/inline-feedback-card";
 import type { ErrorExplainerResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
@@ -27,6 +29,7 @@ export function ErrorExplainerForm({ usageCount, plan }: Props) {
   const [result, setResult] = useState<ErrorExplainerResult | null>(null);
   const [currentUsage, setCurrentUsage] = useState(usageCount);
   const [contextBanner, setContextBanner] = useState<string | null>(null);
+  const { showFifthUseCard } = useFeedback();
 
   const limit = getUsageLimit(plan);
   const limitReached = currentUsage >= limit;
@@ -134,7 +137,7 @@ export function ErrorExplainerForm({ usageCount, plan }: Props) {
       </form>
 
       <p className="mt-2 text-xs text-muted-500">
-        {currentUsage} of {limit} lookups used this month
+        {currentUsage} of {limit} credits used this month
       </p>
 
       <div aria-live="polite">
@@ -152,6 +155,7 @@ export function ErrorExplainerForm({ usageCount, plan }: Props) {
                 fixSuggestions: result.fixSuggestions,
               }}
             />
+            {showFifthUseCard && <InlineFeedbackCard toolName="error-resolver" />}
           </>
         )}
       </div>

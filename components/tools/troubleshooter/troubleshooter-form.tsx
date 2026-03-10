@@ -5,6 +5,8 @@ import { TroubleshooterResultCards } from "./result-cards";
 import { CharLimitedInput } from "@/components/shared/char-limited-input";
 import { WorkflowNext, type WorkflowRecommendation } from "@/components/shared/workflow-next";
 import { LimitReachedCard } from "@/components/shared/limit-reached-card";
+import { useFeedback } from "@/hooks/use-feedback";
+import { InlineFeedbackCard } from "@/components/feedback/inline-feedback-card";
 import type { TroubleshooterResult } from "@/lib/claude";
 import { getUsageLimit } from "@/lib/constants";
 import type { PlanTier } from "@/lib/subscription";
@@ -22,6 +24,7 @@ export function TroubleshooterForm({ usageCount, plan }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<TroubleshooterResult | null>(null);
   const [currentUsage, setCurrentUsage] = useState(usageCount);
+  const { showFifthUseCard } = useFeedback();
 
   const limit = getUsageLimit(plan);
   const limitReached = currentUsage >= limit;
@@ -130,7 +133,7 @@ export function TroubleshooterForm({ usageCount, plan }: Props) {
       </form>
 
       <p className="mt-2 text-xs text-muted-500">
-        {currentUsage} of {limit} lookups used this month
+        {currentUsage} of {limit} credits used this month
       </p>
 
       <div aria-live="polite">
@@ -148,6 +151,7 @@ export function TroubleshooterForm({ usageCount, plan }: Props) {
                 platforms,
               }}
             />
+            {showFifthUseCard && <InlineFeedbackCard toolName="troubleshooter" />}
           </>
         )}
       </div>

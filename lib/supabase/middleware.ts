@@ -53,7 +53,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Onboarding check for authenticated users on protected routes
-  const onboardingExemptPaths = ["/onboarding", "/api/", "/upgrade/success"];
+  const onboardingExemptPaths = ["/onboarding", "/api/", "/upgrade/success", "/cancelled"];
   const isOnboardingExempt = onboardingExemptPaths.some((p) => pathname.startsWith(p));
 
   if (user && !isOnboardingExempt && protectedRoutes.some((route) => pathname.startsWith(route))) {
@@ -82,6 +82,50 @@ export async function updateSession(request: NextRequest) {
         maxAge: 60 * 60 * 24 * 30, // 30 days
       });
     }
+  }
+
+  // Session validation for authenticated users on protected routes
+  if (user && protectedRoutes.some((route) => pathname.startsWith(route))) {
+    const sessionCookie = request.cookies.get("plexease_session_id");
+
+    if (sessionCookie) {
+      const sessionCheckedAt = request.cookies.get("session_checked_at");
+      const now = Date.now();
+      const fiveMinutes = 5 * 60 * 1000;
+      const needsCheck =
+        !sessionCheckedAt || now - parseInt(sessionCheckedAt.value, 10) > fiveMinutes;
+
+      if (needsCheck) {
+        const { validateSession } = await import("@/lib/sessions");
+        const isValid = await validateSession(sessionCookie.value);
+
+        if (!isValid) {
+          // Session was invalidated (e.g. signed out from another device)
+          const loginUrl = request.nextUrl.clone();
+          loginUrl.pathname = "/login";
+          loginUrl.searchParams.set("reason", "session_expired");
+          const redirectResponse = NextResponse.redirect(loginUrl);
+          redirectResponse.cookies.delete("plexease_session_id");
+          redirectResponse.cookies.delete("session_checked_at");
+          // Clear Supabase auth cookies
+          request.cookies.getAll().forEach((cookie) => {
+            if (cookie.name.startsWith("sb-")) {
+              redirectResponse.cookies.delete(cookie.name);
+            }
+          });
+          return redirectResponse;
+        }
+
+        // Session is valid — cache the check
+        supabaseResponse.cookies.set("session_checked_at", now.toString(), {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 300, // 5 minutes
+        });
+      }
+    }
+    // No session cookie but authenticated = backwards compatible (pre-session-enforcement logins)
   }
 
   return supabaseResponse;

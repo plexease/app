@@ -7,6 +7,7 @@ import { PricingToggle } from "@/components/billing/pricing-toggle";
 import { PricingCard } from "@/components/billing/pricing-card";
 import { FeatureComparison } from "@/components/billing/feature-comparison";
 import { FaqSection } from "@/components/billing/faq-section";
+import { EnterpriseCallout } from "@/components/billing/enterprise-callout";
 import { FREE_MONTHLY_LIMIT, ESSENTIALS_MONTHLY_LIMIT, PRO_MONTHLY_LIMIT } from "@/lib/constants";
 import type { PlanTier } from "@/lib/subscription";
 
@@ -72,7 +73,7 @@ function UpgradePageContent({ currentPlan }: { currentPlan: PlanTier }) {
           name="Free"
           price={"\u00A30"}
           features={[
-            `${FREE_MONTHLY_LIMIT} tool uses per month`,
+            `${FREE_MONTHLY_LIMIT} credits per month`,
             "All available tools",
           ]}
           cta={{ label: currentPlan === "free" ? "Current plan" : "Free tier", disabled: true }}
@@ -82,7 +83,7 @@ function UpgradePageContent({ currentPlan }: { currentPlan: PlanTier }) {
           price={interval === "monthly" ? "\u00A35/mo" : "\u00A350/yr"}
           subtitle={interval === "annual" ? "\u00A34.17/mo \u2014 save \u00A310" : undefined}
           features={[
-            `${ESSENTIALS_MONTHLY_LIMIT} tool uses per month`,
+            `${ESSENTIALS_MONTHLY_LIMIT} credits per month`,
             "All available tools",
             "Saved history",
           ]}
@@ -101,7 +102,7 @@ function UpgradePageContent({ currentPlan }: { currentPlan: PlanTier }) {
           price={interval === "monthly" ? "\u00A319/mo" : "\u00A3190/yr"}
           subtitle={interval === "annual" ? "\u00A315.83/mo \u2014 save \u00A338" : undefined}
           features={[
-            `${PRO_MONTHLY_LIMIT} tool uses per month`,
+            `${PRO_MONTHLY_LIMIT} credits per month`,
             "All available tools",
             "Saved history",
             "Priority AI responses",
@@ -120,6 +121,11 @@ function UpgradePageContent({ currentPlan }: { currentPlan: PlanTier }) {
       <p className="mt-6 text-center text-xs text-muted-500">
         Powered by Stripe &mdash; secure payments. We never see your card details.
       </p>
+
+      {/* Enterprise callout */}
+      <div className="mt-8">
+        <EnterpriseCallout />
+      </div>
 
       {/* Feature comparison */}
       <div className="mt-12">

@@ -49,7 +49,7 @@ export function UsageCard({ plan, usageCount }: Props) {
         />
       </div>
       <p className="mt-2 text-xs text-muted-500">
-        Lookups used this month
+        Credits used this month
       </p>
       {plan === "free" && usageCount >= warning && (
         <Link

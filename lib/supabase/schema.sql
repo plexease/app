@@ -27,6 +27,7 @@ create table public.subscriptions (
   current_period_end timestamptz,
   cancel_at_period_end boolean default false not null,
   grace_period_end timestamptz,
+  show_cancellation_feedback boolean default false,
   created_at timestamptz default now() not null
 );
 
@@ -135,6 +136,7 @@ create table public.sessions (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   device_info text,
+  raw_user_agent text,
   ip_hash text,
   last_active timestamptz not null default now(),
   created_at timestamptz not null default now()
