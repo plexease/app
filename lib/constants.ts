@@ -34,6 +34,14 @@ export const TOOL_NAME_API_WRAPPER_GENERATOR = "api-wrapper-generator";
 export const TOOL_NAME_UNIT_TEST_GENERATOR = "unit-test-generator";
 export const TOOL_NAME_CONNECTION_HEALTH_CHECK = "connection-health-check";
 export const TOOL_NAME_UPGRADE_ASSISTANT = "upgrade-assistant";
+export const TOOL_NAME_TOOL_PLANNER = "tool-planner";
+export const TOOL_NAME_CONNECTION_MAP = "connection-map";
+export const TOOL_NAME_INTEGRATION_SETUP = "integration-setup";
+export const TOOL_NAME_WEBHOOK_BUILDER = "webhook-builder";
+export const TOOL_NAME_AUTH_GUIDE = "auth-guide";
+export const TOOL_NAME_WORKFLOW_BUILDER = "workflow-builder";
+export const TOOL_NAME_TROUBLESHOOTER = "troubleshooter";
+export const TOOL_NAME_WHAT_CHANGED = "what-changed";
 
 // Tool router
 export const ROUTER_DAILY_LIMIT = 10;

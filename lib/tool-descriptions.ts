@@ -158,24 +158,24 @@ type Category = "explore" | "setup" | "troubleshoot" | "maintain";
 function getStageDescription(stage: Category, persona: Persona): string {
   const descriptions: Record<Category, Record<Persona, string>> = {
     explore: {
-      business_owner: "Figure out what you need",
-      support_ops: "Research tools and plan integrations",
-      implementer: "Evaluate packages and architecture options",
+      business_owner: "Figure out what tools and connections you need",
+      support_ops: "Research platforms and plan integrations",
+      implementer: "Evaluate tools, APIs, and architecture options",
     },
     setup: {
-      business_owner: "Build and connect your services",
-      support_ops: "Generate code and API integrations",
-      implementer: "Scaffold implementations and wrappers",
+      business_owner: "Connect your apps and set up automations",
+      support_ops: "Configure integrations and workflows",
+      implementer: "Build connections, webhooks, and automation code",
     },
     troubleshoot: {
-      business_owner: "Find and fix problems",
-      support_ops: "Diagnose errors and understand code",
-      implementer: "Debug errors, analyse code",
+      business_owner: "Find and fix connection problems",
+      support_ops: "Diagnose integration issues and changes",
+      implementer: "Debug connections, analyse changes and errors",
     },
     maintain: {
-      business_owner: "Keep everything running smoothly",
-      support_ops: "Audit dependencies and check health",
-      implementer: "Audit, test, migrate, monitor health",
+      business_owner: "Keep your integrations running smoothly",
+      support_ops: "Monitor health and manage updates",
+      implementer: "Audit, test, migrate, and verify integrations",
     },
   };
   return descriptions[stage][persona];
