@@ -18,6 +18,9 @@ export function LoginForm() {
     if (searchParams.get("error") === "auth_failed") {
       toast.error("Authentication failed. Please sign in again.");
     }
+    if (searchParams.get("reason") === "session_expired") {
+      toast("You were signed out because another device signed in. You can manage active sessions in Settings.", { id: "session-expired" });
+    }
   }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
