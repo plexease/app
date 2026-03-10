@@ -18,10 +18,10 @@ export class DashboardPage {
 
   // Sidebar categories
   readonly sidebar = this.page.locator("aside");
-  readonly exploreCategory = this.sidebar.getByText("Explore");
-  readonly setUpCategory = this.sidebar.getByText("Set Up");
-  readonly troubleshootCategory = this.sidebar.getByText("Troubleshoot");
-  readonly maintainCategory = this.sidebar.getByText("Maintain");
+  readonly exploreCategory = this.sidebar.getByText("Explore", { exact: true });
+  readonly setUpCategory = this.sidebar.getByText("Set Up", { exact: true });
+  readonly troubleshootCategory = this.sidebar.getByText("Troubleshoot", { exact: true });
+  readonly maintainCategory = this.sidebar.getByText("Maintain", { exact: true });
 
   // View toggle
   readonly viewToggle = this.sidebar.getByText("View as").locator("..");

@@ -3,7 +3,7 @@ import { HowItWorksPage } from "../../pages/how-it-works.page";
 
 test.describe("Shared Components", () => {
   test("StackSelector persists language across tools", async ({ freeUserPage, mockApi }) => {
-    await mockApi.codeExplainer(freeUserPage, "success");
+    await mockApi.howItWorks(freeUserPage, "success");
 
     // Set language on Code Explainer
     const explainer = new HowItWorksPage(freeUserPage);
@@ -24,7 +24,7 @@ test.describe("Shared Components", () => {
   });
 
   test("context banner shows when arriving from hand-off", async ({ freeUserPage, mockApi }) => {
-    await mockApi.codeExplainer(freeUserPage, "success");
+    await mockApi.howItWorks(freeUserPage, "success");
 
     // Manually set workflow context in localStorage
     await freeUserPage.goto("/tools/how-it-works");

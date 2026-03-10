@@ -25,7 +25,7 @@ test.describe("Usage Limits", () => {
     supabaseAdmin,
     mockApi,
   }) => {
-    await mockApi.packageAdvisor(freeUserPage, "success");
+    await mockApi.toolFinder(freeUserPage, "success");
     const userId = await supabaseAdmin.getFreeUserId();
 
     await supabaseAdmin.setUsageCount(userId, "tool-finder", 9);
