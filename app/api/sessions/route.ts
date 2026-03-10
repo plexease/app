@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getUserSessions, deleteOtherSessions } from "@/lib/sessions";
 
@@ -34,9 +35,8 @@ export async function DELETE(request: Request) {
   }
 
   // Read current session ID from cookie
-  const cookieHeader = request.headers.get("cookie") ?? "";
-  const match = cookieHeader.match(/plexease_session_id=([^;]+)/);
-  const currentSessionId = match?.[1];
+  const cookieStore = await cookies();
+  const currentSessionId = cookieStore.get("plexease_session_id")?.value;
 
   if (!currentSessionId) {
     return NextResponse.json({ error: "No active session" }, { status: 400 });

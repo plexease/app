@@ -22,11 +22,12 @@ export function CancellationFeedback({
       })
     : null;
 
-  async function clearFlag() {
+  async function clearFlag(): Promise<boolean> {
     try {
-      await fetch("/api/feedback/clear-cancellation", { method: "POST" });
+      const res = await fetch("/api/feedback/clear-cancellation", { method: "POST" });
+      return res.ok;
     } catch {
-      // Non-critical
+      return false;
     }
   }
 
@@ -45,8 +46,12 @@ export function CancellationFeedback({
       if (res.ok) {
         setSubmitted(true);
         toast.success("Thanks for the feedback!");
-        await clearFlag();
-        router.push("/dashboard");
+        const cleared = await clearFlag();
+        if (cleared) {
+          router.push("/dashboard");
+        } else {
+          toast.error("Could not complete — please try again.");
+        }
       }
     } catch {
       toast.error("Failed to send feedback");
@@ -56,8 +61,12 @@ export function CancellationFeedback({
   }
 
   async function handleSkip() {
-    await clearFlag();
-    router.push("/dashboard");
+    const cleared = await clearFlag();
+    if (cleared) {
+      router.push("/dashboard");
+    } else {
+      toast.error("Could not complete — please try again.");
+    }
   }
 
   if (submitted) return null;

@@ -383,14 +383,14 @@ All sessions use **Opus** (Max plan). Each phase uses **3 focused sessions** for
 
 > **Update this section each session.**
 
-- Phase: 9b complete (merged to main via PR #5), ready for 9c design
-- Last action: Phase 10 implemented — session enforcement, feedback framework, credits rename, enterprise callout
+- Phase: 10 complete, ready for PR and merge
+- Last action: Phase 10 implemented — session enforcement (3 concurrent, cached middleware validation), feedback framework (5th-use card, sidebar button, cancellation intercept), billing polish (credits rename, Enterprise callout)
 - Next step: Phase 11 — UI Polish (landing page tools section, collapsible sidebar accordions, Phase 10 test coverage)
-- Key new files from 9b: `lib/tool-descriptions.ts` (TOOL_CATALOG), `lib/tool-recommendations.ts`, `lib/tool-router.ts`, `lib/utils.ts` (resolveViewingAs), `app/api/tools/router/route.ts`, `app/api/view-mode/route.ts`, `components/dashboard/views/` (3 view components), `components/dashboard/hero-input.tsx`, `components/dashboard/view-toggle.tsx`
-- Dashboard architecture: layout reads `viewing_as` cookie → passes to Sidebar; page reads cookie + fetches profile → passes to DashboardContent → renders BusinessOwnerView / SupportOpsView / ImplementerView
+- Key new files from Phase 10: `lib/sessions.ts`, `lib/feedback.ts`, `hooks/use-feedback.ts`, `components/feedback/` (inline-feedback-card, feedback-button, cancellation-feedback), `components/settings/active-sessions.tsx`, `components/billing/enterprise-callout.tsx`, `app/api/sessions/`, `app/api/feedback/`, `app/(dashboard)/cancelled/`
+- Session architecture: auth callback creates session + enforces 3-limit → middleware validates with 5-min TTL cookie → settings page shows active sessions UI
+- Feedback architecture: useFeedback hook checks /api/feedback/status on mount → shows InlineFeedbackCard in tool forms after 5th use. Persistent FeedbackButton in sidebar. Cancellation feedback via Stripe webhook flag → /cancelled page redirect
 - Test setup: run `npm run test:setup` to generate `playwright/.env.test` from `.env.local`, then `npm test` for full Playwright suite
-- Test count: 118 fast + 4 fast-serial + 3 slow (125 total)
+- Test count: 155 total (updated assertions for credits rename)
 - CI: fast tests on every push, fast + slow on PRs to main, branch protection requires both to pass
-- CI secrets: includes `NEXT_PUBLIC_STRIPE_PRICE_ESSENTIALS_MONTHLY` and `NEXT_PUBLIC_STRIPE_PRICE_ESSENTIALS_ANNUAL` (repo-level)
 - Repo: public, squash merge only, auto-delete branches, PRs required for main
 - Brand guide: `docs/brand-style-guide.md` — reference for all future UI work

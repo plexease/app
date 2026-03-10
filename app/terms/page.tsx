@@ -44,12 +44,13 @@ export default function TermsOfService() {
           </section>
 
           <section className="mt-10 space-y-4">
-            <h2 className="font-heading text-xl font-semibold text-white">4. Free and Pro Plans</h2>
+            <h2 className="font-heading text-xl font-semibold text-white">4. Plans and Credits</h2>
             <p>
-              The Service offers a Free plan (20 tool uses per month) and a Pro plan
-              (&pound;19/month or &pound;190/year) with unlimited tool uses, saved history, and
-              priority AI responses. We reserve the right to modify plan features and pricing
-              with 30 days&apos; notice.
+              The Service offers three plans: Free (10 credits per month), Essentials
+              (&pound;5/month or &pound;50/year, 100 credits per month with saved history), and Pro
+              (&pound;19/month or &pound;190/year, 1,000 credits per month with saved history and
+              priority AI responses). One credit equals one tool use. We reserve the right to
+              modify plan features and pricing with 30 days&apos; notice.
             </p>
           </section>
 
