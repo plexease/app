@@ -3,13 +3,13 @@ import { TOOL_CATALOG, type ToolId } from "@/lib/tool-descriptions";
 
 /** Platform-to-tool relevance mapping. */
 const PLATFORM_TOOLS: Record<string, ToolId[]> = {
-  shopify: ["integration-planner", "health-checker", "error-explainer"],
-  woocommerce: ["integration-planner", "code-generator", "health-checker"],
-  xero: ["integration-planner", "api-wrapper-generator", "error-explainer"],
-  stripe: ["api-wrapper-generator", "integration-planner", "code-generator"],
-  "royal-mail": ["api-wrapper-generator", "integration-planner"],
-  quickbooks: ["integration-planner", "api-wrapper-generator", "error-explainer"],
-  magento: ["integration-planner", "health-checker", "migration-assistant"],
+  shopify: ["integration-blueprint", "connection-health-check", "error-resolver"],
+  woocommerce: ["integration-blueprint", "code-generator", "connection-health-check"],
+  xero: ["integration-blueprint", "api-wrapper-generator", "error-resolver"],
+  stripe: ["api-wrapper-generator", "integration-blueprint", "code-generator"],
+  "royal-mail": ["api-wrapper-generator", "integration-blueprint"],
+  quickbooks: ["integration-blueprint", "api-wrapper-generator", "error-resolver"],
+  magento: ["integration-blueprint", "connection-health-check", "upgrade-assistant"],
 };
 
 /** Goal-to-category priority. */
@@ -22,8 +22,8 @@ const GOAL_CATEGORY_PRIORITY: Record<string, string[]> = {
 
 /** Comfort-level priority for tiebreaking (simpler tools first for guided users). */
 const COMFORT_TOOL_PRIORITY: Record<string, ToolId[]> = {
-  guided: ["error-explainer", "code-explainer", "health-checker", "package-advisor"],
-  writes_code: ["code-generator", "api-wrapper-generator", "unit-test-generator", "migration-assistant"],
+  guided: ["error-resolver", "how-it-works", "connection-health-check", "tool-finder"],
+  writes_code: ["code-generator", "api-wrapper-generator", "unit-test-generator", "upgrade-assistant"],
 };
 
 export function getRecommendedTools(

@@ -7,7 +7,7 @@ export class DashboardPage {
   readonly heading = this.main.locator("h1", { hasText: "Dashboard" });
   readonly upgradeLink = this.main.locator('a[href="/upgrade"]');
   readonly usageCard = this.main.getByText("Usage", { exact: true }).locator("..");
-  readonly toolLink = this.main.locator('a[href="/tools/code-explainer"]');
+  readonly toolLink = this.main.locator('a[href="/tools/how-it-works"]');
   readonly manageBillingButton = this.main.getByText("Manage Subscription");
 
   // Persona views

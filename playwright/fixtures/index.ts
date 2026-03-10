@@ -14,16 +14,16 @@ import {
 
 type MockApiFactory = {
   nugetAdvisor: (page: Page, scenario?: "success" | "error") => Promise<void>;
-  codeExplainer: (page: Page, scenario?: "success" | "error") => Promise<void>;
-  integrationPlanner: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  howItWorks: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  integrationBlueprint: (page: Page, scenario?: "success" | "error") => Promise<void>;
   codeGenerator: (page: Page, scenario?: "success" | "error") => Promise<void>;
-  dependencyAudit: (page: Page, scenario?: "success" | "error") => Promise<void>;
-  errorExplainer: (page: Page, scenario?: "success" | "error") => Promise<void>;
-  packageAdvisor: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  compatibilityCheck: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  errorResolver: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  toolFinder: (page: Page, scenario?: "success" | "error") => Promise<void>;
   apiWrapperGenerator: (page: Page, scenario?: "success" | "error") => Promise<void>;
   unitTestGenerator: (page: Page, scenario?: "success" | "error") => Promise<void>;
-  healthChecker: (page: Page, scenario?: "success" | "error") => Promise<void>;
-  migrationAssistant: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  connectionHealthCheck: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  upgradeAssistant: (page: Page, scenario?: "success" | "error") => Promise<void>;
   checkoutStatus: (page: Page, response: { plan: string }) => Promise<void>;
   router: (page: Page, scenario?: "success" | "error" | "rate_limited") => Promise<void>;
 };
@@ -130,27 +130,27 @@ export const test = base.extend<TestFixtures>({
           })
         );
       },
-      codeExplainer: async (page: Page, scenario: "success" | "error" = "success") => {
+      howItWorks: async (page: Page, scenario: "success" | "error" = "success") => {
         const fixturePath = path.resolve(
           __dirname,
-          `../mocks/fixtures/code-explainer-${scenario}.json`
+          `../mocks/fixtures/how-it-works-${scenario}.json`
         );
         const body = readFileSync(fixturePath, "utf-8");
         const status = scenario === "error" ? 500 : 200;
 
-        await page.route("**/api/tools/code-explainer", (route) =>
+        await page.route("**/api/tools/how-it-works", (route) =>
           route.fulfill({ status, contentType: "application/json", body })
         );
       },
-      integrationPlanner: async (page: Page, scenario: "success" | "error" = "success") => {
+      integrationBlueprint: async (page: Page, scenario: "success" | "error" = "success") => {
         const fixturePath = path.resolve(
           __dirname,
-          `../mocks/fixtures/integration-planner-${scenario}.json`
+          `../mocks/fixtures/integration-blueprint-${scenario}.json`
         );
         const body = readFileSync(fixturePath, "utf-8");
         const status = scenario === "error" ? 500 : 200;
 
-        await page.route("**/api/tools/integration-planner", (route) =>
+        await page.route("**/api/tools/integration-blueprint", (route) =>
           route.fulfill({ status, contentType: "application/json", body })
         );
       },
@@ -166,39 +166,39 @@ export const test = base.extend<TestFixtures>({
           route.fulfill({ status, contentType: "application/json", body })
         );
       },
-      dependencyAudit: async (page: Page, scenario: "success" | "error" = "success") => {
+      compatibilityCheck: async (page: Page, scenario: "success" | "error" = "success") => {
         const fixturePath = path.resolve(
           __dirname,
-          `../mocks/fixtures/dependency-audit-${scenario}.json`
+          `../mocks/fixtures/compatibility-check-${scenario}.json`
         );
         const body = readFileSync(fixturePath, "utf-8");
         const status = scenario === "error" ? 500 : 200;
 
-        await page.route("**/api/tools/dependency-audit", (route) =>
+        await page.route("**/api/tools/compatibility-check", (route) =>
           route.fulfill({ status, contentType: "application/json", body })
         );
       },
-      errorExplainer: async (page: Page, scenario: "success" | "error" = "success") => {
+      errorResolver: async (page: Page, scenario: "success" | "error" = "success") => {
         const fixturePath = path.resolve(
           __dirname,
-          `../mocks/fixtures/error-explainer-${scenario}.json`
+          `../mocks/fixtures/error-resolver-${scenario}.json`
         );
         const body = readFileSync(fixturePath, "utf-8");
         const status = scenario === "error" ? 500 : 200;
 
-        await page.route("**/api/tools/error-explainer", (route) =>
+        await page.route("**/api/tools/error-resolver", (route) =>
           route.fulfill({ status, contentType: "application/json", body })
         );
       },
-      packageAdvisor: async (page: Page, scenario: "success" | "error" = "success") => {
+      toolFinder: async (page: Page, scenario: "success" | "error" = "success") => {
         const fixturePath = path.resolve(
           __dirname,
-          `../mocks/fixtures/package-advisor-${scenario}.json`
+          `../mocks/fixtures/tool-finder-${scenario}.json`
         );
         const body = readFileSync(fixturePath, "utf-8");
         const status = scenario === "error" ? 500 : 200;
 
-        await page.route("**/api/tools/package-advisor", (route) =>
+        await page.route("**/api/tools/tool-finder", (route) =>
           route.fulfill({ status, contentType: "application/json", body })
         );
       },
@@ -226,27 +226,27 @@ export const test = base.extend<TestFixtures>({
           route.fulfill({ status, contentType: "application/json", body })
         );
       },
-      healthChecker: async (page: Page, scenario: "success" | "error" = "success") => {
+      connectionHealthCheck: async (page: Page, scenario: "success" | "error" = "success") => {
         const fixturePath = path.resolve(
           __dirname,
-          `../mocks/fixtures/health-checker-${scenario}.json`
+          `../mocks/fixtures/connection-health-check-${scenario}.json`
         );
         const body = readFileSync(fixturePath, "utf-8");
         const status = scenario === "error" ? 500 : 200;
 
-        await page.route("**/api/tools/health-checker", (route) =>
+        await page.route("**/api/tools/connection-health-check", (route) =>
           route.fulfill({ status, contentType: "application/json", body })
         );
       },
-      migrationAssistant: async (page: Page, scenario: "success" | "error" = "success") => {
+      upgradeAssistant: async (page: Page, scenario: "success" | "error" = "success") => {
         const fixturePath = path.resolve(
           __dirname,
-          `../mocks/fixtures/migration-assistant-${scenario}.json`
+          `../mocks/fixtures/upgrade-assistant-${scenario}.json`
         );
         const body = readFileSync(fixturePath, "utf-8");
         const status = scenario === "error" ? 500 : 200;
 
-        await page.route("**/api/tools/migration-assistant", (route) =>
+        await page.route("**/api/tools/upgrade-assistant", (route) =>
           route.fulfill({ status, contentType: "application/json", body })
         );
       },

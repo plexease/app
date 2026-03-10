@@ -1,30 +1,30 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { UnitTestResultCards } from "./result-cards";
+import { ErrorExplainerResultCards } from "./result-cards";
 import { StackSelector } from "@/components/shared/stack-selector";
 import { CharLimitedInput } from "@/components/shared/char-limited-input";
 import { WorkflowNext, type WorkflowRecommendation } from "@/components/shared/workflow-next";
 import { loadWorkflowContext } from "@/lib/workflow-context";
 import { LimitReachedCard } from "@/components/shared/limit-reached-card";
-import type { UnitTestGeneratorResult } from "@/lib/claude";
+import type { ErrorExplainerResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
 import type { PlanTier } from "@/lib/subscription";
 
-const ACCEPTED_FROM = ["integration-code-generator", "api-wrapper-generator"];
+const ACCEPTED_FROM = ["connection-health-check"];
 
 type Props = {
   usageCount: number;
   plan: PlanTier;
 };
 
-export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
-  const [code, setCode] = useState("");
+export function ErrorExplainerForm({ usageCount, plan }: Props) {
+  const [errorLog, setErrorLog] = useState("");
   const [stack, setStack] = useState<SelectedStack | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<UnitTestGeneratorResult | null>(null);
+  const [result, setResult] = useState<ErrorExplainerResult | null>(null);
   const [currentUsage, setCurrentUsage] = useState(usageCount);
   const [contextBanner, setContextBanner] = useState<string | null>(null);
 
@@ -35,12 +35,7 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
     const ctx = loadWorkflowContext(ACCEPTED_FROM);
     if (ctx) {
       setContextBanner(`Continuing from ${ctx.sourceToolId} — ${ctx.language}, ${ctx.framework}`);
-      if (ctx.payload.code) setCode(String(ctx.payload.code).slice(0, 5000));
-      if (ctx.payload.files) {
-        const files = ctx.payload.files as { code?: string }[];
-        const combined = files.map((f) => f.code ?? "").join("\n\n");
-        setCode(combined.slice(0, 5000));
-      }
+      if (ctx.payload.errorLog) setErrorLog(String(ctx.payload.errorLog).slice(0, 3000));
     }
   }, []);
 
@@ -56,11 +51,11 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
     setResult(null);
 
     try {
-      const res = await fetch("/api/tools/unit-test-generator", {
+      const res = await fetch("/api/tools/error-resolver", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          code,
+          errorLog,
           language: stack.language,
           framework: stack.framework,
         }),
@@ -90,14 +85,19 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
     return <LimitReachedCard />;
   }
 
+  const toolNameMap: Record<string, { name: string; href: string }> = {
+    "compatibility-check": { name: "Compatibility Check", href: "/tools/compatibility-check" },
+    "connection-health-check": { name: "Connection Health Check", href: "/tools/connection-health-check" },
+  };
+
   const recommendations: WorkflowRecommendation[] = result
     ? [
         {
           toolId: result.nextStepToolId,
-          toolName: "Compatibility Check",
-          href: "/tools/compatibility-check",
+          toolName: toolNameMap[result.nextStepToolId]?.name ?? result.nextStepToolId,
+          href: toolNameMap[result.nextStepToolId]?.href ?? `/tools/${result.nextStepToolId}`,
           description: result.nextStepDescription,
-          contextSummary: `Language: ${stack?.language ?? "unknown"}, Test framework: ${result.testFramework.slice(0, 50)}`,
+          contextSummary: `Language: ${stack?.language ?? "unknown"}, Error: ${result.rootCause.slice(0, 100)}`,
         },
       ]
     : [];
@@ -114,22 +114,22 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
         <StackSelector onChange={setStack} />
 
         <CharLimitedInput
-          id="code-input"
-          value={code}
-          onChange={setCode}
-          maxLength={5000}
-          placeholder="Paste the code you want to test..."
+          id="error-log-input"
+          value={errorLog}
+          onChange={setErrorLog}
+          maxLength={3000}
+          placeholder="Paste your error log or stack trace here..."
           disabled={loading}
           rows={10}
-          label="Paste the code you want to test"
+          label="Paste your error log or stack trace"
         />
 
         <button
           type="submit"
-          disabled={loading || !code.trim() || !stack}
+          disabled={loading || !errorLog.trim() || !stack}
           className="rounded-lg bg-brand-500 px-5 py-3 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950"
         >
-          {loading ? "Generating..." : "Generate Tests"}
+          {loading ? "Analysing..." : "Analyse"}
         </button>
       </form>
 
@@ -141,15 +141,15 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
         {error && <p className="mt-3 text-sm text-red-400" role="alert">{error}</p>}
         {result && (
           <>
-            <UnitTestResultCards result={result} />
+            <ErrorExplainerResultCards result={result} />
             <WorkflowNext
               recommendations={recommendations}
-              sourceToolId="unit-test-generator"
+              sourceToolId="error-resolver"
               language={stack?.language ?? ""}
               framework={stack?.framework ?? ""}
               payload={{
-                testFramework: result.testFramework,
-                files: result.files.map((f) => f.filename),
+                rootCause: result.rootCause.slice(0, 500),
+                fixSuggestions: result.fixSuggestions,
               }}
             />
           </>

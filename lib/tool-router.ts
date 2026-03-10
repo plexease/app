@@ -11,16 +11,16 @@ export function matchKeywords(query: string): KeywordMatch | null {
 
   // High-confidence matches — specific phrases
   const highConfidence: [RegExp, ToolId][] = [
-    [/\b(error|exception|stack\s*trace|crash|fail|broke|broken|not\s*working|stopped)\b/, "error-explainer"],
-    [/\b(connect|integrate|set\s*up|link|sync|hook\s*up)\b/, "integration-planner"],
-    [/\b(choose|compare|which|recommend|package|library|alternative)\b/, "package-advisor"],
+    [/\b(error|exception|stack\s*trace|crash|fail|broke|broken|not\s*working|stopped)\b/, "error-resolver"],
+    [/\b(connect|integrate|set\s*up|link|sync|hook\s*up|blueprint)\b/, "integration-blueprint"],
+    [/\b(choose|compare|which|recommend|package|library|alternative|find\s*tool)\b/, "tool-finder"],
     [/\b(generate|scaffold|boilerplate|create\s*code|write\s*code)\b/, "code-generator"],
     [/\b(wrap|wrapper|api\s*client|sdk)\b/, "api-wrapper-generator"],
     [/\b(test|testing|unit\s*test)\b/, "unit-test-generator"],
-    [/\b(audit|dependencies|outdated|vulnerable)\b/, "dependency-audit"],
-    [/\b(health|check|status|diagnose|config)\b/, "health-checker"],
-    [/\b(migrate|upgrade|version|update|breaking\s*change)\b/, "migration-assistant"],
-    [/\b(explain|understand|what\s*does|how\s*does)\b/, "code-explainer"],
+    [/\b(audit|dependencies|outdated|vulnerable|compatible|compatibility)\b/, "compatibility-check"],
+    [/\b(health|check|status|diagnose|config)\b/, "connection-health-check"],
+    [/\b(migrate|upgrade|version|update|breaking\s*change)\b/, "upgrade-assistant"],
+    [/\b(explain|understand|what\s*does|how\s*does)\b/, "how-it-works"],
   ];
 
   const matches: { tool: ToolId; index: number }[] = [];

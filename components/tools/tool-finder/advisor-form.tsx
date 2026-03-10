@@ -1,30 +1,30 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { UnitTestResultCards } from "./result-cards";
+import { PackageAdvisorResultCards } from "./result-cards";
 import { StackSelector } from "@/components/shared/stack-selector";
 import { CharLimitedInput } from "@/components/shared/char-limited-input";
 import { WorkflowNext, type WorkflowRecommendation } from "@/components/shared/workflow-next";
 import { loadWorkflowContext } from "@/lib/workflow-context";
 import { LimitReachedCard } from "@/components/shared/limit-reached-card";
-import type { UnitTestGeneratorResult } from "@/lib/claude";
+import type { PackageAdvisorResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
 import type { PlanTier } from "@/lib/subscription";
 
-const ACCEPTED_FROM = ["integration-code-generator", "api-wrapper-generator"];
+const ACCEPTED_FROM = ["how-it-works", "integration-blueprint"];
 
 type Props = {
   usageCount: number;
   plan: PlanTier;
 };
 
-export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
-  const [code, setCode] = useState("");
+export function PackageAdvisorForm({ usageCount, plan }: Props) {
+  const [query, setQuery] = useState("");
   const [stack, setStack] = useState<SelectedStack | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<UnitTestGeneratorResult | null>(null);
+  const [result, setResult] = useState<PackageAdvisorResult | null>(null);
   const [currentUsage, setCurrentUsage] = useState(usageCount);
   const [contextBanner, setContextBanner] = useState<string | null>(null);
 
@@ -35,12 +35,7 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
     const ctx = loadWorkflowContext(ACCEPTED_FROM);
     if (ctx) {
       setContextBanner(`Continuing from ${ctx.sourceToolId} — ${ctx.language}, ${ctx.framework}`);
-      if (ctx.payload.code) setCode(String(ctx.payload.code).slice(0, 5000));
-      if (ctx.payload.files) {
-        const files = ctx.payload.files as { code?: string }[];
-        const combined = files.map((f) => f.code ?? "").join("\n\n");
-        setCode(combined.slice(0, 5000));
-      }
+      if (ctx.payload.query) setQuery(String(ctx.payload.query).slice(0, 1000));
     }
   }, []);
 
@@ -56,11 +51,11 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
     setResult(null);
 
     try {
-      const res = await fetch("/api/tools/unit-test-generator", {
+      const res = await fetch("/api/tools/tool-finder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          code,
+          query,
           language: stack.language,
           framework: stack.framework,
         }),
@@ -94,10 +89,10 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
     ? [
         {
           toolId: result.nextStepToolId,
-          toolName: "Compatibility Check",
-          href: "/tools/compatibility-check",
+          toolName: "Code Generator",
+          href: "/tools/code-generator",
           description: result.nextStepDescription,
-          contextSummary: `Language: ${stack?.language ?? "unknown"}, Test framework: ${result.testFramework.slice(0, 50)}`,
+          contextSummary: `Language: ${stack?.language ?? "unknown"}, Package: ${result.recommendation.slice(0, 100)}`,
         },
       ]
     : [];
@@ -114,22 +109,22 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
         <StackSelector onChange={setStack} />
 
         <CharLimitedInput
-          id="code-input"
-          value={code}
-          onChange={setCode}
-          maxLength={5000}
-          placeholder="Paste the code you want to test..."
+          id="query-input"
+          value={query}
+          onChange={setQuery}
+          maxLength={1000}
+          placeholder="e.g. 'Serilog' or 'I need a library for sending emails'"
           disabled={loading}
-          rows={10}
-          label="Paste the code you want to test"
+          rows={4}
+          label="Package name or what you need"
         />
 
         <button
           type="submit"
-          disabled={loading || !code.trim() || !stack}
+          disabled={loading || !query.trim() || !stack}
           className="rounded-lg bg-brand-500 px-5 py-3 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950"
         >
-          {loading ? "Generating..." : "Generate Tests"}
+          {loading ? "Advising..." : "Get Advice"}
         </button>
       </form>
 
@@ -141,15 +136,15 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
         {error && <p className="mt-3 text-sm text-red-400" role="alert">{error}</p>}
         {result && (
           <>
-            <UnitTestResultCards result={result} />
+            <PackageAdvisorResultCards result={result} />
             <WorkflowNext
               recommendations={recommendations}
-              sourceToolId="unit-test-generator"
+              sourceToolId="tool-finder"
               language={stack?.language ?? ""}
               framework={stack?.framework ?? ""}
               payload={{
-                testFramework: result.testFramework,
-                files: result.files.map((f) => f.filename),
+                recommendation: result.recommendation.slice(0, 500),
+                alternatives: result.alternatives.map((a) => a.name),
               }}
             />
           </>

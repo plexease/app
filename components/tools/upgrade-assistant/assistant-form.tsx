@@ -1,30 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { UnitTestResultCards } from "./result-cards";
+import { MigrationResultCards } from "./result-cards";
 import { StackSelector } from "@/components/shared/stack-selector";
 import { CharLimitedInput } from "@/components/shared/char-limited-input";
 import { WorkflowNext, type WorkflowRecommendation } from "@/components/shared/workflow-next";
 import { loadWorkflowContext } from "@/lib/workflow-context";
 import { LimitReachedCard } from "@/components/shared/limit-reached-card";
-import type { UnitTestGeneratorResult } from "@/lib/claude";
+import type { MigrationAssistantResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
 import type { PlanTier } from "@/lib/subscription";
 
-const ACCEPTED_FROM = ["integration-code-generator", "api-wrapper-generator"];
+const ACCEPTED_FROM = ["compatibility-check"];
 
 type Props = {
   usageCount: number;
   plan: PlanTier;
 };
 
-export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
+export function MigrationAssistantForm({ usageCount, plan }: Props) {
+  const [migratingFrom, setMigratingFrom] = useState("");
+  const [migratingTo, setMigratingTo] = useState("");
   const [code, setCode] = useState("");
   const [stack, setStack] = useState<SelectedStack | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<UnitTestGeneratorResult | null>(null);
+  const [result, setResult] = useState<MigrationAssistantResult | null>(null);
   const [currentUsage, setCurrentUsage] = useState(usageCount);
   const [contextBanner, setContextBanner] = useState<string | null>(null);
 
@@ -36,11 +38,6 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
     if (ctx) {
       setContextBanner(`Continuing from ${ctx.sourceToolId} — ${ctx.language}, ${ctx.framework}`);
       if (ctx.payload.code) setCode(String(ctx.payload.code).slice(0, 5000));
-      if (ctx.payload.files) {
-        const files = ctx.payload.files as { code?: string }[];
-        const combined = files.map((f) => f.code ?? "").join("\n\n");
-        setCode(combined.slice(0, 5000));
-      }
     }
   }, []);
 
@@ -56,10 +53,12 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
     setResult(null);
 
     try {
-      const res = await fetch("/api/tools/unit-test-generator", {
+      const res = await fetch("/api/tools/upgrade-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          migratingFrom,
+          migratingTo,
           code,
           language: stack.language,
           framework: stack.framework,
@@ -94,10 +93,10 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
     ? [
         {
           toolId: result.nextStepToolId,
-          toolName: "Compatibility Check",
-          href: "/tools/compatibility-check",
+          toolName: "Code Generator",
+          href: "/tools/code-generator",
           description: result.nextStepDescription,
-          contextSummary: `Language: ${stack?.language ?? "unknown"}, Test framework: ${result.testFramework.slice(0, 50)}`,
+          contextSummary: `Language: ${stack?.language ?? "unknown"}, Migration: ${migratingFrom} → ${migratingTo}`,
         },
       ]
     : [];
@@ -113,23 +112,54 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <StackSelector onChange={setStack} />
 
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label htmlFor="migrating-from" className="block text-sm font-medium text-muted-300">
+              Migrating from
+            </label>
+            <input
+              id="migrating-from"
+              type="text"
+              value={migratingFrom}
+              onChange={(e) => setMigratingFrom(e.target.value)}
+              placeholder="e.g. .NET 6"
+              disabled={loading}
+              className="mt-1 w-full rounded-lg border border-surface-700 bg-surface-800 px-3 py-2 text-sm text-white placeholder:text-muted-500 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="migrating-to" className="block text-sm font-medium text-muted-300">
+              Migrating to
+            </label>
+            <input
+              id="migrating-to"
+              type="text"
+              value={migratingTo}
+              onChange={(e) => setMigratingTo(e.target.value)}
+              placeholder="e.g. .NET 8"
+              disabled={loading}
+              className="mt-1 w-full rounded-lg border border-surface-700 bg-surface-800 px-3 py-2 text-sm text-white placeholder:text-muted-500 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            />
+          </div>
+        </div>
+
         <CharLimitedInput
           id="code-input"
           value={code}
           onChange={setCode}
           maxLength={5000}
-          placeholder="Paste the code you want to test..."
+          placeholder="Paste relevant code or project files..."
           disabled={loading}
           rows={10}
-          label="Paste the code you want to test"
+          label="Paste relevant code or project files"
         />
 
         <button
           type="submit"
-          disabled={loading || !code.trim() || !stack}
+          disabled={loading || !code.trim() || !migratingFrom.trim() || !migratingTo.trim() || !stack}
           className="rounded-lg bg-brand-500 px-5 py-3 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950"
         >
-          {loading ? "Generating..." : "Generate Tests"}
+          {loading ? "Planning..." : "Plan Migration"}
         </button>
       </form>
 
@@ -141,15 +171,16 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
         {error && <p className="mt-3 text-sm text-red-400" role="alert">{error}</p>}
         {result && (
           <>
-            <UnitTestResultCards result={result} />
+            <MigrationResultCards result={result} />
             <WorkflowNext
               recommendations={recommendations}
-              sourceToolId="unit-test-generator"
+              sourceToolId="upgrade-assistant"
               language={stack?.language ?? ""}
               framework={stack?.framework ?? ""}
               payload={{
-                testFramework: result.testFramework,
-                files: result.files.map((f) => f.filename),
+                migratingFrom,
+                migratingTo,
+                steps: result.migrationSteps.length,
               }}
             />
           </>

@@ -76,7 +76,7 @@ Analyse the error and return ONLY valid JSON — no markdown, no explanation, no
   "fixSuggestions": ["Actionable fix suggestion 1", "Actionable fix suggestion 2"],
   "relatedDocs": ["Relevant documentation link or resource 1", "Resource 2"],
   "nextStepSuggestion": "A 1-2 sentence recommendation for what the user should do next.",
-  "nextStepToolId": "dependency-audit or health-checker (whichever is most relevant)",
+  "nextStepToolId": "compatibility-check or connection-health-check (whichever is most relevant)",
   "nextStepDescription": "Context-aware description for why the recommended tool would help, referencing specifics from this error."
 }
 
@@ -130,7 +130,7 @@ Analyse this code and return ONLY valid JSON — no markdown, no explanation, no
   "detectedPackages": ["List", "of", "packages/libraries used"],
   "detectedPatterns": ["List", "of", "design patterns or integration patterns detected"],
   "nextStepSuggestion": "A 1-2 sentence recommendation for what the user should do next, referencing a specific tool.",
-  "nextStepToolId": "integration-planner or package-advisor (whichever is most relevant)",
+  "nextStepToolId": "integration-blueprint or tool-finder (whichever is most relevant)",
   "nextStepDescription": "Context-aware description for why the recommended tool would help, referencing specifics from this code."
 }
 
@@ -300,7 +300,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
   ],
   "recommendations": ["Best practice recommendation 1", "Recommendation 2"],
   "nextStepSuggestion": "Recommendation for next step.",
-  "nextStepToolId": "error-explainer",
+  "nextStepToolId": "error-resolver",
   "nextStepDescription": "Context-aware description for debugging any errors found."
 }
 
@@ -421,7 +421,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
   "testFramework": "Which test framework was chosen and why (e.g. xUnit for .NET, pytest for Python).",
   "mockingApproach": "How mocking/stubbing is set up (e.g. Moq for .NET, unittest.mock for Python).",
   "nextStepSuggestion": "Recommendation for next step.",
-  "nextStepToolId": "dependency-audit",
+  "nextStepToolId": "compatibility-check",
   "nextStepDescription": "Context-aware description for auditing dependencies after adding test packages."
 }
 
@@ -597,7 +597,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
   ],
   "recommendations": ["Priority action 1", "Priority action 2"],
   "nextStepSuggestion": "Recommendation for next step.",
-  "nextStepToolId": "migration-assistant",
+  "nextStepToolId": "upgrade-assistant",
   "nextStepDescription": "Context-aware description for migrating outdated dependencies."
 }
 

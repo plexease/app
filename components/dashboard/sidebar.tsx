@@ -19,8 +19,8 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
   {
     label: "Explore",
     items: [
-      { href: "/tools/package-advisor", label: "Package Advisor" },
-      { href: "/tools/integration-planner", label: "Integration Planner" },
+      { href: "/tools/tool-finder", label: "Tool Finder" },
+      { href: "/tools/integration-blueprint", label: "Integration Blueprint" },
     ],
   },
   {
@@ -33,16 +33,16 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
   {
     label: "Troubleshoot",
     items: [
-      { href: "/tools/error-explainer", label: "Error Explainer" },
-      { href: "/tools/code-explainer", label: "Code Explainer" },
+      { href: "/tools/error-resolver", label: "Error Resolver" },
+      { href: "/tools/how-it-works", label: "How It Works" },
     ],
   },
   {
     label: "Maintain",
     items: [
-      { href: "/tools/dependency-audit", label: "Dependency Audit" },
-      { href: "/tools/health-checker", label: "Health Checker" },
-      { href: "/tools/migration-assistant", label: "Migration Assistant" },
+      { href: "/tools/compatibility-check", label: "Compatibility Check" },
+      { href: "/tools/connection-health-check", label: "Connection Health Check" },
+      { href: "/tools/upgrade-assistant", label: "Upgrade Assistant" },
       { href: "/tools/unit-test-generator", label: "Unit Test Generator" },
     ],
   },

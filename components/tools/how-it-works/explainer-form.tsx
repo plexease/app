@@ -1,46 +1,50 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { UnitTestResultCards } from "./result-cards";
+import { CodeExplainerResultCards } from "./result-cards";
 import { StackSelector } from "@/components/shared/stack-selector";
 import { CharLimitedInput } from "@/components/shared/char-limited-input";
 import { WorkflowNext, type WorkflowRecommendation } from "@/components/shared/workflow-next";
 import { loadWorkflowContext } from "@/lib/workflow-context";
 import { LimitReachedCard } from "@/components/shared/limit-reached-card";
-import type { UnitTestGeneratorResult } from "@/lib/claude";
+import type { CodeExplainerResult } from "@/lib/claude";
 import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
 import type { PlanTier } from "@/lib/subscription";
 
-const ACCEPTED_FROM = ["integration-code-generator", "api-wrapper-generator"];
+const SCOPE_OPTIONS = [
+  { value: "how-it-works", label: "How does this code work?" },
+  { value: "specific-function", label: "What does a specific function do?" },
+  { value: "why-failing", label: "Why might this be failing?" },
+  { value: "dependencies", label: "What does this depend on?" },
+];
+
+const ACCEPTED_FROM = ["error-resolver", "connection-health-check"];
 
 type Props = {
   usageCount: number;
   plan: PlanTier;
 };
 
-export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
+export function ExplainerForm({ usageCount, plan }: Props) {
   const [code, setCode] = useState("");
+  const [scopeQuestion, setScopeQuestion] = useState(SCOPE_OPTIONS[0].value);
   const [stack, setStack] = useState<SelectedStack | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<UnitTestGeneratorResult | null>(null);
+  const [result, setResult] = useState<CodeExplainerResult | null>(null);
   const [currentUsage, setCurrentUsage] = useState(usageCount);
   const [contextBanner, setContextBanner] = useState<string | null>(null);
 
   const limit = getUsageLimit(plan);
   const limitReached = currentUsage >= limit;
 
+  // Load workflow context on mount
   useEffect(() => {
     const ctx = loadWorkflowContext(ACCEPTED_FROM);
     if (ctx) {
       setContextBanner(`Continuing from ${ctx.sourceToolId} — ${ctx.language}, ${ctx.framework}`);
       if (ctx.payload.code) setCode(String(ctx.payload.code).slice(0, 5000));
-      if (ctx.payload.files) {
-        const files = ctx.payload.files as { code?: string }[];
-        const combined = files.map((f) => f.code ?? "").join("\n\n");
-        setCode(combined.slice(0, 5000));
-      }
     }
   }, []);
 
@@ -56,11 +60,12 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
     setResult(null);
 
     try {
-      const res = await fetch("/api/tools/unit-test-generator", {
+      const res = await fetch("/api/tools/how-it-works", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           code,
+          scopeQuestion: SCOPE_OPTIONS.find((o) => o.value === scopeQuestion)?.label ?? scopeQuestion,
           language: stack.language,
           framework: stack.framework,
         }),
@@ -94,10 +99,10 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
     ? [
         {
           toolId: result.nextStepToolId,
-          toolName: "Compatibility Check",
-          href: "/tools/compatibility-check",
+          toolName: result.nextStepToolId === "integration-blueprint" ? "Integration Blueprint" : "Tool Finder",
+          href: result.nextStepToolId === "integration-blueprint" ? "/tools/integration-blueprint" : "/tools/tool-finder",
           description: result.nextStepDescription,
-          contextSummary: `Language: ${stack?.language ?? "unknown"}, Test framework: ${result.testFramework.slice(0, 50)}`,
+          contextSummary: `Language: ${stack?.language ?? "unknown"}, Packages: ${result.detectedPackages.join(", ") || "none"}`,
         },
       ]
     : [];
@@ -113,15 +118,33 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <StackSelector onChange={setStack} />
 
+        <div>
+          <label htmlFor="scope-question" className="block text-sm font-medium text-muted-300">
+            What do you want to understand?
+          </label>
+          <select
+            id="scope-question"
+            value={scopeQuestion}
+            onChange={(e) => setScopeQuestion(e.target.value)}
+            disabled={loading}
+            className="mt-1 rounded-lg border border-surface-700 bg-surface-800 px-3 py-2 text-sm text-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+          >
+            {SCOPE_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+        </div>
+
         <CharLimitedInput
           id="code-input"
           value={code}
           onChange={setCode}
           maxLength={5000}
-          placeholder="Paste the code you want to test..."
+          placeholder="Paste the relevant code section here..."
           disabled={loading}
           rows={10}
-          label="Paste the code you want to test"
+          label="Code"
+          hint="Focus on the function or class you're asking about, not the whole file."
         />
 
         <button
@@ -129,7 +152,7 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
           disabled={loading || !code.trim() || !stack}
           className="rounded-lg bg-brand-500 px-5 py-3 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950"
         >
-          {loading ? "Generating..." : "Generate Tests"}
+          {loading ? "Explaining..." : "Explain"}
         </button>
       </form>
 
@@ -141,15 +164,15 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
         {error && <p className="mt-3 text-sm text-red-400" role="alert">{error}</p>}
         {result && (
           <>
-            <UnitTestResultCards result={result} />
+            <CodeExplainerResultCards result={result} />
             <WorkflowNext
               recommendations={recommendations}
-              sourceToolId="unit-test-generator"
+              sourceToolId="how-it-works"
               language={stack?.language ?? ""}
               framework={stack?.framework ?? ""}
               payload={{
-                testFramework: result.testFramework,
-                files: result.files.map((f) => f.filename),
+                detectedPackages: result.detectedPackages,
+                explanation: result.explanation.slice(0, 500),
               }}
             />
           </>

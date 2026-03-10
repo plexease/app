@@ -1,16 +1,16 @@
 import type { Persona } from "@/lib/types/persona";
 
 export type ToolId =
-  | "code-explainer"
-  | "error-explainer"
-  | "package-advisor"
-  | "integration-planner"
+  | "how-it-works"
+  | "error-resolver"
+  | "tool-finder"
+  | "integration-blueprint"
   | "code-generator"
   | "api-wrapper-generator"
   | "unit-test-generator"
-  | "dependency-audit"
-  | "health-checker"
-  | "migration-assistant";
+  | "compatibility-check"
+  | "connection-health-check"
+  | "upgrade-assistant";
 
 type ToolDescriptions = {
   label: string;
@@ -20,23 +20,23 @@ type ToolDescriptions = {
 };
 
 export const TOOL_CATALOG: Record<ToolId, ToolDescriptions> = {
-  "package-advisor": {
-    label: "Package Advisor",
-    href: "/tools/package-advisor",
+  "tool-finder": {
+    label: "Tool Finder",
+    href: "/tools/tool-finder",
     category: "explore",
     descriptions: {
-      business_owner: "Get recommendations for the right tools",
-      support_ops: "Compare packages and libraries for your stack",
+      business_owner: "Get recommendations for the right tools and services",
+      support_ops: "Compare tools, packages, and libraries for your stack",
       implementer: "Package comparison with compatibility analysis",
     },
   },
-  "integration-planner": {
-    label: "Integration Planner",
-    href: "/tools/integration-planner",
+  "integration-blueprint": {
+    label: "Integration Blueprint",
+    href: "/tools/integration-blueprint",
     category: "explore",
     descriptions: {
-      business_owner: "Plan how to connect your services",
-      support_ops: "Architecture and approach for integrations",
+      business_owner: "Plan how to connect your services together",
+      support_ops: "Architecture and approach for connecting platforms",
       implementer: "Integration architecture, packages, patterns",
     },
   },
@@ -60,53 +60,53 @@ export const TOOL_CATALOG: Record<ToolId, ToolDescriptions> = {
       implementer: "Typed wrapper with auth setup and usage",
     },
   },
-  "error-explainer": {
-    label: "Error Explainer",
-    href: "/tools/error-explainer",
+  "error-resolver": {
+    label: "Error Resolver",
+    href: "/tools/error-resolver",
     category: "troubleshoot",
     descriptions: {
-      business_owner: "Find out why something stopped working",
-      support_ops: "Diagnose error messages and stack traces",
-      implementer: "Root cause analysis from errors and traces",
+      business_owner: "Find out why something stopped working and how to fix it",
+      support_ops: "Diagnose error messages and stack traces with resolution steps",
+      implementer: "Root cause analysis from errors and traces with fix suggestions",
     },
   },
-  "code-explainer": {
-    label: "Code Explainer",
-    href: "/tools/code-explainer",
+  "how-it-works": {
+    label: "How It Works",
+    href: "/tools/how-it-works",
     category: "troubleshoot",
     descriptions: {
-      business_owner: "Understand what a piece of code does in plain English",
+      business_owner: "Understand what a piece of code or configuration does in plain English",
       support_ops: "Break down code snippets to understand logic and dependencies",
       implementer: "Parse code, identify patterns and packages",
     },
   },
-  "dependency-audit": {
-    label: "Dependency Audit",
-    href: "/tools/dependency-audit",
+  "compatibility-check": {
+    label: "Compatibility Check",
+    href: "/tools/compatibility-check",
     category: "maintain",
     descriptions: {
-      business_owner: "Check if your project's tools are up to date",
-      support_ops: "Audit dependencies for updates and vulnerabilities",
+      business_owner: "Check if your tools and dependencies are compatible and up to date",
+      support_ops: "Audit dependencies for updates and known issues",
       implementer: "Dependency audit table with status badges",
     },
   },
-  "health-checker": {
-    label: "Health Checker",
-    href: "/tools/health-checker",
+  "connection-health-check": {
+    label: "Connection Health Check",
+    href: "/tools/connection-health-check",
     category: "maintain",
     descriptions: {
-      business_owner: "Get a health report for your setup",
-      support_ops: "Assess configuration health and risks",
+      business_owner: "Get a health report for your connections and integrations",
+      support_ops: "Assess configuration health and identify risks",
       implementer: "Config health assessment with severity ratings",
     },
   },
-  "migration-assistant": {
-    label: "Migration Assistant",
-    href: "/tools/migration-assistant",
+  "upgrade-assistant": {
+    label: "Upgrade Assistant",
+    href: "/tools/upgrade-assistant",
     category: "maintain",
     descriptions: {
-      business_owner: "Get help upgrading to a new version",
-      support_ops: "Step-by-step migration with breaking changes",
+      business_owner: "Get help upgrading to a new version of your tools",
+      support_ops: "Step-by-step upgrade guide with breaking changes",
       implementer: "Migration steps, breaking changes, effort estimate",
     },
   },
