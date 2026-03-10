@@ -1,0 +1,10 @@
+{
+  "sourceSetup": {"steps": ["Go to Shopify Admin > Settings > Notifications", "Add a webhook for Order Creation"], "webhookUrl": "https://your-app.com/webhooks/shopify/orders", "authentication": "HMAC signature verification using shared secret"},
+  "targetSetup": {"steps": ["Create a Slack incoming webhook URL", "Configure the channel for notifications"], "endpointCode": "// Express endpoint example\napp.post('/webhooks/shopify/orders', (req, res) => {\n  // Process order\n  res.sendStatus(200);\n});"},
+  "payloadFormat": {"description": "Shopify sends order data as JSON", "exampleFields": [{"field": "id", "description": "Unique order ID"}, {"field": "total_price", "description": "Order total"}]},
+  "testing": ["Use Shopify's webhook testing tool to send a test event", "Check Slack channel for the notification"],
+  "securityNotes": ["Always verify HMAC signatures", "Use HTTPS endpoints only"],
+  "nextStepSuggestion": "Monitor your webhooks for failures.",
+  "nextStepToolId": "troubleshooter",
+  "nextStepDescription": "Use Troubleshooter if webhooks stop firing or events are missed."
+}

@@ -1,0 +1,13 @@
+{
+  "prerequisites": ["Shopify admin access", "Xero account with API access enabled"],
+  "steps": [
+    {"step": 1, "title": "Enable Xero API access", "description": "Go to Xero Developer portal and create an app", "platform": "Xero"},
+    {"step": 2, "title": "Install Shopify connector", "description": "From Shopify App Store, install the Xero integration app", "platform": "Shopify"}
+  ],
+  "verificationSteps": ["Create a test order in Shopify", "Check it appears in Xero within 5 minutes"],
+  "commonPitfalls": [{"issue": "Tax codes don't match between platforms", "prevention": "Map Shopify tax settings to Xero tax rates before enabling sync"}],
+  "estimatedTime": "30-45 minutes",
+  "nextStepSuggestion": "Set up webhooks for real-time sync.",
+  "nextStepToolId": "webhook-builder",
+  "nextStepDescription": "Use Webhook Builder to set up real-time notifications between your platforms."
+}

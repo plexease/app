@@ -23,7 +23,15 @@ type MockApiFactory = {
   apiWrapperGenerator: (page: Page, scenario?: "success" | "error") => Promise<void>;
   unitTestGenerator: (page: Page, scenario?: "success" | "error") => Promise<void>;
   connectionHealthCheck: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  connectionMap: (page: Page, scenario?: "success" | "error") => Promise<void>;
   upgradeAssistant: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  integrationSetup: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  authGuide: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  toolPlanner: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  webhookBuilder: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  workflowBuilder: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  whatChanged: (page: Page, scenario?: "success" | "error") => Promise<void>;
+  troubleshooter: (page: Page, scenario?: "success" | "error") => Promise<void>;
   checkoutStatus: (page: Page, response: { plan: string }) => Promise<void>;
   router: (page: Page, scenario?: "success" | "error" | "rate_limited") => Promise<void>;
 };
@@ -238,6 +246,18 @@ export const test = base.extend<TestFixtures>({
           route.fulfill({ status, contentType: "application/json", body })
         );
       },
+      connectionMap: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/connection-map-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/connection-map", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
       upgradeAssistant: async (page: Page, scenario: "success" | "error" = "success") => {
         const fixturePath = path.resolve(
           __dirname,
@@ -247,6 +267,90 @@ export const test = base.extend<TestFixtures>({
         const status = scenario === "error" ? 500 : 200;
 
         await page.route("**/api/tools/upgrade-assistant", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      integrationSetup: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/integration-setup-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/integration-setup", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      authGuide: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/auth-guide-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/auth-guide", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      toolPlanner: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/tool-planner-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/tool-planner", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      webhookBuilder: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/webhook-builder-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/webhook-builder", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      workflowBuilder: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/workflow-builder-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/workflow-builder", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      whatChanged: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/what-changed-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/what-changed", (route) =>
+          route.fulfill({ status, contentType: "application/json", body })
+        );
+      },
+      troubleshooter: async (page: Page, scenario: "success" | "error" = "success") => {
+        const fixturePath = path.resolve(
+          __dirname,
+          `../mocks/fixtures/troubleshooter-${scenario}.json`
+        );
+        const body = readFileSync(fixturePath, "utf-8");
+        const status = scenario === "error" ? 500 : 200;
+
+        await page.route("**/api/tools/troubleshooter", (route) =>
           route.fulfill({ status, contentType: "application/json", body })
         );
       },

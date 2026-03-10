@@ -10,7 +10,15 @@ export type ToolId =
   | "unit-test-generator"
   | "compatibility-check"
   | "connection-health-check"
-  | "upgrade-assistant";
+  | "upgrade-assistant"
+  | "tool-planner"
+  | "connection-map"
+  | "integration-setup"
+  | "webhook-builder"
+  | "auth-guide"
+  | "workflow-builder"
+  | "troubleshooter"
+  | "what-changed";
 
 type ToolDescriptions = {
   label: string;
@@ -118,6 +126,86 @@ export const TOOL_CATALOG: Record<ToolId, ToolDescriptions> = {
       business_owner: "Make sure your code works correctly",
       support_ops: "Generate test files for existing code",
       implementer: "Test scaffold with mocking approach",
+    },
+  },
+  "tool-planner": {
+    label: "Tool Planner",
+    href: "/tools/tool-planner",
+    category: "explore",
+    descriptions: {
+      business_owner: "Get recommendations for the right tools for your business",
+      support_ops: "Compare platforms and tools for your integration needs",
+      implementer: "Evaluate tool stacks with cost and complexity analysis",
+    },
+  },
+  "connection-map": {
+    label: "Connection Map",
+    href: "/tools/connection-map",
+    category: "explore",
+    descriptions: {
+      business_owner: "See how your apps are connected and find weak spots",
+      support_ops: "Map integration landscape with health indicators",
+      implementer: "Architecture overview with API dependency chain and failure modes",
+    },
+  },
+  "integration-setup": {
+    label: "Integration Setup",
+    href: "/tools/integration-setup",
+    category: "setup",
+    descriptions: {
+      business_owner: "Get step-by-step help connecting two apps together",
+      support_ops: "Configuration guide with webhook setup and troubleshooting tips",
+      implementer: "API endpoints, auth flows, and architecture for platform connections",
+    },
+  },
+  "webhook-builder": {
+    label: "Webhook Builder",
+    href: "/tools/webhook-builder",
+    category: "setup",
+    descriptions: {
+      business_owner: "Set up automatic notifications between your apps",
+      support_ops: "Configure webhooks with endpoint setup and payload inspection",
+      implementer: "Webhook endpoint code, signature verification, and retry logic",
+    },
+  },
+  "auth-guide": {
+    label: "Auth Guide",
+    href: "/tools/auth-guide",
+    category: "setup",
+    descriptions: {
+      business_owner: "Get help setting up API keys and authentication for any service",
+      support_ops: "Authentication setup, scopes, permissions, and credential rotation",
+      implementer: "Auth flow diagrams, token refresh logic, and setup code snippets",
+    },
+  },
+  "workflow-builder": {
+    label: "Workflow Builder",
+    href: "/tools/workflow-builder",
+    category: "setup",
+    descriptions: {
+      business_owner: "Design automated workflows between your apps — no coding required",
+      support_ops: "Multi-step automation with monitoring and error handling",
+      implementer: "Workflow architecture with queue patterns and reliability design",
+    },
+  },
+  "troubleshooter": {
+    label: "Troubleshooter",
+    href: "/tools/troubleshooter",
+    category: "troubleshoot",
+    descriptions: {
+      business_owner: "Find out why your apps stopped talking to each other",
+      support_ops: "Guided diagnosis with root cause analysis and fix steps",
+      implementer: "Integration debugging with payload inspection and replay guidance",
+    },
+  },
+  "what-changed": {
+    label: "What Changed?",
+    href: "/tools/what-changed",
+    category: "troubleshoot",
+    descriptions: {
+      business_owner: "Find out how an update or change affects your integrations",
+      support_ops: "Impact analysis with priority checklist and customer-facing notes",
+      implementer: "API diff analysis, migration code, and version pinning guidance",
     },
   },
 };

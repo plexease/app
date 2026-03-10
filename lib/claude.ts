@@ -616,3 +616,479 @@ ${dependencyFile}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
     throw new Error(`Failed to parse Claude response: ${text}`);
   }
 }
+
+// --- Tool Planner ---
+
+const toolPlannerSchema = z.object({
+  recommendations: z.array(z.object({
+    name: z.string(),
+    purpose: z.string(),
+    cost: z.string(),
+    integrationComplexity: z.enum(["low", "medium", "high"]),
+  })),
+  stackOverview: z.string(),
+  implementationOrder: z.array(z.string()),
+  considerations: z.array(z.string()),
+  nextStepSuggestion: z.string(),
+  nextStepToolId: z.string(),
+  nextStepDescription: z.string(),
+});
+
+export type ToolPlannerResult = z.infer<typeof toolPlannerSchema>;
+
+export async function getToolPlan(
+  description: string,
+  personaInstruction?: string
+): Promise<ToolPlannerResult> {
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 1024,
+    messages: [{
+      role: "user",
+      content: `You are an integration platform advisor. The user needs help choosing the right tools and platforms for their business needs.
+
+Analyse their requirements and recommend a compatible tool stack.
+
+User's needs: "${description}"
+
+Return ONLY valid JSON — no markdown, no explanation, no code fences:
+{
+  "recommendations": [{"name": "Tool Name", "purpose": "What it does for them", "cost": "Free / £X/month / etc", "integrationComplexity": "low|medium|high"}],
+  "stackOverview": "How these tools work together as a stack",
+  "implementationOrder": ["First do this", "Then this"],
+  "considerations": ["Important things to know"],
+  "nextStepSuggestion": "What to do next",
+  "nextStepToolId": "integration-setup",
+  "nextStepDescription": "Brief description of why this tool helps next"
+}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
+    }],
+  });
+
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  const parsed = toolPlannerSchema.safeParse(JSON.parse(text));
+  if (!parsed.success) throw new Error(`Failed to parse Claude response: ${text}`);
+  return parsed.data;
+}
+
+// --- Connection Map ---
+
+const connectionMapSchema = z.object({
+  connections: z.array(z.object({
+    from: z.string(),
+    to: z.string(),
+    dataFlow: z.string(),
+    method: z.string(),
+  })),
+  weakPoints: z.array(z.object({
+    description: z.string(),
+    severity: z.enum(["critical", "warning", "info"]),
+    recommendation: z.string(),
+  })),
+  overallAssessment: z.string(),
+  recommendations: z.array(z.string()),
+  nextStepSuggestion: z.string(),
+  nextStepToolId: z.string(),
+  nextStepDescription: z.string(),
+});
+
+export type ConnectionMapResult = z.infer<typeof connectionMapSchema>;
+
+export async function getConnectionMap(
+  platforms: string,
+  concerns?: string,
+  personaInstruction?: string
+): Promise<ConnectionMapResult> {
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 1024,
+    messages: [{
+      role: "user",
+      content: `You are an integration architecture advisor. Analyse the user's described platform landscape and map how data flows between systems.
+
+Platforms: "${platforms}"
+${concerns ? `Concerns: "${concerns}"` : ""}
+
+Return ONLY valid JSON — no markdown, no explanation, no code fences:
+{
+  "connections": [{"from": "Platform A", "to": "Platform B", "dataFlow": "What data moves", "method": "API/webhook/sync/etc"}],
+  "weakPoints": [{"description": "What could fail", "severity": "critical|warning|info", "recommendation": "How to address it"}],
+  "overallAssessment": "Summary of the integration landscape health",
+  "recommendations": ["Improvement suggestion 1", "Suggestion 2"],
+  "nextStepSuggestion": "What to do next",
+  "nextStepToolId": "integration-setup",
+  "nextStepDescription": "Brief description of why this tool helps next"
+}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
+    }],
+  });
+
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  const parsed = connectionMapSchema.safeParse(JSON.parse(text));
+  if (!parsed.success) throw new Error(`Failed to parse Claude response: ${text}`);
+  return parsed.data;
+}
+
+// --- Integration Setup ---
+
+const integrationSetupSchema = z.object({
+  prerequisites: z.array(z.string()),
+  steps: z.array(z.object({
+    step: z.number(),
+    title: z.string(),
+    description: z.string(),
+    platform: z.string(),
+  })),
+  verificationSteps: z.array(z.string()),
+  commonPitfalls: z.array(z.object({
+    issue: z.string(),
+    prevention: z.string(),
+  })),
+  estimatedTime: z.string(),
+  nextStepSuggestion: z.string(),
+  nextStepToolId: z.string(),
+  nextStepDescription: z.string(),
+});
+
+export type IntegrationSetupResult = z.infer<typeof integrationSetupSchema>;
+
+export async function getIntegrationSetup(
+  platformA: string,
+  platformB: string,
+  goal?: string,
+  personaInstruction?: string
+): Promise<IntegrationSetupResult> {
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 2048,
+    messages: [{
+      role: "user",
+      content: `You are an integration setup expert. Guide the user through connecting two platforms together with clear, step-by-step instructions.
+
+Connect: "${platformA}" to "${platformB}"
+${goal ? `Goal: "${goal}"` : ""}
+
+Return ONLY valid JSON — no markdown, no explanation, no code fences:
+{
+  "prerequisites": ["What you need before starting"],
+  "steps": [{"step": 1, "title": "Step title", "description": "Detailed instructions", "platform": "Which platform this step is on"}],
+  "verificationSteps": ["How to verify the connection works"],
+  "commonPitfalls": [{"issue": "Common problem", "prevention": "How to avoid it"}],
+  "estimatedTime": "Approximate setup time",
+  "nextStepSuggestion": "What to do next",
+  "nextStepToolId": "webhook-builder",
+  "nextStepDescription": "Brief description of why this tool helps next"
+}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
+    }],
+  });
+
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  const parsed = integrationSetupSchema.safeParse(JSON.parse(text));
+  if (!parsed.success) throw new Error(`Failed to parse Claude response: ${text}`);
+  return parsed.data;
+}
+
+// --- Webhook Builder ---
+
+const webhookBuilderSchema = z.object({
+  sourceSetup: z.object({
+    steps: z.array(z.string()),
+    webhookUrl: z.string(),
+    authentication: z.string(),
+  }),
+  targetSetup: z.object({
+    steps: z.array(z.string()),
+    endpointCode: z.string().optional(),
+  }),
+  payloadFormat: z.object({
+    description: z.string(),
+    exampleFields: z.array(z.object({ field: z.string(), description: z.string() })),
+  }),
+  testing: z.array(z.string()),
+  securityNotes: z.array(z.string()),
+  nextStepSuggestion: z.string(),
+  nextStepToolId: z.string(),
+  nextStepDescription: z.string(),
+});
+
+export type WebhookBuilderResult = z.infer<typeof webhookBuilderSchema>;
+
+export async function getWebhookSetup(
+  sourceApp: string,
+  targetApp: string,
+  events?: string,
+  personaInstruction?: string
+): Promise<WebhookBuilderResult> {
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 2048,
+    messages: [{
+      role: "user",
+      content: `You are a webhook integration specialist. Help the user set up event-driven communication between two applications.
+
+Source (sends events): "${sourceApp}"
+Target (receives events): "${targetApp}"
+${events ? `Events to handle: "${events}"` : ""}
+
+Return ONLY valid JSON — no markdown, no explanation, no code fences:
+{
+  "sourceSetup": {"steps": ["Step 1", "Step 2"], "webhookUrl": "Example webhook URL pattern", "authentication": "How auth works"},
+  "targetSetup": {"steps": ["Step 1", "Step 2"], "endpointCode": "// Optional example endpoint code"},
+  "payloadFormat": {"description": "What the webhook payload looks like", "exampleFields": [{"field": "field_name", "description": "What this field contains"}]},
+  "testing": ["How to test the webhook"],
+  "securityNotes": ["Security best practice"],
+  "nextStepSuggestion": "What to do next",
+  "nextStepToolId": "troubleshooter",
+  "nextStepDescription": "Brief description of why this tool helps next"
+}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
+    }],
+  });
+
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  const parsed = webhookBuilderSchema.safeParse(JSON.parse(text));
+  if (!parsed.success) throw new Error(`Failed to parse Claude response: ${text}`);
+  return parsed.data;
+}
+
+// --- Auth Guide ---
+
+const authGuideSchema = z.object({
+  authMethod: z.string(),
+  steps: z.array(z.object({
+    step: z.number(),
+    title: z.string(),
+    description: z.string(),
+  })),
+  securityTips: z.array(z.string()),
+  testingSteps: z.array(z.string()),
+  commonErrors: z.array(z.object({
+    error: z.string(),
+    fix: z.string(),
+  })),
+  nextStepSuggestion: z.string(),
+  nextStepToolId: z.string(),
+  nextStepDescription: z.string(),
+});
+
+export type AuthGuideResult = z.infer<typeof authGuideSchema>;
+
+export async function getAuthGuide(
+  service: string,
+  purpose?: string,
+  personaInstruction?: string
+): Promise<AuthGuideResult> {
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 1024,
+    messages: [{
+      role: "user",
+      content: `You are an API authentication expert. Help the user understand and set up authentication for a specific service. Cover the auth method (API key, OAuth 2.0, JWT, etc.), step-by-step credential setup, and security best practices.
+
+Service: "${service}"
+${purpose ? `Purpose: "${purpose}"` : ""}
+
+Return ONLY valid JSON — no markdown, no explanation, no code fences:
+{
+  "authMethod": "The authentication method used (e.g. OAuth 2.0, API Key, JWT)",
+  "steps": [{"step": 1, "title": "Step title", "description": "Detailed instructions"}],
+  "securityTips": ["Security best practice"],
+  "testingSteps": ["How to verify auth works"],
+  "commonErrors": [{"error": "Common auth error", "fix": "How to fix it"}],
+  "nextStepSuggestion": "What to do next",
+  "nextStepToolId": "integration-setup",
+  "nextStepDescription": "Brief description of why this tool helps next"
+}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
+    }],
+  });
+
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  const parsed = authGuideSchema.safeParse(JSON.parse(text));
+  if (!parsed.success) throw new Error(`Failed to parse Claude response: ${text}`);
+  return parsed.data;
+}
+
+// --- Workflow Builder ---
+
+const workflowBuilderSchema = z.object({
+  trigger: z.object({
+    event: z.string(),
+    platform: z.string(),
+    conditions: z.array(z.string()),
+  }),
+  steps: z.array(z.object({
+    step: z.number(),
+    action: z.string(),
+    platform: z.string(),
+    details: z.string(),
+    errorHandling: z.string(),
+  })),
+  implementationOptions: z.array(z.object({
+    method: z.string(),
+    description: z.string(),
+    complexity: z.enum(["low", "medium", "high"]),
+    cost: z.string(),
+  })),
+  estimatedSetupTime: z.string(),
+  considerations: z.array(z.string()),
+  nextStepSuggestion: z.string(),
+  nextStepToolId: z.string(),
+  nextStepDescription: z.string(),
+});
+
+export type WorkflowBuilderResult = z.infer<typeof workflowBuilderSchema>;
+
+export async function getWorkflow(
+  description: string,
+  platforms?: string,
+  personaInstruction?: string
+): Promise<WorkflowBuilderResult> {
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 2048,
+    messages: [{
+      role: "user",
+      content: `You are an automation workflow designer. Help the user design a multi-step workflow that connects their apps. Consider both no-code (Zapier, Make, n8n) and code-based approaches.
+
+Workflow: "${description}"
+${platforms ? `Platforms: "${platforms}"` : ""}
+
+Return ONLY valid JSON — no markdown, no explanation, no code fences:
+{
+  "trigger": {"event": "What starts the workflow", "platform": "Where the trigger happens", "conditions": ["When to run"]},
+  "steps": [{"step": 1, "action": "What happens", "platform": "Where", "details": "How", "errorHandling": "What if it fails"}],
+  "implementationOptions": [{"method": "Zapier/Make/Custom code", "description": "How to implement", "complexity": "low|medium|high", "cost": "Free/£X/month"}],
+  "estimatedSetupTime": "How long to set up",
+  "considerations": ["Important things to know"],
+  "nextStepSuggestion": "What to do next",
+  "nextStepToolId": "webhook-builder",
+  "nextStepDescription": "Brief description of why this tool helps next"
+}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
+    }],
+  });
+
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  const parsed = workflowBuilderSchema.safeParse(JSON.parse(text));
+  if (!parsed.success) throw new Error(`Failed to parse Claude response: ${text}`);
+  return parsed.data;
+}
+
+// --- Troubleshooter ---
+
+const troubleshooterSchema = z.object({
+  likelyCause: z.object({
+    category: z.enum(["auth", "webhook", "mapping", "rate_limit", "service_outage", "configuration", "other"]),
+    explanation: z.string(),
+    confidence: z.enum(["high", "medium", "low"]),
+  }),
+  diagnosticSteps: z.array(z.object({
+    step: z.number(),
+    check: z.string(),
+    expectedResult: z.string(),
+    ifFails: z.string(),
+  })),
+  fixSteps: z.array(z.string()),
+  preventionTips: z.array(z.string()),
+  nextStepSuggestion: z.string(),
+  nextStepToolId: z.string(),
+  nextStepDescription: z.string(),
+});
+
+export type TroubleshooterResult = z.infer<typeof troubleshooterSchema>;
+
+export async function troubleshootIntegration(
+  problem: string,
+  platforms?: string,
+  recentChanges?: string,
+  personaInstruction?: string
+): Promise<TroubleshooterResult> {
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 2048,
+    messages: [{
+      role: "user",
+      content: `You are an integration troubleshooting expert. Diagnose the user's integration problem through a guided diagnostic approach. Identify the most likely root cause category and provide step-by-step fix instructions.
+
+Problem: "${problem}"
+${platforms ? `Platforms involved: "${platforms}"` : ""}
+${recentChanges ? `Recent changes: "${recentChanges}"` : ""}
+
+Return ONLY valid JSON — no markdown, no explanation, no code fences:
+{
+  "likelyCause": {"category": "auth|webhook|mapping|rate_limit|service_outage|configuration|other", "explanation": "What likely went wrong", "confidence": "high|medium|low"},
+  "diagnosticSteps": [{"step": 1, "check": "What to check", "expectedResult": "What you should see", "ifFails": "What to do if this check fails"}],
+  "fixSteps": ["Step-by-step fix instructions"],
+  "preventionTips": ["How to prevent this in future"],
+  "nextStepSuggestion": "What to do next",
+  "nextStepToolId": "connection-health-check",
+  "nextStepDescription": "Brief description of why this tool helps next"
+}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
+    }],
+  });
+
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  const parsed = troubleshooterSchema.safeParse(JSON.parse(text));
+  if (!parsed.success) throw new Error(`Failed to parse Claude response: ${text}`);
+  return parsed.data;
+}
+
+// --- What Changed ---
+
+const whatChangedSchema = z.object({
+  affectedIntegrations: z.array(z.object({
+    integration: z.string(),
+    impact: z.enum(["breaking", "degraded", "cosmetic", "none"]),
+    description: z.string(),
+  })),
+  priorityOrder: z.array(z.object({
+    item: z.string(),
+    urgency: z.enum(["immediate", "soon", "when_convenient"]),
+    effort: z.string(),
+  })),
+  migrationSteps: z.array(z.string()),
+  workarounds: z.array(z.string()),
+  nextStepSuggestion: z.string(),
+  nextStepToolId: z.string(),
+  nextStepDescription: z.string(),
+});
+
+export type WhatChangedResult = z.infer<typeof whatChangedSchema>;
+
+export async function analyseChange(
+  change: string,
+  currentSetup?: string,
+  personaInstruction?: string
+): Promise<WhatChangedResult> {
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 2048,
+    messages: [{
+      role: "user",
+      content: `You are a change impact analyst for software integrations. The user is describing an external change (API update, platform deprecation, regulation change, etc.). Analyse which integrations are affected, what breaks, and what needs updating.
+
+Change: "${change}"
+${currentSetup ? `Current setup: "${currentSetup}"` : ""}
+
+Return ONLY valid JSON — no markdown, no explanation, no code fences:
+{
+  "affectedIntegrations": [{"integration": "What's affected", "impact": "breaking|degraded|cosmetic|none", "description": "How it's affected"}],
+  "priorityOrder": [{"item": "What to fix", "urgency": "immediate|soon|when_convenient", "effort": "Low/Medium/High"}],
+  "migrationSteps": ["Step-by-step migration instructions"],
+  "workarounds": ["Temporary workaround if available"],
+  "nextStepSuggestion": "What to do next",
+  "nextStepToolId": "upgrade-assistant",
+  "nextStepDescription": "Brief description of why this tool helps next"
+}${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
+    }],
+  });
+
+  const raw = message.content[0].type === "text" ? message.content[0].text : "";
+  const text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  const parsed = whatChangedSchema.safeParse(JSON.parse(text));
+  if (!parsed.success) throw new Error(`Failed to parse Claude response: ${text}`);
+  return parsed.data;
+}

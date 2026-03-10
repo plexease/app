@@ -1,0 +1,12 @@
+{
+  "likelyCause": {"category": "webhook", "explanation": "The webhook endpoint may have changed or the webhook subscription expired after the app update.", "confidence": "high"},
+  "diagnosticSteps": [
+    {"step": 1, "check": "Verify webhook subscriptions are active in Shopify admin", "expectedResult": "All webhooks show as 'Active'", "ifFails": "Re-register the webhook subscriptions"},
+    {"step": 2, "check": "Check Xero's API connection status", "expectedResult": "OAuth token is valid and not expired", "ifFails": "Re-authenticate the Xero connection"}
+  ],
+  "fixSteps": ["Check Shopify webhook subscriptions in Settings > Notifications", "Re-register any missing or inactive webhooks", "Test with a manual order to verify sync resumes"],
+  "preventionTips": ["Set up webhook failure alerts", "Monitor integration health weekly"],
+  "nextStepSuggestion": "Run a health check on your connections.",
+  "nextStepToolId": "connection-health-check",
+  "nextStepDescription": "Use Connection Health Check to verify all your integrations are healthy."
+}

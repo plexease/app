@@ -1,0 +1,15 @@
+{
+  "affectedIntegrations": [
+    {"integration": "Stripe payment processing", "impact": "breaking", "description": "API version 2024-12-18 removes the Sources API endpoint your integration uses"},
+    {"integration": "Xero invoice sync", "impact": "degraded", "description": "Invoice amounts may not include new tax fields from Stripe"}
+  ],
+  "priorityOrder": [
+    {"item": "Update Stripe API version in payment service", "urgency": "immediate", "effort": "Medium — 2-4 hours"},
+    {"item": "Update Xero sync to handle new tax fields", "urgency": "soon", "effort": "Low — 1 hour"}
+  ],
+  "migrationSteps": ["Update Stripe SDK to latest version", "Replace Sources API calls with Payment Intents API", "Update webhook handlers for new event format", "Test payment flow end-to-end"],
+  "workarounds": ["Pin current API version temporarily while migrating", "Contact Stripe support for extension if needed"],
+  "nextStepSuggestion": "Get help with the upgrade process.",
+  "nextStepToolId": "upgrade-assistant",
+  "nextStepDescription": "Use Upgrade Assistant for a detailed migration plan for the Stripe API update."
+}
