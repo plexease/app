@@ -1,7 +1,7 @@
 import { FREE_MONTHLY_LIMIT, ESSENTIALS_MONTHLY_LIMIT, PRO_MONTHLY_LIMIT } from "@/lib/constants";
 
 const features = [
-  { name: "Tool uses", free: `${FREE_MONTHLY_LIMIT}/month`, essentials: `${ESSENTIALS_MONTHLY_LIMIT}/month`, pro: `${PRO_MONTHLY_LIMIT}/month` },
+  { name: "Monthly credits", free: `${FREE_MONTHLY_LIMIT}/month`, essentials: `${ESSENTIALS_MONTHLY_LIMIT}/month`, pro: `${PRO_MONTHLY_LIMIT}/month` },
   { name: "All available tools", free: true, essentials: true, pro: true },
   { name: "Saved history", free: false, essentials: true, pro: true },
   { name: "Priority AI responses", free: false, essentials: false, pro: true },

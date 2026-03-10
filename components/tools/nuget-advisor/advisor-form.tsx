@@ -85,7 +85,7 @@ export function AdvisorForm({ usageCount, plan }: Props) {
       </form>
 
       <p className="mt-2 text-xs text-muted-500">
-        {currentUsage} of {limit} lookups used this month
+        {currentUsage} of {limit} credits used this month
       </p>
 
       <div aria-live="polite">

@@ -5,6 +5,8 @@ import { WhatChangedResultCards } from "./result-cards";
 import { CharLimitedInput } from "@/components/shared/char-limited-input";
 import { WorkflowNext, type WorkflowRecommendation } from "@/components/shared/workflow-next";
 import { LimitReachedCard } from "@/components/shared/limit-reached-card";
+import { useFeedback } from "@/hooks/use-feedback";
+import { InlineFeedbackCard } from "@/components/feedback/inline-feedback-card";
 import type { WhatChangedResult } from "@/lib/claude";
 import { getUsageLimit } from "@/lib/constants";
 import type { PlanTier } from "@/lib/subscription";
@@ -21,6 +23,7 @@ export function ChangeForm({ usageCount, plan }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<WhatChangedResult | null>(null);
   const [currentUsage, setCurrentUsage] = useState(usageCount);
+  const { showFifthUseCard } = useFeedback();
 
   const limit = getUsageLimit(plan);
   const limitReached = currentUsage >= limit;
@@ -113,7 +116,7 @@ export function ChangeForm({ usageCount, plan }: Props) {
       </form>
 
       <p className="mt-2 text-xs text-muted-500">
-        {currentUsage} of {limit} lookups used this month
+        {currentUsage} of {limit} credits used this month
       </p>
 
       <div aria-live="polite">
@@ -131,6 +134,7 @@ export function ChangeForm({ usageCount, plan }: Props) {
                 affectedCount: result.affectedIntegrations.length,
               }}
             />
+            {showFifthUseCard && <InlineFeedbackCard toolName="what-changed" />}
           </>
         )}
       </div>

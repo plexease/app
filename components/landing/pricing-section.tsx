@@ -43,7 +43,7 @@ export function PricingSection({ isLoggedIn, plan }: Props) {
           name="Free"
           price={"\u00A30"}
           features={[
-            `${FREE_MONTHLY_LIMIT} tool uses per month`,
+            `${FREE_MONTHLY_LIMIT} credits per month`,
             "All available tools",
           ]}
           cta={freeCta}
@@ -53,7 +53,7 @@ export function PricingSection({ isLoggedIn, plan }: Props) {
           price={interval === "monthly" ? "\u00A35/mo" : "\u00A350/yr"}
           subtitle={interval === "annual" ? "\u00A34.17/mo \u2014 save \u00A310" : undefined}
           features={[
-            `${ESSENTIALS_MONTHLY_LIMIT} tool uses per month`,
+            `${ESSENTIALS_MONTHLY_LIMIT} credits per month`,
             "All available tools",
             "Saved history",
           ]}
@@ -65,7 +65,7 @@ export function PricingSection({ isLoggedIn, plan }: Props) {
           price={interval === "monthly" ? "\u00A319/mo" : "\u00A3190/yr"}
           subtitle={interval === "annual" ? "\u00A315.83/mo \u2014 save \u00A338" : undefined}
           features={[
-            `${PRO_MONTHLY_LIMIT} tool uses per month`,
+            `${PRO_MONTHLY_LIMIT} credits per month`,
             "All available tools",
             "Saved history",
             "Priority AI responses",

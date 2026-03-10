@@ -20,6 +20,17 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
+  // Check for pending cancellation feedback
+  const { data: subData } = await supabase
+    .from("subscriptions")
+    .select("show_cancellation_feedback")
+    .eq("user_id", user.id)
+    .single();
+
+  if (subData?.show_cancellation_feedback) {
+    redirect("/cancelled");
+  }
+
   const plan = await getUserPlan(user.id);
   const profile = await getUserProfile(user.id);
 
