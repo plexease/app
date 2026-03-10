@@ -21,6 +21,8 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
     items: [
       { href: "/tools/tool-finder", label: "Tool Finder" },
       { href: "/tools/integration-blueprint", label: "Integration Blueprint" },
+      { href: "/tools/tool-planner", label: "Tool Planner" },
+      { href: "/tools/connection-map", label: "Connection Map" },
     ],
   },
   {
@@ -28,6 +30,10 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
     items: [
       { href: "/tools/code-generator", label: "Code Generator" },
       { href: "/tools/api-wrapper-generator", label: "API Wrapper Generator" },
+      { href: "/tools/integration-setup", label: "Integration Setup" },
+      { href: "/tools/webhook-builder", label: "Webhook Builder" },
+      { href: "/tools/auth-guide", label: "Auth Guide" },
+      { href: "/tools/workflow-builder", label: "Workflow Builder" },
     ],
   },
   {
@@ -35,6 +41,8 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
     items: [
       { href: "/tools/error-resolver", label: "Error Resolver" },
       { href: "/tools/how-it-works", label: "How It Works" },
+      { href: "/tools/troubleshooter", label: "Troubleshooter" },
+      { href: "/tools/what-changed", label: "What Changed?" },
     ],
   },
   {
