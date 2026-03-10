@@ -71,7 +71,7 @@ test.describe("Persona Views", () => {
       return res.json();
     });
 
-    expect(response.tool).toBe("error-explainer");
+    expect(response.tool).toBe("error-resolver");
   });
 
   test("router returns rate limited response", async ({ freeUserPage, mockApi }) => {

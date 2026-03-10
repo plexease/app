@@ -3,13 +3,13 @@ import { TOOL_CATALOG, type ToolId } from "@/lib/tool-descriptions";
 
 /** Platform-to-tool relevance mapping. */
 const PLATFORM_TOOLS: Record<string, ToolId[]> = {
-  shopify: ["integration-planner", "health-checker", "error-explainer"],
-  woocommerce: ["integration-planner", "code-generator", "health-checker"],
-  xero: ["integration-planner", "api-wrapper-generator", "error-explainer"],
-  stripe: ["api-wrapper-generator", "integration-planner", "code-generator"],
-  "royal-mail": ["api-wrapper-generator", "integration-planner"],
-  quickbooks: ["integration-planner", "api-wrapper-generator", "error-explainer"],
-  magento: ["integration-planner", "health-checker", "migration-assistant"],
+  shopify: ["integration-blueprint", "connection-health-check", "error-resolver", "integration-setup", "webhook-builder"],
+  woocommerce: ["integration-blueprint", "code-generator", "connection-health-check", "integration-setup"],
+  xero: ["integration-blueprint", "api-wrapper-generator", "error-resolver", "integration-setup", "auth-guide"],
+  stripe: ["api-wrapper-generator", "integration-blueprint", "code-generator", "webhook-builder", "auth-guide"],
+  "royal-mail": ["api-wrapper-generator", "integration-blueprint", "integration-setup"],
+  quickbooks: ["integration-blueprint", "api-wrapper-generator", "error-resolver", "integration-setup"],
+  magento: ["integration-blueprint", "connection-health-check", "upgrade-assistant", "integration-setup"],
 };
 
 /** Goal-to-category priority. */
@@ -22,8 +22,8 @@ const GOAL_CATEGORY_PRIORITY: Record<string, string[]> = {
 
 /** Comfort-level priority for tiebreaking (simpler tools first for guided users). */
 const COMFORT_TOOL_PRIORITY: Record<string, ToolId[]> = {
-  guided: ["error-explainer", "code-explainer", "health-checker", "package-advisor"],
-  writes_code: ["code-generator", "api-wrapper-generator", "unit-test-generator", "migration-assistant"],
+  guided: ["troubleshooter", "integration-setup", "tool-planner", "connection-map", "error-resolver", "how-it-works", "connection-health-check", "tool-finder"],
+  writes_code: ["code-generator", "api-wrapper-generator", "webhook-builder", "unit-test-generator", "upgrade-assistant", "workflow-builder"],
 };
 
 export function getRecommendedTools(

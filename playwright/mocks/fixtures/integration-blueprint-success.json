@@ -1,0 +1,12 @@
+{
+  "approach": "Use Stripe.NET SDK with webhook-based event processing. Create a PaymentService that wraps the Stripe API and handles checkout sessions, subscription lifecycle, and invoice events.",
+  "recommendedPackages": [
+    {"name": "Stripe.NET", "purpose": "Official Stripe SDK for .NET"},
+    {"name": "Microsoft.Extensions.Http", "purpose": "HTTP client factory for resilient API calls"}
+  ],
+  "architectureOverview": "Three-layer architecture: Controller (webhook endpoint + checkout API) → Service (PaymentService wrapping Stripe SDK) → Repository (subscription state in database). Webhooks drive state changes; API calls are idempotent.",
+  "considerations": ["Verify webhook signatures to prevent spoofing", "Use idempotency keys for payment creation", "Handle subscription state transitions atomically", "Test with Stripe CLI for local webhook testing"],
+  "nextStepSuggestion": "Generate the integration boilerplate with the Code Generator.",
+  "nextStepToolId": "code-generator",
+  "nextStepDescription": "You've planned a Stripe payment integration with webhook handling and idempotency. The Code Generator can produce the boilerplate — controllers, webhook handlers, and DTOs based on this plan."
+}

@@ -1,0 +1,14 @@
+{
+  "summary": "3 of 5 packages need attention: 1 vulnerable, 1 outdated, 1 deprecated.",
+  "dependencies": [
+    {"name": "Stripe.NET", "currentVersion": "43.0.0", "latestVersion": "45.2.0", "status": "outdated", "note": "Major version available with new subscription API."},
+    {"name": "Newtonsoft.Json", "currentVersion": "13.0.1", "latestVersion": "13.0.3", "status": "up-to-date", "note": "Patch update available, no breaking changes."},
+    {"name": "System.Text.Json", "currentVersion": "8.0.0", "latestVersion": "8.0.5", "status": "vulnerable", "note": "CVE-2024-1234: denial of service via crafted JSON payload."},
+    {"name": "RestSharp", "currentVersion": "106.15.0", "latestVersion": "112.0.0", "status": "outdated", "note": "v107+ is a complete rewrite with breaking API changes."},
+    {"name": "Microsoft.AspNet.WebApi", "currentVersion": "5.2.7", "latestVersion": "5.2.7", "status": "deprecated", "note": "Replaced by ASP.NET Core. No further updates planned."}
+  ],
+  "recommendations": ["Upgrade System.Text.Json immediately to patch CVE-2024-1234", "Plan Stripe.NET upgrade for new subscription API features", "Migrate from ASP.NET WebApi to ASP.NET Core"],
+  "nextStepSuggestion": "Use the Migration Assistant to plan your upgrade path.",
+  "nextStepToolId": "upgrade-assistant",
+  "nextStepDescription": "Your audit found 1 vulnerable and 2 outdated packages. The Migration Assistant can generate a step-by-step upgrade plan for System.Text.Json and Stripe.NET, including breaking change mitigation."
+}

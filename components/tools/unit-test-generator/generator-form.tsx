@@ -12,7 +12,7 @@ import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
 import type { PlanTier } from "@/lib/subscription";
 
-const ACCEPTED_FROM = ["integration-code-generator", "api-wrapper-generator"];
+const ACCEPTED_FROM = ["code-generator", "api-wrapper-generator"];
 
 type Props = {
   usageCount: number;
@@ -94,8 +94,8 @@ export function UnitTestGeneratorForm({ usageCount, plan }: Props) {
     ? [
         {
           toolId: result.nextStepToolId,
-          toolName: "Dependency Audit",
-          href: "/tools/dependency-audit",
+          toolName: "Compatibility Check",
+          href: "/tools/compatibility-check",
           description: result.nextStepDescription,
           contextSummary: `Language: ${stack?.language ?? "unknown"}, Test framework: ${result.testFramework.slice(0, 50)}`,
         },

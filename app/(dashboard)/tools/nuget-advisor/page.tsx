@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function NuGetAdvisorPage() {
-  redirect("/tools/package-advisor?language=csharp");
+  redirect("/tools/tool-finder?language=csharp");
 }

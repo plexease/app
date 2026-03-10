@@ -10,10 +10,10 @@ type Props = {
 };
 
 const STAGE_PROMPTS = [
-  { label: "Something's broken", category: "troubleshoot" as const, href: "/tools/error-explainer" },
-  { label: "Connect two services", category: "explore" as const, href: "/tools/integration-planner" },
-  { label: "Help me choose tools", category: "explore" as const, href: "/tools/package-advisor" },
-  { label: "Check my setup", category: "maintain" as const, href: "/tools/health-checker" },
+  { label: "Something's broken", category: "troubleshoot" as const, href: "/tools/error-resolver" },
+  { label: "Connect two services", category: "explore" as const, href: "/tools/integration-blueprint" },
+  { label: "Help me choose tools", category: "explore" as const, href: "/tools/tool-finder" },
+  { label: "Check my setup", category: "maintain" as const, href: "/tools/connection-health-check" },
 ];
 
 export function BusinessOwnerView({ recommendedToolIds, platforms }: Props) {

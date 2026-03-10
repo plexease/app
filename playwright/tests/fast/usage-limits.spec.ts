@@ -1,5 +1,5 @@
 import { test, expect } from "../../fixtures";
-import { PackageAdvisorPage } from "../../pages/package-advisor.page";
+import { ToolFinderPage } from "../../pages/tool-finder.page";
 
 test.describe("Usage Limits", () => {
   test.describe.configure({ mode: "serial" });
@@ -9,9 +9,9 @@ test.describe("Usage Limits", () => {
   }) => {
     const userId = await supabaseAdmin.getFreeUserId();
 
-    await supabaseAdmin.setUsageCount(userId, "package-advisor", 10);
+    await supabaseAdmin.setUsageCount(userId, "tool-finder", 10);
 
-    const advisor = new PackageAdvisorPage(freeUserPage);
+    const advisor = new ToolFinderPage(freeUserPage);
     await advisor.goto();
 
     await expect(advisor.limitReachedMessage).toBeVisible();
@@ -25,12 +25,12 @@ test.describe("Usage Limits", () => {
     supabaseAdmin,
     mockApi,
   }) => {
-    await mockApi.packageAdvisor(freeUserPage, "success");
+    await mockApi.toolFinder(freeUserPage, "success");
     const userId = await supabaseAdmin.getFreeUserId();
 
-    await supabaseAdmin.setUsageCount(userId, "package-advisor", 9);
+    await supabaseAdmin.setUsageCount(userId, "tool-finder", 9);
 
-    const advisor = new PackageAdvisorPage(freeUserPage);
+    const advisor = new ToolFinderPage(freeUserPage);
     await advisor.goto();
 
     await expect(advisor.queryInput).toBeVisible();
@@ -52,9 +52,9 @@ test.describe("Usage Limits", () => {
 
     // Temporarily set free user to Essentials tier
     await supabaseAdmin.setSubscriptionState(userId, { plan: "essentials" });
-    await supabaseAdmin.setUsageCount(userId, "package-advisor", 100);
+    await supabaseAdmin.setUsageCount(userId, "tool-finder", 100);
 
-    const advisor = new PackageAdvisorPage(freeUserPage);
+    const advisor = new ToolFinderPage(freeUserPage);
     await advisor.goto();
 
     await expect(advisor.limitReachedMessage).toBeVisible();

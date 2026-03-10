@@ -1,0 +1,16 @@
+{
+  "trigger": {"event": "New order created", "platform": "Shopify", "conditions": ["Order total > \u00a30", "Order status is confirmed"]},
+  "steps": [
+    {"step": 1, "action": "Create invoice", "platform": "Xero", "details": "Map order line items to invoice lines", "errorHandling": "Queue failed invoices for retry"},
+    {"step": 2, "action": "Send notification", "platform": "Slack", "details": "Post order summary to #orders channel", "errorHandling": "Log failure, non-blocking"}
+  ],
+  "implementationOptions": [
+    {"method": "Zapier", "description": "No-code setup with pre-built Shopify and Xero integrations", "complexity": "low", "cost": "\u00a325/month"},
+    {"method": "Custom Node.js", "description": "Full control with webhook listeners and API calls", "complexity": "high", "cost": "Hosting only"}
+  ],
+  "estimatedSetupTime": "1-2 hours with Zapier, 4-8 hours custom",
+  "considerations": ["Zapier has a 100-task/month limit on free plan", "Custom solution needs error handling and retry logic"],
+  "nextStepSuggestion": "Set up the webhook triggers.",
+  "nextStepToolId": "webhook-builder",
+  "nextStepDescription": "Use Webhook Builder to set up the event triggers for your workflow."
+}

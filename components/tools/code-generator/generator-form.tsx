@@ -12,7 +12,7 @@ import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
 import type { PlanTier } from "@/lib/subscription";
 
-const ACCEPTED_FROM = ["integration-planner", "package-advisor", "migration-assistant"];
+const ACCEPTED_FROM = ["integration-blueprint", "tool-finder", "upgrade-assistant"];
 
 type Props = {
   usageCount: number;
@@ -86,9 +86,9 @@ export function GeneratorForm({ usageCount, plan }: Props) {
 
   const recommendations: WorkflowRecommendation[] = result
     ? [{
-        toolId: "dependency-audit",
-        toolName: "Dependency Audit",
-        href: "/tools/dependency-audit",
+        toolId: "compatibility-check",
+        toolName: "Compatibility Check",
+        href: "/tools/compatibility-check",
         description: result.nextStepDescription,
         contextSummary: `Language: ${stack?.language ?? "unknown"}, Files: ${result.files.map((f) => f.filename).join(", ")}`,
       }]
@@ -137,7 +137,7 @@ export function GeneratorForm({ usageCount, plan }: Props) {
             <GeneratorResultCards result={result} />
             <WorkflowNext
               recommendations={recommendations}
-              sourceToolId="integration-code-generator"
+              sourceToolId="code-generator"
               language={stack?.language ?? ""}
               framework={stack?.framework ?? ""}
               payload={{

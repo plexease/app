@@ -1,8 +1,0 @@
-{
-  "explanation": "This code creates an HTTP client that connects to the Stripe payment API. It handles creating payment intents and processing webhook events for subscription billing.",
-  "detectedPackages": ["Stripe.NET", "Microsoft.Extensions.Http"],
-  "detectedPatterns": ["Dependency Injection", "Webhook Handler", "Repository Pattern"],
-  "nextStepSuggestion": "The Integration Planner can help you map out the full payment flow including error handling and testing.",
-  "nextStepToolId": "integration-planner",
-  "nextStepDescription": "Your code uses Stripe.NET for payment processing. The Integration Planner can help you map out a full integration strategy — covering webhook handling, error recovery, and testing approaches for your C# Stripe setup."
-}

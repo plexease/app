@@ -9,6 +9,6 @@
   "testFramework": "xUnit was chosen as it is the most popular testing framework for modern .NET projects, with excellent async support and a clean attribute-based API.",
   "mockingApproach": "Moq is used for creating mock implementations of IStripeClient. This allows testing PaymentService in isolation without making real API calls.",
   "nextStepSuggestion": "Run a dependency audit to ensure your test packages are up to date.",
-  "nextStepToolId": "dependency-audit",
+  "nextStepToolId": "compatibility-check",
   "nextStepDescription": "You've added xUnit and Moq as test dependencies. The Dependency Audit tool can verify these packages are on their latest versions and check for any known vulnerabilities."
 }

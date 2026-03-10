@@ -1,16 +1,24 @@
 import type { Persona } from "@/lib/types/persona";
 
 export type ToolId =
-  | "code-explainer"
-  | "error-explainer"
-  | "package-advisor"
-  | "integration-planner"
+  | "how-it-works"
+  | "error-resolver"
+  | "tool-finder"
+  | "integration-blueprint"
   | "code-generator"
   | "api-wrapper-generator"
   | "unit-test-generator"
-  | "dependency-audit"
-  | "health-checker"
-  | "migration-assistant";
+  | "compatibility-check"
+  | "connection-health-check"
+  | "upgrade-assistant"
+  | "tool-planner"
+  | "connection-map"
+  | "integration-setup"
+  | "webhook-builder"
+  | "auth-guide"
+  | "workflow-builder"
+  | "troubleshooter"
+  | "what-changed";
 
 type ToolDescriptions = {
   label: string;
@@ -20,23 +28,23 @@ type ToolDescriptions = {
 };
 
 export const TOOL_CATALOG: Record<ToolId, ToolDescriptions> = {
-  "package-advisor": {
-    label: "Package Advisor",
-    href: "/tools/package-advisor",
+  "tool-finder": {
+    label: "Tool Finder",
+    href: "/tools/tool-finder",
     category: "explore",
     descriptions: {
-      business_owner: "Get recommendations for the right tools",
-      support_ops: "Compare packages and libraries for your stack",
+      business_owner: "Get recommendations for the right tools and services",
+      support_ops: "Compare tools, packages, and libraries for your stack",
       implementer: "Package comparison with compatibility analysis",
     },
   },
-  "integration-planner": {
-    label: "Integration Planner",
-    href: "/tools/integration-planner",
+  "integration-blueprint": {
+    label: "Integration Blueprint",
+    href: "/tools/integration-blueprint",
     category: "explore",
     descriptions: {
-      business_owner: "Plan how to connect your services",
-      support_ops: "Architecture and approach for integrations",
+      business_owner: "Plan how to connect your services together",
+      support_ops: "Architecture and approach for connecting platforms",
       implementer: "Integration architecture, packages, patterns",
     },
   },
@@ -60,53 +68,53 @@ export const TOOL_CATALOG: Record<ToolId, ToolDescriptions> = {
       implementer: "Typed wrapper with auth setup and usage",
     },
   },
-  "error-explainer": {
-    label: "Error Explainer",
-    href: "/tools/error-explainer",
+  "error-resolver": {
+    label: "Error Resolver",
+    href: "/tools/error-resolver",
     category: "troubleshoot",
     descriptions: {
-      business_owner: "Find out why something stopped working",
-      support_ops: "Diagnose error messages and stack traces",
-      implementer: "Root cause analysis from errors and traces",
+      business_owner: "Find out why something stopped working and how to fix it",
+      support_ops: "Diagnose error messages and stack traces with resolution steps",
+      implementer: "Root cause analysis from errors and traces with fix suggestions",
     },
   },
-  "code-explainer": {
-    label: "Code Explainer",
-    href: "/tools/code-explainer",
+  "how-it-works": {
+    label: "How It Works",
+    href: "/tools/how-it-works",
     category: "troubleshoot",
     descriptions: {
-      business_owner: "Understand what a piece of code does in plain English",
+      business_owner: "Understand what a piece of code or configuration does in plain English",
       support_ops: "Break down code snippets to understand logic and dependencies",
       implementer: "Parse code, identify patterns and packages",
     },
   },
-  "dependency-audit": {
-    label: "Dependency Audit",
-    href: "/tools/dependency-audit",
+  "compatibility-check": {
+    label: "Compatibility Check",
+    href: "/tools/compatibility-check",
     category: "maintain",
     descriptions: {
-      business_owner: "Check if your project's tools are up to date",
-      support_ops: "Audit dependencies for updates and vulnerabilities",
+      business_owner: "Check if your tools and dependencies are compatible and up to date",
+      support_ops: "Audit dependencies for updates and known issues",
       implementer: "Dependency audit table with status badges",
     },
   },
-  "health-checker": {
-    label: "Health Checker",
-    href: "/tools/health-checker",
+  "connection-health-check": {
+    label: "Connection Health Check",
+    href: "/tools/connection-health-check",
     category: "maintain",
     descriptions: {
-      business_owner: "Get a health report for your setup",
-      support_ops: "Assess configuration health and risks",
+      business_owner: "Get a health report for your connections and integrations",
+      support_ops: "Assess configuration health and identify risks",
       implementer: "Config health assessment with severity ratings",
     },
   },
-  "migration-assistant": {
-    label: "Migration Assistant",
-    href: "/tools/migration-assistant",
+  "upgrade-assistant": {
+    label: "Upgrade Assistant",
+    href: "/tools/upgrade-assistant",
     category: "maintain",
     descriptions: {
-      business_owner: "Get help upgrading to a new version",
-      support_ops: "Step-by-step migration with breaking changes",
+      business_owner: "Get help upgrading to a new version of your tools",
+      support_ops: "Step-by-step upgrade guide with breaking changes",
       implementer: "Migration steps, breaking changes, effort estimate",
     },
   },
@@ -118,6 +126,86 @@ export const TOOL_CATALOG: Record<ToolId, ToolDescriptions> = {
       business_owner: "Make sure your code works correctly",
       support_ops: "Generate test files for existing code",
       implementer: "Test scaffold with mocking approach",
+    },
+  },
+  "tool-planner": {
+    label: "Tool Planner",
+    href: "/tools/tool-planner",
+    category: "explore",
+    descriptions: {
+      business_owner: "Get recommendations for the right tools for your business",
+      support_ops: "Compare platforms and tools for your integration needs",
+      implementer: "Evaluate tool stacks with cost and complexity analysis",
+    },
+  },
+  "connection-map": {
+    label: "Connection Map",
+    href: "/tools/connection-map",
+    category: "explore",
+    descriptions: {
+      business_owner: "See how your apps are connected and find weak spots",
+      support_ops: "Map integration landscape with health indicators",
+      implementer: "Architecture overview with API dependency chain and failure modes",
+    },
+  },
+  "integration-setup": {
+    label: "Integration Setup",
+    href: "/tools/integration-setup",
+    category: "setup",
+    descriptions: {
+      business_owner: "Get step-by-step help connecting two apps together",
+      support_ops: "Configuration guide with webhook setup and troubleshooting tips",
+      implementer: "API endpoints, auth flows, and architecture for platform connections",
+    },
+  },
+  "webhook-builder": {
+    label: "Webhook Builder",
+    href: "/tools/webhook-builder",
+    category: "setup",
+    descriptions: {
+      business_owner: "Set up automatic notifications between your apps",
+      support_ops: "Configure webhooks with endpoint setup and payload inspection",
+      implementer: "Webhook endpoint code, signature verification, and retry logic",
+    },
+  },
+  "auth-guide": {
+    label: "Auth Guide",
+    href: "/tools/auth-guide",
+    category: "setup",
+    descriptions: {
+      business_owner: "Get help setting up API keys and authentication for any service",
+      support_ops: "Authentication setup, scopes, permissions, and credential rotation",
+      implementer: "Auth flow diagrams, token refresh logic, and setup code snippets",
+    },
+  },
+  "workflow-builder": {
+    label: "Workflow Builder",
+    href: "/tools/workflow-builder",
+    category: "setup",
+    descriptions: {
+      business_owner: "Design automated workflows between your apps — no coding required",
+      support_ops: "Multi-step automation with monitoring and error handling",
+      implementer: "Workflow architecture with queue patterns and reliability design",
+    },
+  },
+  "troubleshooter": {
+    label: "Troubleshooter",
+    href: "/tools/troubleshooter",
+    category: "troubleshoot",
+    descriptions: {
+      business_owner: "Find out why your apps stopped talking to each other",
+      support_ops: "Guided diagnosis with root cause analysis and fix steps",
+      implementer: "Integration debugging with payload inspection and replay guidance",
+    },
+  },
+  "what-changed": {
+    label: "What Changed?",
+    href: "/tools/what-changed",
+    category: "troubleshoot",
+    descriptions: {
+      business_owner: "Find out how an update or change affects your integrations",
+      support_ops: "Impact analysis with priority checklist and customer-facing notes",
+      implementer: "API diff analysis, migration code, and version pinning guidance",
     },
   },
 };
@@ -158,24 +246,24 @@ type Category = "explore" | "setup" | "troubleshoot" | "maintain";
 function getStageDescription(stage: Category, persona: Persona): string {
   const descriptions: Record<Category, Record<Persona, string>> = {
     explore: {
-      business_owner: "Figure out what you need",
-      support_ops: "Research tools and plan integrations",
-      implementer: "Evaluate packages and architecture options",
+      business_owner: "Figure out what tools and connections you need",
+      support_ops: "Research platforms and plan integrations",
+      implementer: "Evaluate tools, APIs, and architecture options",
     },
     setup: {
-      business_owner: "Build and connect your services",
-      support_ops: "Generate code and API integrations",
-      implementer: "Scaffold implementations and wrappers",
+      business_owner: "Connect your apps and set up automations",
+      support_ops: "Configure integrations and workflows",
+      implementer: "Build connections, webhooks, and automation code",
     },
     troubleshoot: {
-      business_owner: "Find and fix problems",
-      support_ops: "Diagnose errors and understand code",
-      implementer: "Debug errors, analyse code",
+      business_owner: "Find and fix connection problems",
+      support_ops: "Diagnose integration issues and changes",
+      implementer: "Debug connections, analyse changes and errors",
     },
     maintain: {
-      business_owner: "Keep everything running smoothly",
-      support_ops: "Audit dependencies and check health",
-      implementer: "Audit, test, migrate, monitor health",
+      business_owner: "Keep your integrations running smoothly",
+      support_ops: "Monitor health and manage updates",
+      implementer: "Audit, test, migrate, and verify integrations",
     },
   };
   return descriptions[stage][persona];

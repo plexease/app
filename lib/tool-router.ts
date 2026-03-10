@@ -11,16 +11,26 @@ export function matchKeywords(query: string): KeywordMatch | null {
 
   // High-confidence matches — specific phrases
   const highConfidence: [RegExp, ToolId][] = [
-    [/\b(error|exception|stack\s*trace|crash|fail|broke|broken|not\s*working|stopped)\b/, "error-explainer"],
-    [/\b(connect|integrate|set\s*up|link|sync|hook\s*up)\b/, "integration-planner"],
-    [/\b(choose|compare|which|recommend|package|library|alternative)\b/, "package-advisor"],
+    // Specific phrases first (new tools)
+    [/\b(connect\s*.*to|set\s*up\s*.*integration|link\s*.*with|how\s*to\s*connect)\b/, "integration-setup"],
+    [/\b(webhook|notify|notification|event\s*driven|trigger)\b/, "webhook-builder"],
+    [/\b(auth|api\s*key|oauth|token|credentials|authenticate)\b/, "auth-guide"],
+    [/\b(automate|automation|workflow|when\s*.*then|zapier|make|n8n)\b/, "workflow-builder"],
+    [/\b(changed|deprecated|breaking\s*change|api\s*update|sunset)\b/, "what-changed"],
+    [/\b(troubleshoot|not\s*syncing|stopped\s*working|connection\s*.*problem|apps?\s*.*not\s*.*talking)\b/, "troubleshooter"],
+    [/\b(map|landscape|overview|how\s*.*connected|connections)\b/, "connection-map"],
+    [/\b(plan|stack|what\s*tools|what\s*should\s*i\s*use|tool\s*plan)\b/, "tool-planner"],
+    // Original patterns
+    [/\b(error|exception|stack\s*trace|crash|fail|broke|broken)\b/, "error-resolver"],
+    [/\b(integrate|blueprint)\b/, "integration-blueprint"],
+    [/\b(choose|compare|which|recommend|package|library|alternative|find\s*tool)\b/, "tool-finder"],
     [/\b(generate|scaffold|boilerplate|create\s*code|write\s*code)\b/, "code-generator"],
     [/\b(wrap|wrapper|api\s*client|sdk)\b/, "api-wrapper-generator"],
     [/\b(test|testing|unit\s*test)\b/, "unit-test-generator"],
-    [/\b(audit|dependencies|outdated|vulnerable)\b/, "dependency-audit"],
-    [/\b(health|check|status|diagnose|config)\b/, "health-checker"],
-    [/\b(migrate|upgrade|version|update|breaking\s*change)\b/, "migration-assistant"],
-    [/\b(explain|understand|what\s*does|how\s*does)\b/, "code-explainer"],
+    [/\b(audit|dependencies|outdated|vulnerable|compatible|compatibility)\b/, "compatibility-check"],
+    [/\b(health|check|status|diagnose|config)\b/, "connection-health-check"],
+    [/\b(migrate|upgrade|version|update)\b/, "upgrade-assistant"],
+    [/\b(explain|understand|what\s*does|how\s*does)\b/, "how-it-works"],
   ];
 
   const matches: { tool: ToolId; index: number }[] = [];

@@ -7,7 +7,7 @@ export class DashboardPage {
   readonly heading = this.main.locator("h1", { hasText: "Dashboard" });
   readonly upgradeLink = this.main.locator('a[href="/upgrade"]');
   readonly usageCard = this.main.getByText("Usage", { exact: true }).locator("..");
-  readonly toolLink = this.main.locator('a[href="/tools/code-explainer"]');
+  readonly toolLink = this.main.locator('a[href="/tools/how-it-works"]');
   readonly manageBillingButton = this.main.getByText("Manage Subscription");
 
   // Persona views
@@ -18,10 +18,10 @@ export class DashboardPage {
 
   // Sidebar categories
   readonly sidebar = this.page.locator("aside");
-  readonly exploreCategory = this.sidebar.getByText("Explore");
-  readonly setUpCategory = this.sidebar.getByText("Set Up");
-  readonly troubleshootCategory = this.sidebar.getByText("Troubleshoot");
-  readonly maintainCategory = this.sidebar.getByText("Maintain");
+  readonly exploreCategory = this.sidebar.getByText("Explore", { exact: true });
+  readonly setUpCategory = this.sidebar.getByText("Set Up", { exact: true });
+  readonly troubleshootCategory = this.sidebar.getByText("Troubleshoot", { exact: true });
+  readonly maintainCategory = this.sidebar.getByText("Maintain", { exact: true });
 
   // View toggle
   readonly viewToggle = this.sidebar.getByText("View as").locator("..");

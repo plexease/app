@@ -19,8 +19,10 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
   {
     label: "Explore",
     items: [
-      { href: "/tools/package-advisor", label: "Package Advisor" },
-      { href: "/tools/integration-planner", label: "Integration Planner" },
+      { href: "/tools/tool-finder", label: "Tool Finder" },
+      { href: "/tools/integration-blueprint", label: "Integration Blueprint" },
+      { href: "/tools/tool-planner", label: "Tool Planner" },
+      { href: "/tools/connection-map", label: "Connection Map" },
     ],
   },
   {
@@ -28,21 +30,27 @@ const navGroups: { label: string | null; items: { href: string; label: string; e
     items: [
       { href: "/tools/code-generator", label: "Code Generator" },
       { href: "/tools/api-wrapper-generator", label: "API Wrapper Generator" },
+      { href: "/tools/integration-setup", label: "Integration Setup" },
+      { href: "/tools/webhook-builder", label: "Webhook Builder" },
+      { href: "/tools/auth-guide", label: "Auth Guide" },
+      { href: "/tools/workflow-builder", label: "Workflow Builder" },
     ],
   },
   {
     label: "Troubleshoot",
     items: [
-      { href: "/tools/error-explainer", label: "Error Explainer" },
-      { href: "/tools/code-explainer", label: "Code Explainer" },
+      { href: "/tools/error-resolver", label: "Error Resolver" },
+      { href: "/tools/how-it-works", label: "How It Works" },
+      { href: "/tools/troubleshooter", label: "Troubleshooter" },
+      { href: "/tools/what-changed", label: "What Changed?" },
     ],
   },
   {
     label: "Maintain",
     items: [
-      { href: "/tools/dependency-audit", label: "Dependency Audit" },
-      { href: "/tools/health-checker", label: "Health Checker" },
-      { href: "/tools/migration-assistant", label: "Migration Assistant" },
+      { href: "/tools/compatibility-check", label: "Compatibility Check" },
+      { href: "/tools/connection-health-check", label: "Connection Health Check" },
+      { href: "/tools/upgrade-assistant", label: "Upgrade Assistant" },
       { href: "/tools/unit-test-generator", label: "Unit Test Generator" },
     ],
   },
@@ -59,7 +67,7 @@ export function Sidebar({ plan, usageCount, viewingAs }: Props) {
   const isFree = plan.plan === "free";
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-surface-700 bg-surface-950 px-4 py-6">
+    <aside className="flex min-h-screen w-64 flex-col border-r border-surface-700 bg-surface-950 px-4 py-6">
       <Link href="/dashboard" aria-label="Plexease dashboard" className="inline-block rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950">
         <Logo iconSize={24} textSize={18} />
       </Link>

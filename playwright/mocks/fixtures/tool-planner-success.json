@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    {"name": "Stripe", "purpose": "Payment processing", "cost": "2.9% + 30p per transaction", "integrationComplexity": "medium"},
+    {"name": "Xero", "purpose": "Accounting and invoicing", "cost": "\u00a315/month", "integrationComplexity": "medium"}
+  ],
+  "stackOverview": "Stripe handles payments and syncs transaction data to Xero for accounting. Both have well-documented APIs and official integrations.",
+  "implementationOrder": ["Set up Stripe account and API keys", "Connect Xero and configure chart of accounts", "Set up Stripe-to-Xero sync via webhook or integration app"],
+  "considerations": ["Stripe and Xero have a native integration via Xero's app marketplace", "Consider using a middleware like Zapier if you want no-code setup"],
+  "nextStepSuggestion": "Set up the connection between your chosen tools.",
+  "nextStepToolId": "integration-setup",
+  "nextStepDescription": "Now that you have a tool plan, use Integration Setup to connect your platforms step by step."
+}

@@ -1,0 +1,14 @@
+{
+  "connections": [
+    {"from": "Shopify", "to": "Stripe", "dataFlow": "Payment processing", "method": "Built-in integration"},
+    {"from": "Shopify", "to": "Xero", "dataFlow": "Order and invoice data", "method": "Third-party sync app"}
+  ],
+  "weakPoints": [
+    {"description": "Shopify-to-Xero sync relies on a third-party app", "severity": "warning", "recommendation": "Set up monitoring alerts for sync failures"}
+  ],
+  "overallAssessment": "Your integration landscape is moderately connected. The main risk is the third-party dependency for accounting sync.",
+  "recommendations": ["Consider a direct API integration for Shopify-to-Xero if volume grows", "Add webhook monitoring for payment events"],
+  "nextStepSuggestion": "Set up the weak connections more reliably.",
+  "nextStepToolId": "integration-setup",
+  "nextStepDescription": "Use Integration Setup to strengthen the Shopify-to-Xero connection."
+}

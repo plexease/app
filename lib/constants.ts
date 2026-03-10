@@ -24,20 +24,24 @@ export function getUsageLimit(plan: PlanTier): number {
 
 // Tool names
 export const TOOL_NAME_NUGET_ADVISOR = "nuget-advisor";
-export const TOOL_NAME_CODE_EXPLAINER = "code-explainer";
-export const TOOL_NAME_INTEGRATION_PLANNER = "integration-planner";
-export const TOOL_NAME_CODE_GENERATOR = "integration-code-generator";
-export const TOOL_NAME_DEPENDENCY_AUDIT = "dependency-audit";
-export const TOOL_NAME_ERROR_EXPLAINER = "error-explainer";
-export const TOOL_NAME_PACKAGE_ADVISOR = "package-advisor";
+export const TOOL_NAME_HOW_IT_WORKS = "how-it-works";
+export const TOOL_NAME_INTEGRATION_BLUEPRINT = "integration-blueprint";
+export const TOOL_NAME_CODE_GENERATOR = "code-generator";
+export const TOOL_NAME_COMPATIBILITY_CHECK = "compatibility-check";
+export const TOOL_NAME_ERROR_RESOLVER = "error-resolver";
+export const TOOL_NAME_TOOL_FINDER = "tool-finder";
 export const TOOL_NAME_API_WRAPPER_GENERATOR = "api-wrapper-generator";
 export const TOOL_NAME_UNIT_TEST_GENERATOR = "unit-test-generator";
-export const TOOL_NAME_HEALTH_CHECKER = "health-checker";
-export const TOOL_NAME_MIGRATION_ASSISTANT = "migration-assistant";
-export const TOOL_NAME_INTEGRATION_HUB = "integration-hub";
+export const TOOL_NAME_CONNECTION_HEALTH_CHECK = "connection-health-check";
+export const TOOL_NAME_UPGRADE_ASSISTANT = "upgrade-assistant";
+export const TOOL_NAME_TOOL_PLANNER = "tool-planner";
+export const TOOL_NAME_CONNECTION_MAP = "connection-map";
+export const TOOL_NAME_INTEGRATION_SETUP = "integration-setup";
+export const TOOL_NAME_WEBHOOK_BUILDER = "webhook-builder";
+export const TOOL_NAME_AUTH_GUIDE = "auth-guide";
+export const TOOL_NAME_WORKFLOW_BUILDER = "workflow-builder";
 export const TOOL_NAME_TROUBLESHOOTER = "troubleshooter";
-export const TOOL_NAME_CHANGE_IMPACT = "change-impact";
-export const TOOL_NAME_STACK_PLANNER = "stack-planner";
+export const TOOL_NAME_WHAT_CHANGED = "what-changed";
 
 // Tool router
 export const ROUTER_DAILY_LIMIT = 10;

@@ -72,7 +72,7 @@ export default async function DashboardLayout({
         usageCount={totalUsage}
         viewingAs={viewingAs}
       />
-      <main id="main-content" className="flex-1 p-8">{children}</main>
+      <main id="main-content" className="flex-1 p-8 min-h-screen">{children}</main>
     </div>
   );
 }

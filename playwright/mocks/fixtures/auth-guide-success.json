@@ -1,0 +1,13 @@
+{
+  "authMethod": "API Key (Secret Key + Publishable Key)",
+  "steps": [
+    {"step": 1, "title": "Create a Stripe account", "description": "Sign up at stripe.com and verify your email"},
+    {"step": 2, "title": "Find your API keys", "description": "Go to Developers > API Keys in the Stripe Dashboard"}
+  ],
+  "securityTips": ["Never expose your secret key in client-side code", "Use environment variables for all keys"],
+  "testingSteps": ["Make a test API call using curl with your secret key", "Verify you get a successful response"],
+  "commonErrors": [{"error": "Invalid API Key provided", "fix": "Check you're using the correct key for your environment (test vs live)"}],
+  "nextStepSuggestion": "Connect Stripe to your application.",
+  "nextStepToolId": "integration-setup",
+  "nextStepDescription": "Use Integration Setup to connect Stripe to your platform."
+}
