@@ -12,7 +12,7 @@ import type { SelectedStack } from "@/lib/stack-options";
 import { getUsageLimit } from "@/lib/constants";
 import type { PlanTier } from "@/lib/subscription";
 
-const ACCEPTED_FROM = ["integration-code-generator", "api-wrapper-generator"];
+const ACCEPTED_FROM = ["code-generator", "api-wrapper-generator"];
 
 type Props = {
   usageCount: number;

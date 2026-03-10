@@ -23,6 +23,6 @@
     "Set up monitoring alerts for webhook failures"
   ],
   "nextStepSuggestion": "Use the Error Explainer if you encounter any errors during webhook setup.",
-  "nextStepToolId": "error-explainer",
+  "nextStepToolId": "error-resolver",
   "nextStepDescription": "If you encounter errors while implementing these fixes, the Error Explainer can analyse the stack trace and provide specific guidance for your Stripe webhook configuration."
 }

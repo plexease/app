@@ -10,6 +10,6 @@
     "NullReferenceException troubleshooting guide on Stack Overflow"
   ],
   "nextStepSuggestion": "Run a dependency audit to check if your packages are up to date and compatible.",
-  "nextStepToolId": "dependency-audit",
+  "nextStepToolId": "compatibility-check",
   "nextStepDescription": "Your error may be related to package version incompatibilities. The Dependency Audit tool can check your project's packages for outdated or vulnerable dependencies."
 }

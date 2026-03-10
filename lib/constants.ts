@@ -26,7 +26,7 @@ export function getUsageLimit(plan: PlanTier): number {
 export const TOOL_NAME_NUGET_ADVISOR = "nuget-advisor";
 export const TOOL_NAME_HOW_IT_WORKS = "how-it-works";
 export const TOOL_NAME_INTEGRATION_BLUEPRINT = "integration-blueprint";
-export const TOOL_NAME_CODE_GENERATOR = "integration-code-generator";
+export const TOOL_NAME_CODE_GENERATOR = "code-generator";
 export const TOOL_NAME_COMPATIBILITY_CHECK = "compatibility-check";
 export const TOOL_NAME_ERROR_RESOLVER = "error-resolver";
 export const TOOL_NAME_TOOL_FINDER = "tool-finder";

@@ -26,6 +26,6 @@
   ],
   "estimatedEffort": "Medium — 2-4 hours for a typical project with 10-20 controllers and EF Core data access.",
   "nextStepSuggestion": "Generate updated integration code for the new .NET 8 APIs.",
-  "nextStepToolId": "integration-code-generator",
+  "nextStepToolId": "code-generator",
   "nextStepDescription": "Now that you have a migration plan, the Code Generator can create updated boilerplate code using .NET 8 patterns like minimal APIs and the new authentication middleware."
 }

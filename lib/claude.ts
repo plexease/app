@@ -188,7 +188,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
   "architectureOverview": "High-level architecture description — components, data flow, key patterns.",
   "considerations": ["Security consideration", "Error handling note", "Testing approach"],
   "nextStepSuggestion": "A 1-2 sentence recommendation for what to do next.",
-  "nextStepToolId": "integration-code-generator or api-wrapper-generator",
+  "nextStepToolId": "code-generator or api-wrapper-generator",
   "nextStepDescription": "Context-aware description referencing specifics from this plan."
 }${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },
@@ -362,7 +362,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
   "breakingChanges": ["Breaking change 1 — what breaks and how to fix it"],
   "estimatedEffort": "Medium — 2-4 hours for a typical project",
   "nextStepSuggestion": "Recommendation for next step.",
-  "nextStepToolId": "integration-code-generator",
+  "nextStepToolId": "code-generator",
   "nextStepDescription": "Context-aware description for generating updated integration code after migration."
 }
 
@@ -539,7 +539,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences:
   "compatibility": "Version and framework compatibility information.",
   "versionAdvice": "Latest stable version, whether to upgrade, any deprecation notes.",
   "nextStepSuggestion": "A 1-2 sentence recommendation for what to do next.",
-  "nextStepToolId": "integration-code-generator",
+  "nextStepToolId": "code-generator",
   "nextStepDescription": "Context-aware description for generating integration code with the recommended package."
 }${personaInstruction ? `\n\n${personaInstruction}` : ""}`,
       },

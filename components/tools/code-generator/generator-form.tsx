@@ -137,7 +137,7 @@ export function GeneratorForm({ usageCount, plan }: Props) {
             <GeneratorResultCards result={result} />
             <WorkflowNext
               recommendations={recommendations}
-              sourceToolId="integration-code-generator"
+              sourceToolId="code-generator"
               language={stack?.language ?? ""}
               framework={stack?.framework ?? ""}
               payload={{

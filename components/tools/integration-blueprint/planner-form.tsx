@@ -83,7 +83,7 @@ export function PlannerForm({ usageCount, plan }: Props) {
 
   const recommendations: WorkflowRecommendation[] = result
     ? [{
-        toolId: "integration-code-generator",
+        toolId: "code-generator",
         toolName: "Code Generator",
         href: "/tools/code-generator",
         description: result.nextStepDescription,

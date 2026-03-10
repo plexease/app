@@ -3,6 +3,6 @@
   "detectedPackages": ["Stripe.NET", "Microsoft.Extensions.Http"],
   "detectedPatterns": ["Dependency Injection", "Webhook Handler", "Repository Pattern"],
   "nextStepSuggestion": "The Integration Planner can help you map out the full payment flow including error handling and testing.",
-  "nextStepToolId": "integration-planner",
+  "nextStepToolId": "integration-blueprint",
   "nextStepDescription": "Your code uses Stripe.NET for payment processing. The Integration Planner can help you map out a full integration strategy — covering webhook handling, error recovery, and testing approaches for your C# Stripe setup."
 }

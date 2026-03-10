@@ -9,6 +9,6 @@
   ],
   "recommendations": ["Upgrade System.Text.Json immediately to patch CVE-2024-1234", "Plan Stripe.NET upgrade for new subscription API features", "Migrate from ASP.NET WebApi to ASP.NET Core"],
   "nextStepSuggestion": "Use the Migration Assistant to plan your upgrade path.",
-  "nextStepToolId": "migration-assistant",
+  "nextStepToolId": "upgrade-assistant",
   "nextStepDescription": "Your audit found 1 vulnerable and 2 outdated packages. The Migration Assistant can generate a step-by-step upgrade plan for System.Text.Json and Stripe.NET, including breaking change mitigation."
 }
