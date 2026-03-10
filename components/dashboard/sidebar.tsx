@@ -67,7 +67,7 @@ export function Sidebar({ plan, usageCount, viewingAs }: Props) {
   const isFree = plan.plan === "free";
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-surface-700 bg-surface-950 px-4 py-6">
+    <aside className="flex min-h-screen w-64 flex-col border-r border-surface-700 bg-surface-950 px-4 py-6">
       <Link href="/dashboard" aria-label="Plexease dashboard" className="inline-block rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-surface-950">
         <Logo iconSize={24} textSize={18} />
       </Link>
